@@ -11,6 +11,7 @@ const Home = () => {
           category={{ name: "Almonds Kernels", id: "1", slug: 'almonds' }}
           price={500}
           comparePrice={1000}
+          key={id}
           slug='pishori-giri'
         />
       ))}
