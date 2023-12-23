@@ -35,10 +35,12 @@ const ProductItem: FC<ProductItemProps> = ({
         />
       </Link>
     )}
-    <span className="font-semibold block">{name}</span>
-    {category && (
-      <span className="block pt-1 text-gray-600">{category.name}</span>
-    )}
+    <Link href={`/${category?.slug || "product"}/${slug}`}>
+      <span className="font-semibold block">{name}</span>
+      {category && (
+        <span className="block pt-1 text-gray-600">{category.name}</span>
+      )}
+    </Link>
     {price && (
       <div className="mt-3">
         {comparePrice && (
