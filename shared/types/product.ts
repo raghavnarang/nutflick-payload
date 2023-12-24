@@ -1,4 +1,3 @@
-import { Category } from "./category";
 import { CurrencyPosition } from "./currency";
 
 export interface Product {
@@ -8,8 +7,8 @@ export interface Product {
   comparePrice?: number;
   image?: string;
   desc?: string;
-  category?: Category;
   currency?: string;
   currencyPosition?: CurrencyPosition;
   slug: string;
+  productType: string;
 }

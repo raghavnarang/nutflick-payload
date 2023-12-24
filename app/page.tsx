@@ -1,20 +1,38 @@
 import ProductItem from "@/components/product/product-item";
+import { getProducts } from "@/lib/shopify";
+import { ReactNode } from "react";
 
-const Home = () => {
+const Home = async () => {
+  const products = await getProducts({});
+
   return (
     <div className="flex flex-wrap gap-10 w-auto justify-center">
-      {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((id) => (
-        <ProductItem
-          name="Pishori Badam Giri"
-          image="/product.webp"
-          id={`${id}`}
-          category={{ name: "Almonds Kernels", id: "1", slug: 'almonds' }}
-          price={500}
-          comparePrice={1000}
-          key={id}
-          slug='pishori-giri'
-        />
-      ))}
+      {products.reduce<ReactNode[]>((productNodes, product) => {
+        const hasVariants = product.variants.length > 1 || undefined;
+
+        return [
+          ...productNodes,
+          product.variants.map((variant) => (
+            <ProductItem
+              name={product.title + (hasVariants ? ` - ${variant.title}` : "")}
+              image={
+                hasVariants ? variant.image.url : product.featuredImage.url
+              }
+              id={variant.id}
+              price={parseFloat(variant.price.amount)}
+              comparePrice={parseFloat(variant.compareAtPrice.amount)}
+              key={variant.id}
+              slug={product.handle}
+              topLeftTag={hasVariants && variant.title}
+              productType={product.productType}
+              variantId={
+                hasVariants &&
+                variant.id.split("gid://shopify/ProductVariant/")[1]
+              }
+            />
+          )),
+        ];
+      }, [])}
     </div>
   );
 };
