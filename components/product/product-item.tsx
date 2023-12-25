@@ -1,12 +1,9 @@
-import { CurrencyPosition } from "@/shared/types/currency";
 import type { Product } from "@/shared/types/product";
 import Image from "next/image";
 import type { FC } from "react";
 import Price from "./price";
 import Link from "next/link";
-import Cart from "../Icons/cart";
-import Tooltip from "../tooltip";
-import { AddToCartFromProductItem } from "../cart/add-to-cart-product-item";
+import AddToCart from "../cart/product-item/add-to-cart";
 
 interface ProductItemProps extends Product {
   smallDesc?: string;
@@ -21,13 +18,13 @@ const ProductItem: FC<ProductItemProps> = ({
   image,
   price,
   comparePrice,
-  currency = "₹",
-  currencyPosition = CurrencyPosition.Left,
+  currency,
+  currencyPosition,
   slug,
   topLeftTag,
   productType,
   variantId,
-  id
+  id,
 }) => {
   const link = `/product/${slug}` + (variantId ? `?variant=${variantId}` : "");
   return (
@@ -51,10 +48,12 @@ const ProductItem: FC<ProductItemProps> = ({
         </Link>
       )}
       <Link href={link}>
-        <span className="font-semibold block">{name}</span>
         {productType && (
-          <span className="block pt-1 text-gray-600">{productType}</span>
+          <span className="block mb-1 text-gray-600 text-sm">
+            {productType}
+          </span>
         )}
+        <span className="block">{name}</span>
       </Link>
       <div className="flex items-end justify-between mt-3">
         {price && (
@@ -71,11 +70,11 @@ const ProductItem: FC<ProductItemProps> = ({
               price={price}
               currency={currency}
               currencyPosition={currencyPosition}
-              className="text-xl text-red-500 font-bold ml-2"
+              className="text-xl ml-2"
             />
           </div>
         )}
-        <AddToCartFromProductItem variantId={id} />
+        <AddToCart variantId={id} />
       </div>
     </div>
   );

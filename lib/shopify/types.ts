@@ -50,6 +50,19 @@ export type Money = {
   currencyCode: string;
 };
 
+export type CartDiscountCode = {
+  applicable: boolean;
+  code: string;
+};
+
+export type CartDiscountAllocation = {
+  discountedAmount: Money;
+};
+
+export type UserError = {
+  messgae: string;
+};
+
 export type Page = {
   id: string;
   title: string;
@@ -100,6 +113,8 @@ export type ShopifyCart = {
   };
   lines: Connection<CartItem>;
   totalQuantity: number;
+  discountCodes: CartDiscountCode[];
+  discountAllocations: CartDiscountAllocation[];
 };
 
 export type ShopifyCollection = {
@@ -188,6 +203,19 @@ export type ShopifyUpdateCartOperation = {
       merchandiseId: string;
       quantity: number;
     }[];
+  };
+};
+
+export type ShopifyUpdateDiscountCodesToCartOperation = {
+  data: {
+    cartDiscountCodesUpdate: {
+      cart: ShopifyCart;
+      userErrors: UserError[];
+    };
+  };
+  variables: {
+    cartId: string;
+    discountCodes: string[];
   };
 };
 

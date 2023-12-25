@@ -1,4 +1,5 @@
 import { CurrencyPosition } from "@/shared/types/currency";
+import cx from "classnames";
 import type { FC } from "react";
 
 interface PriceProps {
@@ -6,18 +7,22 @@ interface PriceProps {
   currency?: string;
   price: number;
   className?: string;
+  negative?: boolean;
 }
 
 const Price: FC<PriceProps> = ({
-  currency,
-  currencyPosition,
+  currency = "₹",
+  currencyPosition = CurrencyPosition.Left,
   price,
   className,
+  negative = false,
 }) => (
-  <span className={className}>
-    {currencyPosition === CurrencyPosition.Left && currency}
-    {price}
-    {currencyPosition === CurrencyPosition.Right && currency}
+  <span className={cx("whitespace-nowrap", className)}>
+    {`${negative ? "- " : ""}${
+      currencyPosition === CurrencyPosition.Left ? currency : ""
+    }${price.toFixed(2)}${
+      currencyPosition === CurrencyPosition.Right ? currency : ""
+    }`}
   </span>
 );
 

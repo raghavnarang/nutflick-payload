@@ -7,7 +7,6 @@ import { cookies } from "next/headers";
 
 const Header = async () => {
   const cartId = cookies().get("cartId")?.value;
-
   const cart = cartId ? await getCart(cartId) : undefined;
 
   const navItems = [
