@@ -16,12 +16,22 @@ const CartItem: FC<CartItemProps> = ({ item }) => {
     product.variants.find(({ id }) => variantMerch.id === id) ||
     product.variants[0];
   const variants = product.variants;
-  const hasVariants = variants.length > 1 || undefined;
+  const hasMultipleVariants = variants.length > 1 || undefined;
 
-  const variantId = variantMerch.id.split("gid://shopify/ProductVariant/")[1];
-
-  const link =
-    `/product/${product.handle}` + (hasVariants ? `?variant=${variantId}` : "");
+  const link = {
+    pathname: `/product/${product.handle}`,
+    query: hasMultipleVariants && {
+      ...variantMerch.selectedOptions.reduce(
+        (final, current) => ({
+          ...final,
+          [current.name.toLowerCase()]: current.value
+            .replace(" ", "")
+            .toLowerCase(),
+        }),
+        {}
+      ),
+    },
+  };
 
   return (
     <div
@@ -44,7 +54,7 @@ const CartItem: FC<CartItemProps> = ({ item }) => {
             </span>
             <Link href={link} className="block mb-1">
               {product.title}
-              {hasVariants && ` - ${variantMerch?.title}`}
+              {hasMultipleVariants && ` - ${variantMerch.title}`}
             </Link>
             <Price
               price={parseFloat(variant.price.amount)}

@@ -12,16 +12,19 @@ const Cart = async () => {
     <div className="flex justify-center">
       <div className="max-w-7xl w-full">
         <h1 className="text-2xl mb-10">Cart</h1>
-        <div className="flex justify-center items-start lg:flex-row flex-col">
-          <div className="lg:w-2/3 lg:mr-10 w-full">
-            {cart?.lines.map((line) => (
-              <CartItem item={line} key={line.id} />
-            ))}
 
-            {!cart && <EmptyCart />}
+        {!cart && <EmptyCart />}
+
+        {cart && (
+          <div className="flex justify-center items-start lg:flex-row flex-col">
+            <div className="lg:w-2/3 lg:mr-10 w-full">
+              {cart?.lines.map((line) => (
+                <CartItem item={line} key={line.id} />
+              ))}
+            </div>
+            <CartSummary cart={cart} />
           </div>
-          {cart && <CartSummary cart={cart} />}
-        </div>
+        )}
       </div>
     </div>
   );
