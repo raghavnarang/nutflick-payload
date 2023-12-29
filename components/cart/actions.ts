@@ -9,13 +9,11 @@ import {
   updateCart,
   updateDiscountCodesToCart,
 } from "@/lib/shopify";
+import { Status } from "@/shared/types/status";
 import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 
-export async function addItem(
-  prevState: any,
-  selectedVariantId: string | undefined
-) {
+export async function addItem(selectedVariantId: string) {
   let cartId = cookies().get("cartId")?.value;
   let cart;
 
@@ -30,7 +28,7 @@ export async function addItem(
   }
 
   if (!selectedVariantId) {
-    return { message: "Missing product variant ID" };
+    return { message: "Missing product variant ID", status: Status.error };
   }
 
   try {
@@ -38,39 +36,36 @@ export async function addItem(
       { merchandiseId: selectedVariantId, quantity: 1 },
     ]);
     revalidateTag(TAGS.cart);
-    return { message: "Added to Cart" };
+    return { message: "Added to Cart", status: Status.success };
   } catch (e) {
-    return { message: "Error adding item to cart" };
+    return { message: "Unable to add item to cart", status: Status.error };
   }
 }
 
-export async function removeItem(prevState: any, lineId: string) {
+export async function removeItem(lineId: string) {
   const cartId = cookies().get("cartId")?.value;
 
   if (!cartId) {
-    return "Missing cart ID";
+    return { message: "Missing cart ID", status: Status.error };
   }
 
   try {
     await removeFromCart(cartId, [lineId]);
     revalidateTag(TAGS.cart);
+    return { message: "Item removed from cart", status: Status.success };
   } catch (e) {
-    return "Error removing item from cart";
+    return { message: "Error removing item from cart", status: Status.error };
   }
 }
 
 export async function updateItemQuantity(
   prevState: any,
-  payload: {
-    lineId: string;
-    variantId: string;
-    quantity: number;
-  }
+  payload: { lineId: string; variantId: string; quantity: number }
 ) {
   const cartId = cookies().get("cartId")?.value;
 
   if (!cartId) {
-    return "Missing cart ID";
+    return { message: "Missing cart ID", status: Status.error };
   }
 
   const { lineId, variantId, quantity } = payload;
@@ -91,20 +86,19 @@ export async function updateItemQuantity(
     ]);
     revalidateTag(TAGS.cart);
   } catch (e) {
-    return "Error updating item quantity";
+    return { message: "Error updating item quantity", status: Status.error };
   }
 }
 
-export async function addCartDiscountCode(prevState: any, formData: FormData) {
+export async function addCartDiscountCode(code: string) {
   const cartId = cookies().get("cartId")?.value;
 
   if (!cartId) {
-    return { message: "Missing cart ID" };
+    return { message: "Missing cart ID", status: Status.error };
   }
 
-  const code = formData.get("code");
   if (typeof code !== "string" || code.length === 0) {
-    return { message: "Empty discount code provided" };
+    return { message: "Empty discount code provided", status: Status.error };
   }
 
   try {
@@ -118,9 +112,12 @@ export async function addCartDiscountCode(prevState: any, formData: FormData) {
 
     if (existingCoupon) {
       if (existingCoupon.applicable) {
-        return { message: "Discount code is already applied" };
+        return {
+          message: "Discount code is already applied",
+          status: Status.error,
+        };
       } else {
-        return { message: "Coupon code is invalid" };
+        return { message: "Coupon code is invalid", status: Status.error };
       }
     }
 
@@ -132,7 +129,7 @@ export async function addCartDiscountCode(prevState: any, formData: FormData) {
     revalidateTag(TAGS.cart);
 
     if (errors?.length && errors.length > 0) {
-      return { message: errors.join(" | ") };
+      return { message: errors.join(" | "), status: Status.error };
     }
 
     if (
@@ -140,28 +137,27 @@ export async function addCartDiscountCode(prevState: any, formData: FormData) {
         (discount) => discount.code.toLowerCase() === code.toLowerCase()
       )?.applicable
     ) {
-      return { message: "Coupon code is invalid" };
+      return { message: "Coupon code is invalid", status: Status.error };
     }
 
-    return { message: "Coupon applied successfully" };
+    return { message: "Code applied successfully", status: Status.success };
   } catch (e) {
-    return { message: "Error updating discount codes to cart" };
+    return {
+      message: "Error updating discount codes to cart",
+      status: Status.error,
+    };
   }
 }
 
-export async function removeCartDiscountCode(
-  prevState: any,
-  formData: FormData
-) {
+export async function removeCartDiscountCode(code: string) {
   const cartId = cookies().get("cartId")?.value;
 
   if (!cartId) {
-    return { message: "Missing cart ID" };
+    return { message: "Missing cart ID", status: Status.error };
   }
 
-  const code = formData.get("code");
   if (typeof code !== "string" || code.length === 0) {
-    return { message: "Empty discount code provided" };
+    return { message: "Empty discount code provided", status: Status.error };
   }
 
   try {
@@ -169,9 +165,12 @@ export async function removeCartDiscountCode(
     const discounts =
       cart?.discountCodes.map((discount) => discount.code.toLowerCase()) || [];
 
-    if (!discounts.includes(code.toLowerCase())) {
-      return { message: "Unable to find coupon code in cart" };
-    }
+    // if (!discounts.includes(code.toLowerCase())) {
+    //   return {
+    //     message: "Unable to find coupon code in cart",
+    //     status: Status.error,
+    //   };
+    // }
 
     const { errors } = await updateDiscountCodesToCart(
       cartId,
@@ -181,11 +180,14 @@ export async function removeCartDiscountCode(
     revalidateTag(TAGS.cart);
 
     if (errors?.length && errors.length > 0) {
-      return { message: errors.join(" | ") };
+      return { message: errors.join(" | "), status: Status.error };
     }
 
-    return { message: "Coupon applied successfully" };
+    return { message: "Code removed successfully", status: Status.success };
   } catch (e) {
-    return { message: "Error updating discount codes to cart" };
+    return {
+      message: "Error updating discount codes to cart",
+      status: Status.error,
+    };
   }
 }

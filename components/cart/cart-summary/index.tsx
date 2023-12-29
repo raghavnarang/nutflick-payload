@@ -4,6 +4,7 @@ import type { FC } from "react";
 import DiscountTag from "./discount-tag";
 import ApplyDiscount from "./apply-discount";
 import Link from "next/link";
+import Button from "@/components/button";
 
 interface CartSummaryProps {
   cart: Cart;
@@ -57,12 +58,9 @@ const CartSummary: FC<CartSummaryProps> = ({ cart }) => {
           />
         </div>
       </div>
-      <Link
-        href={cart.checkoutUrl}
-        className="block text-lg w-full text-center bg-red-500 text-white rounded-lg py-3"
-      >
-        Proceed to Checkout
-      </Link>
+      <Button>
+        <Link href={cart.checkoutUrl}>Proceed to Checkout</Link>
+      </Button>
     </div>
   );
 };

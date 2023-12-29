@@ -1,15 +1,11 @@
 import Link from "next/link";
+import BigMessage from "../big-message";
+import Cart from "../Icons/cart";
 
 const EmptyCart = () => (
-  <div>
-    <p>No Items in Cart</p>
-    <Link
-      href="/"
-      className="bg-red-500 text-white px-4 py-2 rounded-sm inline-block mt-5"
-    >
-      Go to Home
-    </Link>
-  </div>
+  <BigMessage icon={Cart} button={{ text: <Link href="/">Go to Home</Link> }}>
+    No Items in Cart. Go to home & add some items in cart to proceed.
+  </BigMessage>
 );
 
 export default EmptyCart;

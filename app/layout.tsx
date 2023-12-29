@@ -4,6 +4,7 @@ import "./globals.css";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import Body from "@/components/body";
+import { ToastProvider } from "@/features/toast";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,13 +22,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <div className="flex flex-col justify-between min-h-screen px-5">
-          <div>
-            <Header />
-            <Body>{children}</Body>
+        <ToastProvider>
+          <div className="flex flex-col justify-between min-h-screen px-5">
+            <div>
+              <Header />
+              <Body>{children}</Body>
+            </div>
+            <Footer />
           </div>
-          <Footer />
-        </div>
+        </ToastProvider>
       </body>
     </html>
   );

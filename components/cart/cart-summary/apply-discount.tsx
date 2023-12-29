@@ -1,30 +1,35 @@
 "use client";
 
-import { useFormState, useFormStatus } from "react-dom";
 import { addCartDiscountCode } from "../actions";
-import { useEffect, useRef } from "react";
-import FormTooltip from "../form-tooltip";
+import { useState } from "react";
+import useToastWithServerPromise from "@/features/toast/hooks/use-toast-with-server-promise";
 
-const ApplyDiscountForm = ({ toast }: { toast?: { message: string } }) => {
-  const { pending } = useFormStatus();
 
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    if (inputRef.current) {
-      inputRef.current.value = "";
-    }
-  }, [toast]);
+const ApplyDiscount = () => {
+  const [code, setCode] = useState("");
+  const [pending, addDiscount] = useToastWithServerPromise(
+    () => addCartDiscountCode(code),
+    `Applying code: ${code}`,
+    undefined,
+    () => setCode("")
+  );
 
   return (
-    <div className="flex w-full">
+    <form
+      className="w-full flex items-center relative"
+      onSubmit={(e) => {
+        e.preventDefault();
+        addDiscount();
+      }}
+    >
       <input
         className="text-sm px-3 py-2 border border-solid border-gray-300 focus:border-gray-400 outline-none rounded-sm w-full mr-5 disabled:opacity-50"
         type="text"
         name="code"
         placeholder="Discount Code"
         required
-        ref={inputRef}
+        value={code}
+        onChange={(e) => setCode(e.target.value)}
         disabled={pending}
       />
       <button
@@ -34,17 +39,6 @@ const ApplyDiscountForm = ({ toast }: { toast?: { message: string } }) => {
       >
         Apply
       </button>
-    </div>
-  );
-};
-
-const ApplyDiscount = () => {
-  const [message, formAction] = useFormState(addCartDiscountCode, null);
-
-  return (
-    <form action={formAction} className="w-full flex items-center relative">
-      <ApplyDiscountForm toast={message || undefined} />
-      <FormTooltip value={message || undefined} className="-bottom-6" />
     </form>
   );
 };

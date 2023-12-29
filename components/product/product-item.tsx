@@ -3,7 +3,7 @@ import type { FC } from "react";
 import Price from "./price";
 import Link from "next/link";
 import type { Product, ProductVariant } from "@/lib/shopify/types";
-import AddToCart from "../cart/product-item/add-to-cart";
+import AddToCart from "../cart/add-to-cart";
 
 interface ProductItemProps {
   product: Product;
@@ -61,7 +61,7 @@ const ProductItem: FC<ProductItemProps> = ({
             {product.productType}
           </span>
         )}
-        <span className="block">{product.title}</span>
+        <span className="block">{product.title}{hasMultipleVariants ? ` - ${variant.title}`: ''}</span>
       </Link>
       <div className="flex items-end justify-between mt-3">
         <div>
@@ -76,7 +76,7 @@ const ProductItem: FC<ProductItemProps> = ({
             className="text-xl ml-2"
           />
         </div>
-        <AddToCart variantId={variant.id} />
+        <AddToCart product={product} variant={variant} />
       </div>
     </div>
   );

@@ -13,9 +13,9 @@ const Cart = async () => {
       <div className="max-w-7xl w-full">
         <h1 className="text-2xl mb-10">Cart</h1>
 
-        {!cart && <EmptyCart />}
+        {(!cart || cart.lines.length === 0) && <EmptyCart />}
 
-        {cart && (
+        {cart && cart.lines.length > 0 && (
           <div className="flex justify-center items-start lg:flex-row flex-col">
             <div className="lg:w-2/3 lg:mr-10 w-full">
               {cart?.lines.map((line) => (

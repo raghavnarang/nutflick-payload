@@ -1,10 +1,10 @@
 import { getProduct } from "@/lib/shopify";
 import type { FC } from "react";
 import Image from "next/image";
-import ErrorMessage from "@/components/error";
+import ErrorMessage from "@/components/error-message";
 import cx from "classnames";
 import Link from "next/link";
-import AddToCart from "@/components/cart/product-item/add-to-cart";
+import AddToCart from "@/components/cart/add-to-cart";
 
 interface ProductProps {
   params: { slug: string };
@@ -27,14 +27,14 @@ const Product: FC<ProductProps> = async ({
     );
   }
 
-  const variantId =
+  const variant =
     product.variants.find((variant) =>
       variant.selectedOptions.every(
         (option) =>
           searchParams[option.name.toLowerCase()] ===
           option.value.replace(" ", "").toLowerCase()
       )
-    )?.id || product.variants[0].id;
+    ) || product.variants[0];
 
   return (
     <div className="w-full flex gap-10">
@@ -54,7 +54,7 @@ const Product: FC<ProductProps> = async ({
         {product.options.every((option) => option.values.length > 1) &&
           product.options.map((option) => (
             <div key={option.id}>
-              <p className="text-lg mb-2">{option.name}</p>
+              <p className="text-lg mb-3">{option.name}</p>
               {option.values.map((value) => {
                 const isSelected =
                   searchParams[option.name.toLowerCase()] ===
@@ -88,7 +88,7 @@ const Product: FC<ProductProps> = async ({
               })}
             </div>
           ))}
-        <AddToCart variantId={variantId} bigButton />
+        <AddToCart bigButton product={product} variant={variant} />
       </div>
     </div>
   );
