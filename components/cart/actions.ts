@@ -12,12 +12,26 @@ import {
 import { Status } from "@/shared/types/status";
 import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
+import z from "zod";
+
+const stringSchema = z.string().min(1);
+const numberSchema = z.number();
+const updateItemQuantityPayloadSchema = z.object({
+  lineId: stringSchema,
+  variantId: stringSchema,
+  quantity: numberSchema,
+});
 
 export async function addItem(selectedVariantId: string) {
   let cartId = cookies().get("cartId")?.value;
-  let cart;
 
+  let cart;
   if (cartId) {
+    const validation = stringSchema.safeParse(cartId);
+    if (!validation.success) {
+      return { message: "Invalid data detected.", status: Status.error };
+    }
+
     cart = await getCart(cartId);
   }
 
@@ -45,6 +59,12 @@ export async function addItem(selectedVariantId: string) {
 export async function removeItem(lineId: string) {
   const cartId = cookies().get("cartId")?.value;
 
+  const cartValidation = stringSchema.safeParse(cartId);
+  const lineValidation = stringSchema.safeParse(lineId);
+  if (!cartValidation.success || !lineValidation.success) {
+    return { message: "Invalid data detected.", status: Status.error };
+  }
+
   if (!cartId) {
     return { message: "Missing cart ID", status: Status.error };
   }
@@ -63,6 +83,12 @@ export async function updateItemQuantity(
   payload: { lineId: string; variantId: string; quantity: number }
 ) {
   const cartId = cookies().get("cartId")?.value;
+
+  const cartValidation = stringSchema.safeParse(cartId);
+  const payloadValidation = updateItemQuantityPayloadSchema.safeParse(payload);
+  if (!cartValidation.success || !payloadValidation.success) {
+    return { message: "Invalid data detected.", status: Status.error };
+  }
 
   if (!cartId) {
     return { message: "Missing cart ID", status: Status.error };
@@ -92,6 +118,12 @@ export async function updateItemQuantity(
 
 export async function addCartDiscountCode(code: string) {
   const cartId = cookies().get("cartId")?.value;
+
+  const cartValidation = stringSchema.safeParse(cartId);
+  const codeValidation = stringSchema.safeParse(code);
+  if (!cartValidation.success || !codeValidation.success) {
+    return { message: "Invalid data detected.", status: Status.error };
+  }
 
   if (!cartId) {
     return { message: "Missing cart ID", status: Status.error };
@@ -152,6 +184,12 @@ export async function addCartDiscountCode(code: string) {
 export async function removeCartDiscountCode(code: string) {
   const cartId = cookies().get("cartId")?.value;
 
+  const cartValidation = stringSchema.safeParse(cartId);
+  const codeValidation = stringSchema.safeParse(code);
+  if (!cartValidation.success || !codeValidation.success) {
+    return { message: "Invalid data detected.", status: Status.error };
+  }
+
   if (!cartId) {
     return { message: "Missing cart ID", status: Status.error };
   }
@@ -165,12 +203,12 @@ export async function removeCartDiscountCode(code: string) {
     const discounts =
       cart?.discountCodes.map((discount) => discount.code.toLowerCase()) || [];
 
-    // if (!discounts.includes(code.toLowerCase())) {
-    //   return {
-    //     message: "Unable to find coupon code in cart",
-    //     status: Status.error,
-    //   };
-    // }
+    if (!discounts.includes(code.toLowerCase())) {
+      return {
+        message: "Unable to find coupon code in cart",
+        status: Status.error,
+      };
+    }
 
     const { errors } = await updateDiscountCodesToCart(
       cartId,
