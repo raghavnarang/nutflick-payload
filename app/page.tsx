@@ -1,9 +1,13 @@
 import ProductItem from "@/components/product/product-item";
-import { getProducts } from "@/lib/shopify";
+import { getCart, getProducts } from "@/lib/shopify";
+import { cookies } from "next/headers";
 import { ReactNode } from "react";
 
 const Home = async () => {
   const products = await getProducts({});
+
+  const cartId = cookies().get("cartId")?.value;
+  const cart = cartId ? await getCart(cartId) : undefined;
 
   return (
     <div className="flex flex-wrap gap-10 w-auto justify-center">
@@ -13,7 +17,10 @@ const Home = async () => {
           product.variants.map((variant) => (
             <ProductItem
               product={product}
-              variant={product.variants.length > 1 ? variant : undefined}
+              variant={variant}
+              cartItem={cart?.lines.find(
+                (item) => item.merchandise.id === variant.id
+              )}
               key={variant.id}
             />
           )),

@@ -4,6 +4,7 @@ import Image from "next/image";
 import type { FC } from "react";
 import Price from "../product/price";
 import EditItemQuantityButton from "./edit-item-quantity-button";
+import EditItemQuantity from "./edit-item-quantity";
 
 interface CartItemProps {
   item: CartItemType;
@@ -61,11 +62,12 @@ const CartItem: FC<CartItemProps> = ({ item }) => {
               className="block text-gray-600"
             />
           </div>
-          <div className="flex">
+          {/* <div className="flex">
             <EditItemQuantityButton type="minus" item={item} />
             <span className="px-3">{item.quantity}</span>
             <EditItemQuantityButton type="plus" item={item} />
-          </div>
+          </div> */}
+          <EditItemQuantity item={item} />
         </div>
       </div>
 

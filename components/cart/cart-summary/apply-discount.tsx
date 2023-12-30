@@ -35,7 +35,7 @@ const ApplyDiscount = () => {
       <button
         type="submit"
         disabled={pending}
-        className="rounded-sm text-sm bg-gray-200 px-3 py-2 hover:bg-gray-300 disabled:hover:bg-gray-200 transition-colors disabled:opacity-50"
+        className="rounded-sm text-sm bg-gray-200 text-gray-700 px-3 py-2 hover:bg-gray-30æ0 disabled:hover:bg-gray-200 transition-colors disabled:opacity-50"
       >
         Apply
       </button>

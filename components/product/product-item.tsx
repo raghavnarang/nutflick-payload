@@ -2,18 +2,18 @@ import Image from "next/image";
 import type { FC } from "react";
 import Price from "./price";
 import Link from "next/link";
-import type { Product, ProductVariant } from "@/lib/shopify/types";
+import type { CartItem, Product, ProductVariant } from "@/lib/shopify/types";
 import AddToCart from "../cart/add-to-cart";
+import EditItemQuantity from "../cart/edit-item-quantity";
+import Button from "../button";
 
 interface ProductItemProps {
   product: Product;
-  variant?: ProductVariant;
+  variant: ProductVariant;
+  cartItem?: CartItem;
 }
 
-const ProductItem: FC<ProductItemProps> = ({
-  product,
-  variant = product.variants[0],
-}) => {
+const ProductItem: FC<ProductItemProps> = ({ product, variant, cartItem }) => {
   const { handle: slug } = product;
   const hasMultipleVariants = product.variants.length > 1;
 
@@ -61,22 +61,33 @@ const ProductItem: FC<ProductItemProps> = ({
             {product.productType}
           </span>
         )}
-        <span className="block">{product.title}{hasMultipleVariants ? ` - ${variant.title}`: ''}</span>
+        <span className="block">
+          {product.title}
+          {hasMultipleVariants ? ` - ${variant.title}` : ""}
+        </span>
       </Link>
-      <div className="flex items-end justify-between mt-3">
-        <div>
-          {variant.compareAtPrice.amount && (
-            <Price
-              price={parseFloat(variant.compareAtPrice.amount)}
-              className="line-through text-gray-500"
-            />
-          )}
+
+      <div className="mt-3">
+        {variant.compareAtPrice.amount && (
           <Price
-            price={parseFloat(variant.price.amount)}
-            className="text-xl ml-2"
+            price={parseFloat(variant.compareAtPrice.amount)}
+            className="line-through text-gray-500"
           />
-        </div>
-        <AddToCart product={product} variant={variant} />
+        )}
+        <Price
+          price={parseFloat(variant.price.amount)}
+          className="text-xl ml-2"
+        />
+      </div>
+      <div className="mt-3">
+        {!cartItem ? (
+          <AddToCart product={product} variant={variant} showIcon />
+        ) : (
+          <div className="flex items-center justify-between">
+            <EditItemQuantity item={cartItem} />
+            <Button isSecondary small>Remove from Cart</Button>
+          </div>
+        )}
       </div>
     </div>
   );

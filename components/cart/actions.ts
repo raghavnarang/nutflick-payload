@@ -111,6 +111,7 @@ export async function updateItemQuantity(
       },
     ]);
     revalidateTag(TAGS.cart);
+    return { message: "Item quantity updated", status: Status.success };
   } catch (e) {
     return { message: "Error updating item quantity", status: Status.error };
   }

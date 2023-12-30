@@ -10,7 +10,7 @@ type UseToastWithServerPromiseHookType = (
   promiseCallback: () => Promise<ServerMessage | undefined>,
   pendingMessage?: string,
   product?: ProductMinimal,
-  after?: () => void
+  after?: (message?: ServerMessage) => void
 ) => [boolean, () => void];
 
 const useToastWithServerPromise: UseToastWithServerPromiseHookType = (
@@ -36,20 +36,20 @@ const useToastWithServerPromise: UseToastWithServerPromiseHookType = (
 
     setPending(true);
 
-    const { message, status: type } = (await promiseCallback()) || {};
+    const message = await promiseCallback();
 
     if (message) {
       addToast({
         ...toastItem,
         ...{
-          message,
-          type,
+          message: message.message,
+          type: message.status,
         },
         isDismissable: true,
       });
     }
     setPending(false);
-    after?.();
+    after?.(message);
   };
 
   return [pending, execute];
