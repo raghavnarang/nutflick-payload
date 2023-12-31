@@ -13,7 +13,7 @@ const ProductGrid: FC<ProductGrid> = async ({ products }) => {
   const cart = cartId ? await getCart(cartId) : undefined;
   
   return (
-    <div className="flex flex-wrap gap-10 w-auto justify-center">
+    <div className="grid gap-10 xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 grid-cols-1">
       {products.reduce<ReactNode[]>(
         (productNodes, product) => [
           ...productNodes,

@@ -14,7 +14,7 @@ const ProductRecommendations: FC<ProductRecommendationsProps> = async ({
   if (products.length === 0) return null;
   return (
     <div className="mt-20 mb-10">
-      <p className="text-2xl text-center mb-10">Related Products</p>
+      <p className="text-2xl mb-10">Related Products</p>
       <ProductGrid products={products} />
     </div>
   );

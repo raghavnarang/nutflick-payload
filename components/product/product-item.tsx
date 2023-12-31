@@ -32,7 +32,7 @@ const ProductItem: FC<ProductItemProps> = ({ product, variant, cartItem }) => {
   };
 
   return (
-    <div className="w-full lg:w-1/5 md:w-1/3 sm:w-1/2">
+    <div className="w-full">
       <Link
         href={link}
         className="w-full 2xl:h-72 xl:h-60 sm:h-52 h-72 relative mb-5 block"
