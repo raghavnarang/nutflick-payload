@@ -1,35 +1,22 @@
 "use client";
 
 import { addCartDiscountCode } from "../actions";
-import { useState } from "react";
-import useToastWithServerPromise from "@/features/toast/hooks/use-toast-with-server-promise";
+import { useEffect, useRef } from "react";
+import { useFormState, useFormStatus } from "react-dom";
+import { useToast } from "@/features/toast";
+import { Status } from "@/shared/types/status";
 
-
-const ApplyDiscount = () => {
-  const [code, setCode] = useState("");
-  const [pending, addDiscount] = useToastWithServerPromise(
-    () => addCartDiscountCode(code),
-    `Applying code: ${code}`,
-    undefined,
-    () => setCode("")
-  );
+const FormContents = () => {
+  const { pending } = useFormStatus();
 
   return (
-    <form
-      className="w-full flex items-center relative"
-      onSubmit={(e) => {
-        e.preventDefault();
-        addDiscount();
-      }}
-    >
+    <div className="flex w-full">
       <input
         className="text-sm px-3 py-2 border border-solid border-gray-300 focus:border-gray-400 outline-none rounded-sm w-full mr-5 disabled:opacity-50"
         type="text"
         name="code"
         placeholder="Discount Code"
         required
-        value={code}
-        onChange={(e) => setCode(e.target.value)}
         disabled={pending}
       />
       <button
@@ -39,6 +26,33 @@ const ApplyDiscount = () => {
       >
         Apply
       </button>
+    </div>
+  );
+};
+
+const ApplyDiscount = () => {
+  const [result, formAction] = useFormState(addCartDiscountCode, null);
+  const formRef = useRef<HTMLFormElement>(null);
+
+  const { addToast } = useToast();
+
+  useEffect(() => {
+    if (result) {
+      formRef.current?.reset();
+      if (result.status !== Status.success) {
+        addToast({
+          message: result.message,
+          type: result.status,
+          id: Date.now(),
+          isDismissable: true,
+        });
+      }
+    }
+  }, [result]);
+
+  return (
+    <form action={formAction} ref={formRef} className="w-full flex items-center">
+      <FormContents />
     </form>
   );
 };

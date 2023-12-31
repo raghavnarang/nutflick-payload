@@ -22,7 +22,7 @@ const updateItemQuantityPayloadSchema = z.object({
   quantity: numberSchema,
 });
 
-export async function addItem(selectedVariantId: string) {
+export async function addItem(prevState: any, selectedVariantId: string) {
   let cartId = cookies().get("cartId")?.value;
 
   let cart;
@@ -56,7 +56,7 @@ export async function addItem(selectedVariantId: string) {
   }
 }
 
-export async function removeItem(lineId: string) {
+export async function removeItem(prevState: any, lineId: string) {
   const cartId = cookies().get("cartId")?.value;
 
   const cartValidation = stringSchema.safeParse(cartId);
@@ -78,10 +78,11 @@ export async function removeItem(lineId: string) {
   }
 }
 
-export async function updateItemQuantity(
-  prevState: any,
-  payload: { lineId: string; variantId: string; quantity: number }
-) {
+export async function updateItemQuantity(payload: {
+  lineId: string;
+  variantId: string;
+  quantity: number;
+}) {
   const cartId = cookies().get("cartId")?.value;
 
   const cartValidation = stringSchema.safeParse(cartId);
@@ -117,8 +118,9 @@ export async function updateItemQuantity(
   }
 }
 
-export async function addCartDiscountCode(code: string) {
+export async function addCartDiscountCode(prevState: any, data: FormData) {
   const cartId = cookies().get("cartId")?.value;
+  const code = data.get("code") as string;
 
   const cartValidation = stringSchema.safeParse(cartId);
   const codeValidation = stringSchema.safeParse(code);
@@ -128,10 +130,6 @@ export async function addCartDiscountCode(code: string) {
 
   if (!cartId) {
     return { message: "Missing cart ID", status: Status.error };
-  }
-
-  if (typeof code !== "string" || code.length === 0) {
-    return { message: "Empty discount code provided", status: Status.error };
   }
 
   try {
@@ -176,13 +174,13 @@ export async function addCartDiscountCode(code: string) {
     return { message: "Code applied successfully", status: Status.success };
   } catch (e) {
     return {
-      message: "Error updating discount codes to cart",
+      message: "Error updating discount code to cart",
       status: Status.error,
     };
   }
 }
 
-export async function removeCartDiscountCode(code: string) {
+export async function removeCartDiscountCode(prevState: any, code: string) {
   const cartId = cookies().get("cartId")?.value;
 
   const cartValidation = stringSchema.safeParse(cartId);
@@ -225,7 +223,7 @@ export async function removeCartDiscountCode(code: string) {
     return { message: "Code removed successfully", status: Status.success };
   } catch (e) {
     return {
-      message: "Error updating discount codes to cart",
+      message: "Error updating discount code to cart",
       status: Status.error,
     };
   }

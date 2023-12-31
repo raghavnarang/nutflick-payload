@@ -88,7 +88,7 @@ const Product: FC<ProductProps> = async ({
               })}
             </div>
           ))}
-        <AddToCart bigButton product={product} variant={variant} />
+        <AddToCart bigButton variantId={variant.id} />
       </div>
     </div>
   );

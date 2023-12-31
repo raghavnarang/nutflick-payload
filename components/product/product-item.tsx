@@ -4,8 +4,7 @@ import Price from "./price";
 import Link from "next/link";
 import type { CartItem, Product, ProductVariant } from "@/lib/shopify/types";
 import AddToCart from "../cart/add-to-cart";
-import EditItemQuantity from "../cart/edit-item-quantity";
-import Button from "../button";
+import EditCartItem from "../cart/edit-cart-item";
 
 interface ProductItemProps {
   product: Product;
@@ -81,12 +80,9 @@ const ProductItem: FC<ProductItemProps> = ({ product, variant, cartItem }) => {
       </div>
       <div className="mt-3">
         {!cartItem ? (
-          <AddToCart product={product} variant={variant} showIcon />
+          <AddToCart variantId={variant.id} showIcon />
         ) : (
-          <div className="flex items-center justify-between">
-            <EditItemQuantity item={cartItem} />
-            <Button isSecondary small>Remove from Cart</Button>
-          </div>
+          <EditCartItem item={cartItem} />
         )}
       </div>
     </div>
