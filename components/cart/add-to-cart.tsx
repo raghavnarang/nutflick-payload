@@ -29,7 +29,7 @@ const SubmitButton: FC<SubmitButtonProps> = ({ bigButton, showIcon }) => {
   return (
     <Button
       disabled={pending}
-      className={cx({ "!w-1/2 mt-10": bigButton })}
+      className={cx({ "!w-1/2": bigButton })}
       icon={showIcon ? Cart : undefined}
       large={bigButton}
       small={!bigButton}

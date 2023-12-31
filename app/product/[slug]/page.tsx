@@ -1,10 +1,12 @@
-import { getProduct } from "@/lib/shopify";
+import { getCart, getProduct } from "@/lib/shopify";
 import type { FC } from "react";
 import Image from "next/image";
 import ErrorMessage from "@/components/error-message";
 import cx from "classnames";
 import Link from "next/link";
 import AddToCart from "@/components/cart/add-to-cart";
+import { cookies } from "next/headers";
+import EditCartItem from "@/components/cart/edit-cart-item";
 
 interface ProductProps {
   params: { slug: string };
@@ -16,6 +18,9 @@ const Product: FC<ProductProps> = async ({
   searchParams,
 }) => {
   const product = await getProduct(productHandle);
+
+  const cartId = cookies().get("cartId")?.value;
+  const cart = cartId ? await getCart(cartId) : undefined;
 
   if (!product) {
     return (
@@ -35,6 +40,10 @@ const Product: FC<ProductProps> = async ({
           option.value.replace(" ", "").toLowerCase()
       )
     ) || product.variants[0];
+
+  const cartItem = cart?.lines.find(
+    (line) => line.merchandise.id === variant.id
+  );
 
   return (
     <div className="w-full flex gap-10">
@@ -88,7 +97,14 @@ const Product: FC<ProductProps> = async ({
               })}
             </div>
           ))}
-        <AddToCart bigButton variantId={variant.id} />
+        <div className="mt-10">
+          {cartItem && <p className="text-lg mb-3">Quantity (in cart)</p>}
+          {!cartItem ? (
+            <AddToCart bigButton variantId={variant.id} />
+          ) : (
+            <EditCartItem item={cartItem} bigButton />
+          )}
+        </div>
       </div>
     </div>
   );

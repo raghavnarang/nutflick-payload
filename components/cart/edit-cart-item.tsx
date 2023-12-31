@@ -1,6 +1,13 @@
 "use client";
 
-import { useState, type FC, useTransition, useEffect, useRef } from "react";
+import {
+  useState,
+  type FC,
+  useTransition,
+  useEffect,
+  useRef,
+  TransitionStartFunction,
+} from "react";
 import Plus from "../Icons/plus";
 import { removeItem, updateItemQuantity } from "./actions";
 import { ServerMessage } from "@/shared/types/server-message";
@@ -16,31 +23,66 @@ import cx from "classnames";
 interface EditCartItemProps {
   item: CartItem;
   className?: string;
+  bigButton?: boolean;
 }
 
-const FormControls: FC<EditCartItemProps> = ({ item, className }) => {
-  const { pending: removePending } = useFormStatus();
+interface FormControlProps {
+  item: CartItem;
+  pending: boolean;
+}
 
-  const [removeResult, removeAction] = useFormState(removeItem, null);
-  const removeActionWithPayload = removeAction.bind(null, item.id);
+interface UpdateItemQuantityProps extends FormControlProps {
+  startTransition: TransitionStartFunction;
+}
+
+interface RemoveFromCartProps extends FormControlProps {
+  bigButton?: boolean;
+}
+
+const RemoveFromCart: FC<RemoveFromCartProps> = ({
+  item,
+  pending,
+  bigButton = false,
+}) => {
+  const [result, action] = useFormState(removeItem, null);
+  const actionWithPayload = action.bind(null, item.id);
 
   const { addToast } = useToast();
 
   useEffect(() => {
-    if (removeResult && removeResult.status === Status.error) {
+    if (result && result.status === Status.error) {
       addToast({
-        message: removeResult.message,
-        type: removeResult.status,
+        message: result.message,
+        type: result.status,
         id: Date.now(),
         isDismissable: true,
       });
     }
-  }, [removeResult]);
+  }, [result]);
 
-  const [pending, startTransition] = useTransition();
+  return (
+    <Button
+      isSecondary
+      small={!bigButton}
+      large={bigButton}
+      className={cx({ "w-1/2 mt-10": bigButton })}
+      disabled={pending}
+      formAction={actionWithPayload}
+    >
+      Remove from Cart
+    </Button>
+  );
+};
 
+const UpdateItemQuantity: FC<UpdateItemQuantityProps> = ({
+  item,
+  pending,
+  startTransition,
+}) => {
   const [qty, setQty] = useState(() => item.quantity);
   const updateQtyResult = useRef<ServerMessage>();
+
+  const { addToast } = useToast();
 
   useEffect(() => {
     const result = updateQtyResult.current;
@@ -61,8 +103,12 @@ const FormControls: FC<EditCartItemProps> = ({ item, className }) => {
     updateQtyResult.current = undefined;
   }, [pending]);
 
+  useEffect(() => {
+    setQty(item.quantity);
+  }, [item]);
+
   const debouncedUpdateQty = useDebouncedCallback((value: number) => {
-    startTransition(async () => {
+    startTransition!(async () => {
       const result = await updateItemQuantity({
         lineId: item.id,
         variantId: item.merchandise.id,
@@ -80,32 +126,53 @@ const FormControls: FC<EditCartItemProps> = ({ item, className }) => {
   };
 
   return (
-    <div className={cx("flex items-center justify-between", className)}>
-      <div className="flex mr-5">
-        <button
-          formAction={() => updateQty("decrement")}
-          disabled={removePending || pending || qty === 1}
-          className="disabled:opacity-50"
-        >
-          <Minus className="text-red-500" />
-        </button>
-        <span className="px-3">{qty}</span>
-        <button
-          formAction={() => updateQty("increment")}
-          disabled={removePending || pending}
-          className="disabled:opacity-50"
-        >
-          <Plus className="text-red-500" />
-        </button>
-      </div>
-      <Button
-        isSecondary
-        small
-        disabled={removePending || pending}
-        formAction={removeActionWithPayload}
+    <div className="flex mr-5">
+      <button
+        formAction={() => updateQty("decrement")}
+        disabled={pending || qty === 1}
+        className="disabled:opacity-50"
       >
-        Remove from Cart
-      </Button>
+        <Minus className="text-red-500" />
+      </button>
+      <span className="px-3">{qty}</span>
+      <button
+        formAction={() => updateQty("increment")}
+        disabled={pending}
+        className="disabled:opacity-50"
+      >
+        <Plus className="text-red-500" />
+      </button>
+    </div>
+  );
+};
+
+const FormControls: FC<EditCartItemProps> = ({
+  item,
+  className,
+  bigButton,
+}) => {
+  const { pending: removePending } = useFormStatus();
+  const [qtyPending, startTransition] = useTransition();
+
+  const pending = qtyPending || removePending;
+
+  return (
+    <div
+      className={cx(
+        "flex",
+        {
+          "items-center justify-between": !bigButton,
+          "flex-col": bigButton,
+        },
+        className
+      )}
+    >
+      <UpdateItemQuantity
+        item={item}
+        pending={pending}
+        startTransition={startTransition}
+      />
+      <RemoveFromCart item={item} pending={pending} bigButton={bigButton} />
     </div>
   );
 };
