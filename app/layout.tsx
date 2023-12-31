@@ -5,6 +5,7 @@ import Header from "@/components/header";
 import Footer from "@/components/footer";
 import Body from "@/components/body";
 import { ToastProvider } from "@/features/toast";
+import { Suspense } from "react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -25,7 +26,9 @@ export default function RootLayout({
         <ToastProvider>
           <div className="flex flex-col justify-between min-h-screen px-5">
             <div>
-              <Header />
+              <Suspense>
+                <Header />
+              </Suspense>
               <Body>{children}</Body>
             </div>
             <Footer />
