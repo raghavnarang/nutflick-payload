@@ -25,7 +25,7 @@ const Button: FC<ButtonProps> = ({
         "inline-flex rounded px-3 py-2": !large && !small,
         "bg-red-500 hover:bg-red-600 text-white": !isSecondary,
         "bg-gray-200 hover:bg-gray-300 text-gray-700": isSecondary,
-        "flex text-sm px-3 py-1 rounded": small,
+        "flex px-3 py-1 rounded text-sm": small,
       },
       props.className
     )}

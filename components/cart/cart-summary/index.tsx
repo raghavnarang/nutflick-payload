@@ -23,18 +23,18 @@ const CartSummary: FC<CartSummaryProps> = ({ cart }) => {
   return (
     <div className="lg:w-1/3 w-full">
       <div className="bg-gray-50 rounded-lg mb-5">
-        <header className="px-8 h-16 flex items-center border-b border-solid border-gray-300">
+        <header className="md:px-8 px-4 h-16 flex items-center border-b border-solid border-gray-300">
           <span className="text-lg">Cart Summary</span>
         </header>
-        <div className="px-8 h-16 border-b border-solid border-gray-200 flex justify-between items-center text-gray-600">
+        <div className="md:px-8 px-4 h-16 border-b border-solid border-gray-200 flex justify-between items-center text-gray-600">
           <span>Subtotal</span>
           <Price price={parseFloat(cart.cost.subtotalAmount.amount)} />
         </div>
-        <div className="px-8 h-16 border-b border-solid border-gray-200 flex text-gray-600">
+        <div className="md:px-8 px-4 h-16 border-b border-solid border-gray-200 flex text-gray-600">
           <ApplyDiscount />
         </div>
         {validDiscountCodes.length > 0 && (
-          <div className="px-8 py-3 min-h-[64px] border-b border-solid border-gray-200 flex justify-between items-center">
+          <div className="md:px-8 px-4 py-3 min-h-[64px] border-b border-solid border-gray-200 flex justify-between items-center">
             <div className="flex flex-wrap gap-2 mr-4">
               {validDiscountCodes.map((code) => (
                 <DiscountTag code={code} key={code} />
@@ -43,14 +43,14 @@ const CartSummary: FC<CartSummaryProps> = ({ cart }) => {
             <Price className="text-gray-600" negative price={totalDiscount} />
           </div>
         )}
-        <div className="px-8 h-16 border-b border-solid border-gray-200 flex justify-between items-center text-gray-600">
+        <div className="md:px-8 px-4 h-16 border-b border-solid border-gray-200 flex justify-between items-center text-gray-600">
           <span>Taxes</span>
           <div className="flex flex-col items-end justify-center">
             <span>Included in Subtotal</span>
             <span className="text-xs">(More info on Checkout)</span>
           </div>
         </div>
-        <div className="px-8 h-16 flex justify-between items-center">
+        <div className="md:px-8 px-4 h-16 flex justify-between items-center">
           <span className="text-gray-600">Total</span>
           <Price
             className="text-lg"

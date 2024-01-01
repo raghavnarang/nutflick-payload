@@ -4,6 +4,7 @@ import Link from "next/link";
 import logo from "../public/logo.png";
 import HeaderNav from "./nav/header-nav";
 import HeaderMobileNav from "./nav/header-mobile-nav";
+import CartNavItem from "./nav/cart-nav-item";
 
 const Header = async () => (
   <header className="flex justify-center mb-10">
@@ -19,6 +20,11 @@ const Header = async () => (
       <Suspense>
         <div className="md:flex hidden">
           <HeaderNav />
+        </div>
+      </Suspense>
+      <Suspense>
+        <div className="md:hidden flex items-center">
+          <CartNavItem />
         </div>
       </Suspense>
     </div>

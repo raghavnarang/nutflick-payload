@@ -65,7 +65,7 @@ const RemoveFromCart: FC<RemoveFromCartProps> = ({
       isSecondary
       small={!bigButton}
       large={bigButton}
-      className={cx({ "xl:w-1/2 mt-10": bigButton })}
+      className={cx("md:mb-0 mb-5", { "xl:w-1/2 mt-10": bigButton })}
       disabled={pending}
       formAction={actionWithPayload}
     >
@@ -126,7 +126,7 @@ const UpdateItemQuantity: FC<UpdateItemQuantityProps> = ({
   };
 
   return (
-    <div className="flex mr-5">
+    <div className="flex mr-5 md:mb-0 mb-5 items-center">
       <button
         formAction={() => updateQty("decrement")}
         disabled={pending || qty === 1}
@@ -159,9 +159,9 @@ const FormControls: FC<EditCartItemProps> = ({
   return (
     <div
       className={cx(
-        "flex",
+        "flex flex-col md:flex-row items-start",
         {
-          "items-center justify-between": !bigButton,
+          "md:items-center justify-between": !bigButton,
           "flex-col": bigButton,
         },
         className

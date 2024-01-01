@@ -52,22 +52,26 @@ const CartItem: FC<CartItemProps> = ({ item }) => {
             <span className="block text-gray-500 text-sm mb-1">
               {product.productType}
             </span>
-            <Link href={link} className="block mb-1">
+            <Link href={link} className="block mb-1 text-sm md:text-base font-bold md:font-normal">
               {product.title}
               {hasMultipleVariants && ` - ${variantMerch.title}`}
             </Link>
             <Price
               price={parseFloat(variant.price.amount)}
-              className="block text-gray-600"
+              className="block text-gray-600 text-sm md:text-base"
             />
           </div>
           <EditCartItem item={item} className="!justify-start" />
+          <Price
+            price={parseFloat(item.cost.totalAmount.amount)}
+            className="text-base md:hidden block"
+          />
         </div>
       </div>
 
       <Price
         price={parseFloat(item.cost.totalAmount.amount)}
-        className="text-lg text-right"
+        className="text-lg text-right hidden md:block"
       />
     </div>
   );

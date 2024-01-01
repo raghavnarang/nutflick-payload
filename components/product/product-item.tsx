@@ -82,7 +82,7 @@ const ProductItem: FC<ProductItemProps> = ({ product, variant, cartItem }) => {
         {!cartItem ? (
           <AddToCart variantId={variant.id} showIcon />
         ) : (
-          <EditCartItem item={cartItem} />
+          <EditCartItem item={cartItem} className="!flex-row" />
         )}
       </div>
     </div>
