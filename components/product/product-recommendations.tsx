@@ -1,4 +1,4 @@
-import { getProductRecommendations, getProducts } from "@/lib/shopify";
+import { getProductRecommendations } from "@/lib/shopify";
 import { FC } from "react";
 import ProductGrid from "./product-grid";
 

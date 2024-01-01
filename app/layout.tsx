@@ -26,9 +26,7 @@ export default function RootLayout({
         <ToastProvider>
           <div className="flex flex-col justify-between min-h-screen px-5">
             <div>
-              <Suspense>
-                <Header />
-              </Suspense>
+              <Header />
               <Body>{children}</Body>
             </div>
             <Footer />

@@ -1,4 +1,4 @@
-import ProductGrid from "@/components/product-grid";
+import ProductGrid from "@/components/product/product-grid";
 import { getProducts } from "@/lib/shopify";
 
 const Home = async () => {

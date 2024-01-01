@@ -21,7 +21,7 @@ const BigMessage: FC<BigMessageProps> = ({
     <div className="max-w-md flex flex-col items-center">
       <p className="text-xl text-center">{message}</p>
       {button && (
-        <Button onClick={button.onClick} className="mt-7 !w-1/2">
+        <Button onClick={button.onClick} large className="mt-7 !w-1/2">
           {button.text}
         </Button>
       )}

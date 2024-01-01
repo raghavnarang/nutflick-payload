@@ -31,7 +31,9 @@ const Button: FC<ButtonProps> = ({
     )}
   >
     {IconComp && (
-      <IconComp className={cx("mr-2", { "!w-4 !h-4 mr-1": small })} />
+      <IconComp
+        className={cx({ "!w-4 !h-4 mr-1": small, "mr-2": props.children })}
+      />
     )}
     {props.children}
   </button>

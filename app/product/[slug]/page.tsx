@@ -7,7 +7,9 @@ import Link from "next/link";
 import AddToCart from "@/components/cart/add-to-cart";
 import { cookies } from "next/headers";
 import EditCartItem from "@/components/cart/edit-cart-item";
-import ProductRecommendations from "@/components/product-recommendations";
+import ProductRecommendations from "@/components/product/product-recommendations";
+import BigMessage from "@/components/big-message";
+import Sad from "@/components/Icons/sad";
 
 interface ProductProps {
   params: { slug: string };
@@ -25,11 +27,9 @@ const Product: FC<ProductProps> = async ({
 
   if (!product) {
     return (
-      <div className="flex justify-center">
-        <ErrorMessage>
-          Error in fetching product or Product is not valid
-        </ErrorMessage>
-      </div>
+      <BigMessage icon={Sad} button={{ text: <Link href="/">Go to Home</Link> }}>
+        Error in fetching product or Product is not valid
+      </BigMessage>
     );
   }
 
@@ -48,9 +48,9 @@ const Product: FC<ProductProps> = async ({
 
   return (
     <div>
-      <div className="w-full flex gap-10">
+      <div className="w-full flex gap-10 flex-col md:flex-row">
         <div className="w-full md:w-1/2 flex justify-center md:justify-end">
-          <div className="w-96 h-96 max-w-full relative">
+          <div className="md:size-96 sm:h-96 w-full h-64 max-w-full relative">
             <Image
               src={product.featuredImage.url}
               fill
@@ -59,7 +59,7 @@ const Product: FC<ProductProps> = async ({
             />
           </div>
         </div>
-        <div className="w-full md:w-1/3">
+        <div className="w-full md:w-1/2 lg:w-1/3">
           <h1 className="text-3xl mb-5">{product.title}</h1>
           <p className="text-gray-700 mb-5">{product.description}</p>
           {product.options.every((option) => option.values.length > 1) &&
@@ -75,7 +75,7 @@ const Product: FC<ProductProps> = async ({
                     <Link
                       key={value}
                       className={cx(
-                        "rounded px-4 py-2 mr-3 last:mr-0 transition-colors",
+                        "rounded px-4 py-2 mr-3 last:mr-0 transition-colors inline-block",
                         {
                           "text-gray-500 bg-gray-100 hover:bg-gray-200":
                             !isSelected,

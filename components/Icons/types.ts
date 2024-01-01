@@ -1,5 +1,9 @@
+import * as Icons from "@/components/Icons";
+
 interface Icon {
   className?: string;
 }
 
-export type { Icon };
+type IconName = keyof typeof Icons;
+
+export type { Icon, IconName };

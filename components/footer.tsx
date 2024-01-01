@@ -1,29 +1,25 @@
 import Image from "next/image";
 import Link from "next/link";
-import Nav from "@/components/nav";
 import logo from "../public/logo.png";
-
-const navItems = [
-  { text: "Privacy Policy", link: "/privacy-policy" },
-  { text: "Terms & Conditions", link: "/tnc" },
-  {
-    text: "Refund/Cancelation Policy",
-    link: "/refund-cancel-policy",
-  },
-];
+import { Suspense } from "react";
+import FooterNav from "./nav/footer-nav";
 
 const year = new Date().getFullYear();
 
 const Footer = () => (
   <footer className="flex justify-center mt-10">
-    <div className="container py-3 flex justify-between border-t border-solid border-gray-300">
-      <span className="w-1/3 flex items-center text-sm">
+    <div className="container py-3 flex justify-between border-t border-solid border-gray-300 flex-col-reverse lg:flex-row">
+      <span className="lg:w-1/3 w-full text-sm text-center lg:text-left block items-center lg:flex">
         Copyright &copy; {year} Nutflick. All Rights Reserved
       </span>
-      <Link href="/" className="w-1/3 flex justify-center items-center">
+      <Link href="/" className="lg:w-1/3 w-full flex justify-center items-center mb-3 md:my-3 lg:my-0">
         <Image src={logo} alt="Nutflick Logo" width={100} />
       </Link>
-      <Nav items={navItems} className="w-1/3 justify-end text-sm" />
+      <Suspense>
+        <div className="md:flex hidden lg:w-1/3 lg:justify-end md:justify-center">
+          <FooterNav />
+        </div>
+      </Suspense>
     </div>
   </footer>
 );

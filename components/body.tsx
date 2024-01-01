@@ -7,11 +7,11 @@ interface BodyProps {
 }
 
 const Body: FC<BodyProps> = ({ children, className }) => (
-  <Suspense>
-    <div className={cx("flex justify-center", className)}>
-      <div className="container">{children}</div>
+  <div className={cx("flex justify-center", className)}>
+    <div className="container">
+      <Suspense>{children}</Suspense>
     </div>
-  </Suspense>
+  </div>
 );
 
 export default Body;

@@ -1,6 +1,6 @@
 import { Product } from "@/lib/shopify/types";
 import { FC, ReactNode } from "react";
-import ProductItem from "./product/product-item";
+import ProductItem from "./product-item";
 import { cookies } from "next/headers";
 import { getCart } from "@/lib/shopify";
 

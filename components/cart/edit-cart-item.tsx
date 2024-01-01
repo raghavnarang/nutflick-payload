@@ -65,7 +65,7 @@ const RemoveFromCart: FC<RemoveFromCartProps> = ({
       isSecondary
       small={!bigButton}
       large={bigButton}
-      className={cx({ "w-1/2 mt-10": bigButton })}
+      className={cx({ "xl:w-1/2 mt-10": bigButton })}
       disabled={pending}
       formAction={actionWithPayload}
     >
