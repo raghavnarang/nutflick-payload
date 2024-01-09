@@ -108,7 +108,7 @@ const UpdateItemQuantity: FC<UpdateItemQuantityProps> = ({
   }, [item]);
 
   const debouncedUpdateQty = useDebouncedCallback((value: number) => {
-    startTransition!(async () => {
+    startTransition(async () => {
       const result = await updateItemQuantity({
         lineId: item.id,
         variantId: item.merchandise.id,
@@ -162,7 +162,7 @@ const FormControls: FC<EditCartItemProps> = ({
         "flex flex-col md:flex-row items-start",
         {
           "md:items-center justify-between": !bigButton,
-          "flex-col": bigButton,
+          "md:flex-col": bigButton,
         },
         className
       )}
