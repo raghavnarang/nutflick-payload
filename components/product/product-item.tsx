@@ -1,5 +1,5 @@
 import Image from "next/image";
-import type { FC } from "react";
+import { Suspense, type FC } from "react";
 import Price from "./price";
 import Link from "next/link";
 import type { CartItem, Product, ProductVariant } from "@/lib/shopify/types";
@@ -79,11 +79,13 @@ const ProductItem: FC<ProductItemProps> = ({ product, variant, cartItem }) => {
         />
       </div>
       <div className="mt-3">
-        {!cartItem ? (
-          <AddToCart variantId={variant.id} showIcon />
-        ) : (
-          <EditCartItem item={cartItem} className="!flex-row" />
-        )}
+        <Suspense fallback={<p>Adding to cart...</p>}>
+          {!cartItem ? (
+            <AddToCart variantId={variant.id} showIcon />
+          ) : (
+            <EditCartItem item={cartItem} className="!flex-row" />
+          )}
+        </Suspense>
       </div>
     </div>
   );

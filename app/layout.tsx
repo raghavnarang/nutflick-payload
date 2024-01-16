@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/header";
@@ -6,6 +5,7 @@ import Footer from "@/components/footer";
 import Body from "@/components/body";
 import { ToastProvider } from "@/features/toast";
 import { ensureStartsWith } from "@/lib/utils";
+import { ClerkProvider } from "@clerk/nextjs";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -48,15 +48,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <ToastProvider>
-          <div className="flex flex-col justify-between min-h-screen px-5">
-            <div>
-              <Header />
-              <Body>{children}</Body>
-            </div>
-            <Footer />
-          </div>
-        </ToastProvider>
+        <div className="flex flex-col justify-between min-h-screen px-5">
+          <div>{children}</div>
+          <Footer />
+        </div>
       </body>
     </html>
   );

@@ -41,8 +41,9 @@ export async function addItem(prevState: any, selectedVariantId: string) {
     cookies().set("cartId", cartId);
   }
 
-  if (!selectedVariantId) {
-    return { message: "Missing product variant ID", status: Status.error };
+  const validation = stringSchema.safeParse(selectedVariantId);
+  if (!validation.success) {
+    return { message: "Invalid data detected.", status: Status.error };
   }
 
   try {

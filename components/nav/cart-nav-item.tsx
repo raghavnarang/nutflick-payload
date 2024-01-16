@@ -1,20 +1,12 @@
-import { getCart } from "@/lib/shopify";
 import { cookies } from "next/headers";
-import Link from "next/link";
-import { Cart } from "../Icons";
+import CartNavItemUI from "./cart-nav-item-ui";
+import { getCart } from "@/lib/shopify";
 
-const CartNavItem = async () => {
+const CartNavItem = async ({ onlyIcon = false }: { onlyIcon?: boolean }) => {
   const cartId = cookies().get("cartId")?.value;
   const cart = cartId ? await getCart(cartId) : undefined;
 
-  return (
-    <Link href="/cart" className="mr-8 last:mr-0 relative flex">
-      <Cart className="mr-1" />
-      <span className="text-xs size-6 bg-red-500 rounded-full text-white flex items-center justify-center">
-        {cart?.totalQuantity || 0}
-      </span>
-    </Link>
-  );
+  return <CartNavItemUI quantity={cart?.totalQuantity} onlyIcon={onlyIcon} />;
 };
 
 export default CartNavItem;

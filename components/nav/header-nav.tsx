@@ -1,16 +1,21 @@
-import { cookies } from "next/headers";
-import { getCart } from "@/lib/shopify";
 import Nav from "./nav";
-import { NavItem } from "./types";
+import type { NavItem } from "./types";
+import { Suspense, type ReactElement } from "react";
+import { UserButton, SignedIn } from "@clerk/nextjs";
+import CartNavItemUI from "./cart-nav-item-ui";
+import CartNavItem from "./cart-nav-item";
 
 const HeaderNav = async () => {
-  const cartId = cookies().get("cartId")?.value;
-  const cart = cartId ? await getCart(cartId) : undefined;
-
-  const navItems: NavItem[] = [
+  const navItems: Array<NavItem | ReactElement> = [
     { text: "About Us", link: "/about" },
     { text: "Contact Us", link: "/contact" },
-    { text: `Cart (${cart?.totalQuantity || 0})`, link: "/cart", icon: "Cart" },
+    { text: "My Account", link: "/account" },
+    <Suspense fallback={<CartNavItemUI />}>
+      <CartNavItem />
+    </Suspense>,
+    <SignedIn>
+      <UserButton afterSignOutUrl="/" />
+    </SignedIn>,
   ];
 
   return <Nav items={navItems} />;

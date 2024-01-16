@@ -7,3 +7,4 @@ export { default as Minus } from "./minus";
 export { default as Plus } from "./plus";
 export { default as Sad } from "./sad";
 export { default as Tick } from "./tick";
+export { default as User } from "./user";

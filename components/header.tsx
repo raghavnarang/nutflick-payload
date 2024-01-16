@@ -1,34 +1,43 @@
-import { Suspense } from "react";
+import type { FC } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import logo from "../public/logo.png";
-import HeaderNav from "./nav/header-nav";
-import HeaderMobileNav from "./nav/header-mobile-nav";
-import CartNavItem from "./nav/cart-nav-item";
+import type { NavProps } from "./nav/types";
+import Nav from "./nav/nav";
+import MobileNav from "./nav/mobile-nav";
 
-const Header = async () => (
+interface HeaderProps {
+  mobileSideNavItems?: NavProps["items"];
+  navItems?: NavProps["items"];
+  mobileNavItems?: NavProps["items"];
+}
+
+const Header: FC<HeaderProps> = async ({
+  mobileNavItems,
+  mobileSideNavItems,
+  navItems,
+}) => (
   <header className="flex justify-center mb-10">
     <div className="container py-5 flex justify-between border-b border-solid border-gray-300">
       <div className="flex items-center">
-        <Suspense>
-          <HeaderMobileNav />
-        </Suspense>
+        {mobileSideNavItems && <MobileNav items={mobileSideNavItems} />}
         <Link href="/">
           <Image src={logo} alt="Nutflick Logo" className=" w-32 md:w-44" />
         </Link>
       </div>
-      <Suspense>
+      {navItems && (
         <div className="md:flex hidden">
-          <HeaderNav />
+          <Nav items={navItems} />
         </div>
-      </Suspense>
-      <Suspense>
+      )}
+      {mobileNavItems && (
         <div className="md:hidden flex items-center">
-          <CartNavItem />
+          <Nav items={mobileNavItems} />
         </div>
-      </Suspense>
+      )}
     </div>
   </header>
 );
 
 export default Header;
+export type { HeaderProps };
