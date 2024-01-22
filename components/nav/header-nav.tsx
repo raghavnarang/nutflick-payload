@@ -1,7 +1,6 @@
 import Nav from "./nav";
 import type { NavItem } from "./types";
 import { Suspense, type ReactElement } from "react";
-import { UserButton, SignedIn } from "@clerk/nextjs";
 import CartNavItemUI from "./cart-nav-item-ui";
 import CartNavItem from "./cart-nav-item";
 
@@ -13,9 +12,6 @@ const HeaderNav = async () => {
     <Suspense fallback={<CartNavItemUI />}>
       <CartNavItem />
     </Suspense>,
-    <SignedIn>
-      <UserButton afterSignOutUrl="/" />
-    </SignedIn>,
   ];
 
   return <Nav items={navItems} />;

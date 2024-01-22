@@ -9,6 +9,8 @@ export const metadata = {
   },
 };
 
+export const runtime = "edge";
+
 const Home = async () => {
   const products = await getProducts({});
   return <ProductGrid products={products} />;

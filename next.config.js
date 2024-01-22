@@ -8,10 +8,6 @@ const nextConfig = {
         hostname: "cdn.shopify.com",
         pathname: "/s/files/**",
       },
-      {
-        protocol: "https",
-        hostname: "img.clerk.com",
-      },
     ],
   },
 };

@@ -1,0 +1,27 @@
+<mjml>
+  <mj-head>
+    <mj-style>.heading {
+      margin-top: 30px;
+      margin-bottom: 20px;
+      }
+      .body {
+      font-size: 16px;
+      line-height: 30px;
+      }</mj-style>
+  </mj-head>
+  <mj-body>
+    <mj-section>
+      <mj-column>
+        <mj-image width="150px" src="https://dhglmstavnnvgkrc.public.blob.vercel-storage.com/logo-fUSGfNmOKD9cxUjOzQTg0ANUyHAMUI.png" align="left"></mj-image>
+        <mj-text>
+          <h1 class="heading">Login to Nutflick</h1>
+          <p class="body">Click the button below to securely login. The magic link will expire in 24 hours.</p>
+        </mj-text>
+        <mj-button href="[Magic Link]" align="left" background-color="#ef4444" font-size="16px" padding-top="0">Login to Nutflick</mj-button>
+        <mj-text>
+          <p class="body">Confirming this request will securely log you in using <b>raghavvnarang@gmail.com</b></p>
+        </mj-text>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>
