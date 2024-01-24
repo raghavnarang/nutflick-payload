@@ -5,7 +5,6 @@ import cx from "classnames";
 import { usePathname, useSearchParams } from "next/navigation";
 import Bars from "../Icons/bars";
 import Nav from "./nav";
-import Cart from "../Icons/cart";
 import Cross from "../Icons/cross";
 import { NavProps } from "./types";
 
