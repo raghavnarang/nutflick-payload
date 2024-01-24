@@ -22,38 +22,44 @@ const Variant: FC<VariantProps> = ({
   return (
     <div className="py-5 px-7 mb-5 border border-gray-300 rounded-md bg-gray-100">
       <div
-        className={cx("flex justify-stretch items-center gap-7", {
+        className={cx("flex items-start gap-5", {
           "border-b border-gray-300 pb-5": hasActions,
         })}
       >
-        <div className="rounded size-12 bg-gray-300 flex justify-center items-center flex-shrink-0">
-          <ImageUpload minimal name={`${name}[image]`} />
-        </div>
-        <div className="grid grid-cols-5 gap-7 w-full">
+        <ImageUpload minimal name={`${name}[image]`} />
+        <div className="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-5 gap-5 w-full">
           <Textbox
             label="Title"
             name={`${name}[title]`}
             placeholder="Variant Title"
           />
           <Textbox
-            label="Weight (in Kgs)"
+            label="Weight"
             name={`${name}[weight]`}
             placeholder="0.0"
+            number
+            suffix="Kg"
           />
           <Textbox
-            label="Price (₹)"
+            label="Price"
             name={`${name}[price]`}
             placeholder="0.0"
+            number
+            prefix="₹"
           />
           <Textbox
-            label="Compare at price (₹)"
+            label="Compare price"
             name={`${name}[comparePrice]`}
             placeholder="0.0"
+            number
+            prefix="₹"
           />
           <Textbox
-            label="Shipping cost (₹)"
+            label="Shipping cost"
             name={`${name}[includedShippingCost]`}
             placeholder="0.0"
+            number
+            prefix="₹"
           />
         </div>
       </div>

@@ -26,15 +26,16 @@ const ImageUpload: FC<ImageUploadProps> = ({
     setImage(file && URL.createObjectURL(file));
   };
 
-  const imageSize = minimal ? 48 : 80;
+  const imageSize = minimal ? 64 : 80;
 
   return (
     <div
       className={cx(
-        "cursor-pointer",
+        "cursor-pointer flex-shrink-0",
         {
           "p-5 bg-gray-100 rounded-md flex gap-5 border border-gray-300":
             !minimal,
+          "size-16": minimal,
         },
         className
       )}
@@ -44,11 +45,11 @@ const ImageUpload: FC<ImageUploadProps> = ({
         <div
           className={cx(
             "rounded bg-gray-300 flex justify-center items-center flex-shrink-0",
-            { "size-20": !minimal, "size-12": minimal }
+            { "size-20": !minimal, "size-16": minimal }
           )}
         >
           <ImageIcon
-            className={cx({ "!size-10": !minimal, "!size-7": minimal })}
+            className={cx({ "!size-10": !minimal, "!size-8": minimal })}
           />
         </div>
       )}
@@ -58,7 +59,7 @@ const ImageUpload: FC<ImageUploadProps> = ({
           width={imageSize}
           height={imageSize}
           alt="Product Image"
-          className="rounded object-contain bg-white"
+          className="rounded object-contain bg-white flex-shrink-0"
         />
       )}
       <div className={cx("flex flex-col justify-center", { hidden: minimal })}>
@@ -69,7 +70,11 @@ const ImageUpload: FC<ImageUploadProps> = ({
           onChange={onFileChange}
           ref={inputRef}
           accept="image/*"
+          className="hidden"
         />
+        <span className="text-sm text-gray-500">
+          Click anywhere in this box to select an image
+        </span>
       </div>
     </div>
   );

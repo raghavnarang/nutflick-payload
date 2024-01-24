@@ -7,9 +7,15 @@ const Products = () => {
   return (
     <form>
       <h1 className="text-xl mb-5 font-medium">Add Product</h1>
-      <div className="flex gap-10">
-        <div className="w-full max-w-sm">
-          <Textbox name="title" label="Title" placeholder="Add Product Title" className="mb-5" />
+      <div className="flex gap-10 flex-col md:flex-row">
+        <div className="md:w-1/2 max-w-sm">
+          <Textbox
+            name="title"
+            label="Title"
+            placeholder="Add Product Title"
+            inputWrapperClassName="mb-5"
+            required
+          />
           <Textarea
             name="description"
             label="Description"
@@ -18,7 +24,7 @@ const Products = () => {
           />
           <ImageUpload name="image" label="Product Image" />
         </div>
-        <div className="w-full">
+        <div className="md:w-1/2 lg:w-full">
           <h2 className="mb-2">Variants</h2>
           <ProductVariants />
         </div>

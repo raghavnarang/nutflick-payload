@@ -15,7 +15,7 @@ const VariantActions: FC<VariantActionProps> = ({
   const [confirm, setConfirm] = useState(false);
 
   return (
-    <div className="mt-5 flex justify-between">
+    <div className="mt-5 flex flex-col lg:flex-row justify-between gap-3">
       <div className="flex gap-3">
         {onMoveUp && (
           <Button
@@ -53,25 +53,27 @@ const VariantActions: FC<VariantActionProps> = ({
             </Button>
           )}
           {confirm && (
-            <div className="inline-flex gap-3 items-center">
+            <div className="flex justify-between items-center gap-3">
               <span>Delete this variant?</span>
-              <Button
-                onClick={(e) => {
-                  e.preventDefault();
-                  onDelete();
-                }}
-              >
-                Yes
-              </Button>
-              <Button
-                isSecondary
-                onClick={(e) => {
-                  e.preventDefault();
-                  setConfirm(false);
-                }}
-              >
-                No
-              </Button>
+              <div className="flex gap-3">
+                <Button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    onDelete();
+                  }}
+                >
+                  Yes
+                </Button>
+                <Button
+                  isSecondary
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setConfirm(false);
+                  }}
+                >
+                  No
+                </Button>
+              </div>
             </div>
           )}
         </div>

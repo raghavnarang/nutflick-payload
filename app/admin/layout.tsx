@@ -14,7 +14,7 @@ const navItems: NavItem[] = [
 
 const AdminLayout: FC<AdminLayoutProps> = ({ children }) => (
   <div>
-    <Header navItems={navItems} mobileNavItems={navItems} />
+    <Header navItems={navItems} mobileSideNavItems={navItems} />
     <Body>{children}</Body>
   </div>
 );

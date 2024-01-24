@@ -29,7 +29,7 @@ const ShopLayout: FC<ShopLayoutProps> = async ({ children }) => {
 
   return (
     <div>
-      <Header navItems={navItems} />
+      <Header navItems={navItems} mobileSideNavItems={navItems} />
       <Body>
         <ToastProvider>{children}</ToastProvider>
       </Body>
