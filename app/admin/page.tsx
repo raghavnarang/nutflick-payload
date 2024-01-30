@@ -1,12 +1,24 @@
+"use client";
+
 import ProductVariants from "@/components/admin/product-variants";
 import ImageUpload from "@/components/form/image-upload";
 import Textarea from "@/components/form/textarea";
 import Textbox from "@/components/form/textbox";
+import { useFormState } from "react-dom";
+import { AddProduct } from "./actions";
+import Button from "@/components/button";
 
 const Products = () => {
+  const [pending, action] = useFormState(AddProduct, null);
+
   return (
-    <form>
-      <h1 className="text-xl mb-5 font-medium">Add Product</h1>
+    <form action={action}>
+      <div className="flex justify-between items-start">
+        <h1 className="text-xl mb-5 font-medium">Add Product</h1>
+        <Button type="submit" className="!bg-green-500 text-white">
+          Save
+        </Button>
+      </div>
       <div className="flex gap-10 flex-col md:flex-row">
         <div className="md:w-1/2 max-w-sm">
           <Textbox

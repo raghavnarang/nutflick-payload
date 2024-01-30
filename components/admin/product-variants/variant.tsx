@@ -2,7 +2,7 @@ import type { FC } from "react";
 import Textbox from "@/components/form/textbox";
 import ImageUpload from "@/components/form/image-upload";
 import cx from "classnames";
-import VariantActions from "./actions";
+import VariantActions from "./variant-actions";
 
 interface VariantProps {
   name?: string;
@@ -32,33 +32,36 @@ const Variant: FC<VariantProps> = ({
             label="Title"
             name={`${name}[title]`}
             placeholder="Variant Title"
+            required
           />
           <Textbox
             label="Weight"
             name={`${name}[weight]`}
             placeholder="0.0"
-            number
+            decimal
             suffix="Kg"
+            required
           />
           <Textbox
             label="Price"
             name={`${name}[price]`}
             placeholder="0.0"
-            number
+            decimal
             prefix="₹"
+            required
           />
           <Textbox
             label="Compare price"
             name={`${name}[comparePrice]`}
             placeholder="0.0"
-            number
+            decimal
             prefix="₹"
           />
           <Textbox
             label="Shipping cost"
             name={`${name}[includedShippingCost]`}
             placeholder="0.0"
-            number
+            decimal
             prefix="₹"
           />
         </div>

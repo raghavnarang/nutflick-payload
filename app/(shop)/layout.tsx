@@ -24,7 +24,7 @@ const ShopLayout: FC<ShopLayoutProps> = async ({ children }) => {
       text: "My Account",
       link: "/account",
     },
-    <CartItemWithSuspense key='cartItem' />,
+    <CartItemWithSuspense key="cartItem" />,
   ];
 
   return (

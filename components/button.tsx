@@ -2,7 +2,7 @@ import type { ComponentProps, FC } from "react";
 import cx from "classnames";
 import { Icon } from "./Icons/types";
 
-interface ButtonProps extends ComponentProps<"button"> {
+export interface ButtonProps extends ComponentProps<"button"> {
   icon?: FC<Icon>;
   large?: boolean;
   small?: boolean;
@@ -23,8 +23,8 @@ const Button: FC<ButtonProps> = ({
       {
         "flex w-full text-lg rounded-lg py-3": large,
         "inline-flex rounded px-3 py-2": !large && !small,
-        "bg-red-500 hover:bg-red-600 text-white": !isSecondary,
-        "bg-gray-200 hover:bg-gray-300 text-gray-700": isSecondary,
+        "bg-red-500 hover:bg-red-600 disabled:hover:bg-red-500 text-white": !isSecondary,
+        "bg-gray-200 hover:bg-gray-300 disabled:hover:bg-gray-200 text-gray-700": isSecondary,
         "flex px-3 py-1 rounded text-sm": small,
       },
       props.className

@@ -7,6 +7,7 @@ interface TextboxProps extends InputHTMLAttributes<HTMLInputElement> {
   suffix?: string;
   inputWrapperClassName?: string;
   number?: boolean;
+  decimal?: boolean;
 }
 
 const Textbox: FC<TextboxProps> = ({
@@ -15,6 +16,7 @@ const Textbox: FC<TextboxProps> = ({
   suffix,
   inputWrapperClassName,
   number,
+  decimal,
   ...rest
 }) => (
   <div className="flex flex-col">
@@ -32,7 +34,8 @@ const Textbox: FC<TextboxProps> = ({
       )}
       <input
         {...rest}
-        type={number ? "number" : "text"}
+        type={number || decimal ? "number" : "text"}
+        step={decimal ? 0.01 : undefined}
         id={rest.name}
         className={cx("outline-none py-1 px-2 w-full", rest.className)}
       />

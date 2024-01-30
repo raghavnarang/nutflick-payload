@@ -1,13 +1,13 @@
 import Button from "@/components/button";
 import { useState, type FC } from "react";
 
-interface VariantActionProps {
+export interface VariantActionsProps {
   onDelete?: () => void;
   onMoveUp?: () => void;
   onMoveDown?: () => void;
 }
 
-const VariantActions: FC<VariantActionProps> = ({
+const VariantActions: FC<VariantActionsProps> = ({
   onDelete,
   onMoveUp,
   onMoveDown,

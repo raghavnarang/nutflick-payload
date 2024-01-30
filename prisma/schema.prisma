@@ -56,19 +56,19 @@ model VerificationToken {
 }
 
 model Product {
-  id          String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  title       String
-  slug        String  @unique
-  image       String?
-  description String?
+  id           String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title        String
+  slug         String  @unique
+  image        String?
+  description  String?
+  variationSeq Json
 
-  variantions ProductVariations[]
+  variations ProductVariations[]
 }
 
 model ProductVariations {
   id                   String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   productId            String  @db.Uuid
-  slug                 String
   title                String
   price                Float
   comparePrice         Float?
@@ -77,6 +77,4 @@ model ProductVariations {
   weight               Float
 
   product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
-
-  @@unique([productId, slug])
 }

@@ -1,51 +1,66 @@
 "use client";
 
-import { login } from "@/auth/actions";
-import Button from "@/components/button";
+import { login } from "../actions";
 import ErrorMessage from "@/components/error-message";
-import type { FC } from "react";
+import CaptchaSubmitButton from "@/components/form/captcha-submit-button";
+import Link from "next/link";
+import { type FC, useRef, type RefObject } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 
 interface LoginProps {
   searchParams: {
-    callbackUrl?: string;
+    ref?: string;
   };
 }
 
-const SubmitButton = () => {
+interface FormControlsProps {
+  formRef: RefObject<HTMLFormElement>;
+}
+
+const FormControls: FC<FormControlsProps> = ({ formRef }) => {
   const { pending } = useFormStatus();
 
   return (
-    <div>
+    <>
       <input
         type="email"
         placeholder="Enter email to login"
         name="email"
-        className="border-b-2 border-red-300 focus:border-red-500 py-2 block w-full outline-none disabled:opacity-50"
+        className="border-b-2 border-red-300 focus:border-red-500 py-2 block w-full outline-none disabled:opacity-50 mb-5"
         autoFocus
         required
         disabled={pending}
       />
-      <Button type="submit" className="mt-10" disabled={pending}>
+      <CaptchaSubmitButton className="mt-5" formRef={formRef}>
         Login
-      </Button>
-    </div>
+      </CaptchaSubmitButton>
+    </>
   );
 };
 
-const Login: FC<LoginProps> = async ({ searchParams: { callbackUrl } }) => {
+const Login: FC<LoginProps> = ({ searchParams: { ref } }) => {
   const [result, action] = useFormState(login, null);
+  const formRef = useRef<HTMLFormElement>(null);
 
   return (
-    <form action={action}>
+    <form action={action} ref={formRef}>
       <h1 className="text-xl mb-5">Login to Nutflick</h1>
-      {callbackUrl && (
-        <input type="hidden" name="callbackUrl" value={callbackUrl} />
-      )}
-      <SubmitButton />
+      {ref && <input type="hidden" name="ref" value={ref} />}
+      <FormControls formRef={formRef} />
       {result?.message && (
         <ErrorMessage className="mt-5 w-full">{result.message}</ErrorMessage>
       )}
+      <p className="text-xs mt-10">
+        This site is protected by hCaptcha and its{" "}
+        <Link href="https://www.hcaptcha.com/privacy" className="underline">
+          Privacy Policy
+        </Link>{" "}
+        and{" "}
+        <Link href="https://www.hcaptcha.com/terms" className="underline">
+          Terms of Service
+        </Link>{" "}
+        apply.
+      </p>
     </form>
   );
 };
