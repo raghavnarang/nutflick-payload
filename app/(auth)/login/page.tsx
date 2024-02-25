@@ -1,6 +1,6 @@
 "use client";
 
-import { login } from "../actions";
+import { login } from "@/features/server/actions/auth";
 import ErrorMessage from "@/components/error-message";
 import CaptchaSubmitButton from "@/components/form/captcha-submit-button";
 import Link from "next/link";

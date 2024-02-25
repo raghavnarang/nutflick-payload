@@ -52,14 +52,14 @@ const Variant: FC<VariantProps> = ({
           />
           <Textbox
             label="Compare price"
-            name={`${name}[comparePrice]`}
+            name={`${name}[compare_price]`}
             placeholder="0.0"
             decimal
             prefix="₹"
           />
           <Textbox
             label="Shipping cost"
-            name={`${name}[includedShippingCost]`}
+            name={`${name}[included_shipping_cost]`}
             placeholder="0.0"
             decimal
             prefix="₹"

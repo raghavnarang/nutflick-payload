@@ -3,6 +3,7 @@ import "./globals.css";
 import Footer from "@/components/footer";
 import { ensureStartsWith } from "@/lib/utils";
 import { Suspense } from "react";
+import { ToastProvider } from "@/features/toast";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -47,7 +48,9 @@ export default function RootLayout({
       <body className={inter.className}>
         <div className="flex flex-col justify-between min-h-screen px-5">
           <div>
-            <Suspense>{children}</Suspense>
+            <Suspense>
+              <ToastProvider>{children}</ToastProvider>
+            </Suspense>
           </div>
           <Footer />
         </div>

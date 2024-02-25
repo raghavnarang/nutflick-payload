@@ -32,7 +32,7 @@ const ProductVariants = () => {
     <div>
       {variants.map((variant, index) => (
         <Variant
-          name={`variant[${index}]`}
+          name={`variants[${index}]`}
           key={variant}
           onDelete={
             variants.length > 1 ? () => deleteVariant(variant) : undefined

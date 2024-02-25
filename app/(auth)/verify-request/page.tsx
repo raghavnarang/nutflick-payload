@@ -5,7 +5,7 @@ import ErrorMessage from "@/components/error-message";
 import { useRouter } from "next/navigation";
 import { useRef, type FC, useEffect } from "react";
 import { useFormState, useFormStatus } from "react-dom";
-import { verifyOtp } from "../actions";
+import { verifyOtp } from "@/features/server/actions/auth";
 
 interface VerifyRequestProps {
   searchParams: {
