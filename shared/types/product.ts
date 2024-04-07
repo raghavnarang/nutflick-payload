@@ -1,4 +1,4 @@
-import { Tables, TablesInsert } from "@/lib/supabase/db-schema";
+import { Tables, TablesInsert, TablesUpdate } from "@/lib/supabase/db-schema";
 
 export interface ProductMinimal {
   image: { url: string; alt: string };
@@ -12,3 +12,6 @@ export interface Product extends Omit<Tables<"product">, "variant_seq"> {
 
 export interface InsertProduct extends TablesInsert<'product'> {}
 export interface InsertProductVariant extends TablesInsert<'product_variant'> {}
+
+export interface UpdateProduct extends TablesUpdate<'product'> {}
+export interface UpdateProductVariant extends TablesUpdate<'product_variant'> {}

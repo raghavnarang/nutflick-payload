@@ -7,11 +7,14 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { zfd } from "zod-form-data";
 
-const UrlPathnameSchema = z.string().refine((pathname) => {
-  // Customize the logic to match your requirements
-  const pathnameRegex = /^(\/([a-zA-Z0-9\_\-\/]+)?)+$/;
-  return pathnameRegex.test(pathname);
-}).optional();
+const UrlPathnameSchema = z
+  .string()
+  .refine((pathname) => {
+    // Customize the logic to match your requirements
+    const pathnameRegex = /^(\/([a-zA-Z0-9\_\-\/]+)?)+$/;
+    return pathnameRegex.test(pathname);
+  })
+  .optional();
 
 export const login = async (prevState: any, formData: FormData) => {
   const validation = zfd.formData({
@@ -55,7 +58,7 @@ export const verifyOtp = async (prevState: any, formData: FormData) => {
 
   const result = validation.safeParse(formData);
   if (!result.success) {
-    console.log(result.error)
+    console.log(result.error);
     return {
       status: Status.error,
       message: "Something went wrong. Please try again later",
@@ -75,7 +78,7 @@ export const verifyOtp = async (prevState: any, formData: FormData) => {
   });
 
   if (error) {
-    console.log(error)
+    console.log(error);
     return {
       status: Status.error,
       message: "Something went wrong. Please try again later",
@@ -83,8 +86,7 @@ export const verifyOtp = async (prevState: any, formData: FormData) => {
   }
 
   const isAdmin = user?.email && process.env.ADMIN_EMAIL! === user?.email;
-  const redirectRefUrl =
-    !isAdmin || !!ref?.includes("/admin") ? ref : undefined;
+  const redirectRefUrl = !ref?.includes("/admin") || isAdmin ? ref : undefined;
   const redirectUrl = redirectRefUrl || (isAdmin ? "/admin" : "/account");
 
   redirect(redirectUrl);

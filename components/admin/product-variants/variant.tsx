@@ -3,12 +3,14 @@ import Textbox from "@/components/form/textbox";
 import ImageUpload from "@/components/form/image-upload";
 import cx from "classnames";
 import VariantActions from "./variant-actions";
+import type { ProductVariant } from "@/shared/types/product";
 
 interface VariantProps {
   name?: string;
   onDelete?: () => void;
   onMoveUp?: () => void;
   onMoveDown?: () => void;
+  editVariant?: ProductVariant;
 }
 
 const Variant: FC<VariantProps> = ({
@@ -16,6 +18,7 @@ const Variant: FC<VariantProps> = ({
   onDelete,
   onMoveUp,
   onMoveDown,
+  editVariant,
 }) => {
   const hasActions = !!onDelete || !!onMoveUp || !!onMoveDown;
 
@@ -26,12 +29,17 @@ const Variant: FC<VariantProps> = ({
           "border-b border-gray-300 pb-5": hasActions,
         })}
       >
-        <ImageUpload minimal name={`${name}[image]`} />
+        <ImageUpload
+          minimal
+          name={`${name}[image]`}
+          src={editVariant?.image || undefined}
+        />
         <div className="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-5 gap-5 w-full">
           <Textbox
             label="Title"
             name={`${name}[title]`}
             placeholder="Variant Title"
+            defaultValue={editVariant?.title}
             required
           />
           <Textbox
@@ -41,6 +49,7 @@ const Variant: FC<VariantProps> = ({
             decimal
             suffix="Kg"
             required
+            defaultValue={editVariant?.weight}
           />
           <Textbox
             label="Price"
@@ -49,6 +58,7 @@ const Variant: FC<VariantProps> = ({
             decimal
             prefix="₹"
             required
+            defaultValue={editVariant?.price}
           />
           <Textbox
             label="Compare price"
@@ -56,6 +66,7 @@ const Variant: FC<VariantProps> = ({
             placeholder="0.0"
             decimal
             prefix="₹"
+            defaultValue={editVariant?.compare_price || undefined}
           />
           <Textbox
             label="Shipping cost"
@@ -63,7 +74,11 @@ const Variant: FC<VariantProps> = ({
             placeholder="0.0"
             decimal
             prefix="₹"
+            defaultValue={editVariant?.included_shipping_cost || undefined}
           />
+          {editVariant && (
+            <input type="hidden" name={`${name}[id]`} value={editVariant.id} />
+          )}
         </div>
       </div>
       {hasActions && (

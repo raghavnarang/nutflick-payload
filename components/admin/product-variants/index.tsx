@@ -3,10 +3,17 @@
 import Button from "@/components/button";
 import { Plus } from "@/components/Icons";
 import Variant from "./variant";
-import { type MouseEventHandler, useState } from "react";
+import { type MouseEventHandler, useState, FC } from "react";
+import { ProductVariant } from "@/shared/types/product";
 
-const ProductVariants = () => {
-  const [variants, setVariants] = useState([0]);
+interface ProductVariantsProps {
+  editVariants?: ProductVariant[];
+}
+
+const ProductVariants: FC<ProductVariantsProps> = ({ editVariants }) => {
+  const [variants, setVariants] = useState(
+    editVariants ? Array.from(Array(editVariants.length).keys()) : [0]
+  );
 
   const addVariant: MouseEventHandler = (e) => {
     e.preventDefault();
@@ -34,6 +41,7 @@ const ProductVariants = () => {
         <Variant
           name={`variants[${index}]`}
           key={variant}
+          editVariant={editVariants?.[variant]}
           onDelete={
             variants.length > 1 ? () => deleteVariant(variant) : undefined
           }

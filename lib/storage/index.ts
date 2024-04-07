@@ -15,3 +15,11 @@ export const uploadFile = async (file: File, name: string) => {
 
   return data.path;
 };
+
+export const getPublicUrlFromPath = async (path: string) => {
+  const supabase = createClient(cookies());
+  const { data } = await supabase.storage
+    .from(process.env.SUPABASE_PUBLIC_BUCKET!).getPublicUrl(path)
+
+  return data.publicUrl;
+};

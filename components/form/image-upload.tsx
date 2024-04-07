@@ -4,12 +4,14 @@ import Image from "next/image";
 import { useState, type FC, useRef } from "react";
 import ImageIcon from "../Icons/image";
 import cx from "classnames";
+import { Cross } from "../Icons";
 
 export interface ImageUploadProps {
   name?: string;
   className?: string;
   label?: string;
   minimal?: boolean;
+  src?: string;
 }
 
 const ImageUpload: FC<ImageUploadProps> = ({
@@ -17,8 +19,9 @@ const ImageUpload: FC<ImageUploadProps> = ({
   name,
   className,
   minimal,
+  src,
 }) => {
-  const [image, setImage] = useState<string>();
+  const [image, setImage] = useState<string | undefined>(src);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const onFileChange = () => {
@@ -31,7 +34,7 @@ const ImageUpload: FC<ImageUploadProps> = ({
   return (
     <div
       className={cx(
-        "cursor-pointer flex-shrink-0",
+        "cursor-pointer flex-shrink-0 relative",
         {
           "p-5 bg-gray-100 rounded-md flex gap-5 border border-gray-300":
             !minimal,
@@ -41,6 +44,20 @@ const ImageUpload: FC<ImageUploadProps> = ({
       )}
       onClick={() => inputRef.current?.click()}
     >
+      {image && (
+        <span
+          className="absolute size-6 bg-red-600 rounded-full -top-2 -right-2"
+          onClick={(e) => {
+            if (inputRef.current) {
+              inputRef.current.value = "";
+            }
+            setImage(undefined);
+            e.stopPropagation();
+          }}
+        >
+          <Cross className="text-white" />
+        </span>
+      )}
       {!image && (
         <div
           className={cx(
@@ -66,7 +83,7 @@ const ImageUpload: FC<ImageUploadProps> = ({
         {label && <p className="mb-2">{label}</p>}
         <input
           type="file"
-          name={name}
+          name={inputRef.current?.value || (src && !image) ? name : ""}
           onChange={onFileChange}
           ref={inputRef}
           accept="image/*"
