@@ -15,6 +15,10 @@ const ProductVariants: FC<ProductVariantsProps> = ({ editVariants }) => {
     editVariants ? Array.from(Array(editVariants.length).keys()) : [0]
   );
 
+  const deletedVariantIds = editVariants
+    ?.filter((_, index) => !variants.includes(index))
+    .map((v) => v.id);
+
   const addVariant: MouseEventHandler = (e) => {
     e.preventDefault();
     const newVariantKey = Math.max(...variants) + 1;
@@ -52,6 +56,9 @@ const ProductVariants: FC<ProductVariantsProps> = ({ editVariants }) => {
               : undefined
           }
         />
+      ))}
+      {deletedVariantIds?.map((id, index) => (
+        <input type="hidden" name={`deleted_variants[${index}]`} value={id} />
       ))}
       <Button className="!bg-blue-500 text-white" onClick={addVariant}>
         <Plus className="mr-2" />

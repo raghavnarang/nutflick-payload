@@ -185,7 +185,7 @@ export const fetchProduct = async (
     variantsResponse.count === 0
   ) {
     console.log("Products Fetch Error", productsResponse.error);
-    console.log("Varints Fetch Error", variantsResponse.error);
+    console.log("Variants Fetch Error", variantsResponse.error);
 
     throw Error("Something went wrong in fetching product");
   }
@@ -276,8 +276,24 @@ export const insertProduct = async (
   return { ...newProduct, variants: newVariants };
 };
 
+export const deleteVariants = async (
+  variants: number[],
+  sbClient: SupabaseClient
+) => {
+  const { error } = await sbClient
+    .from("product_variant")
+    .delete()
+    .in("id", variants);
+
+  if (error) {
+    console.log(error);
+    throw Error("Unable to delete variants");
+  }
+};
+
 export const updateProduct = async (
-  productWithVariants: FnProduct<UpdateProduct>
+  productWithVariants: FnProduct<UpdateProduct>,
+  variantsToDelete?: number[]
 ): Promise<Product> => {
   const { variants, id, ...product } = productWithVariants;
   if (!id) {
@@ -307,6 +323,10 @@ export const updateProduct = async (
     supabase
   );
   await updateVariantSequence(upsertedVariants, updatedProduct.id, supabase);
+
+  if (!!variantsToDelete?.length) {
+    await deleteVariants(variantsToDelete, supabase);
+  }
 
   return { ...updatedProduct, variants: upsertedVariants };
 };

@@ -86,8 +86,10 @@ const AddEditProduct: FC<AddEditProductProps> = ({ editProduct }) => {
         type: result.status,
       });
 
-      if (result.product && !editProduct)
-        router.push(`/admin/product/${result.product.id}`);
+      if (result.product)
+        router.push(
+          !editProduct ? `/admin/product/${result.product.id}` : "/admin"
+        );
     }
   }, [result]);
 
