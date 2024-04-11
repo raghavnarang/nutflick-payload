@@ -14,6 +14,8 @@ import Textarea from "../form/textarea";
 import ImageUpload from "../form/image-upload";
 import ProductVariants from "./product-variants";
 import { Product } from "@/shared/types/product";
+import Back from "../Icons/back";
+import Link from "next/link";
 
 interface AddEditProductProps {
   editProduct?: Product;
@@ -26,10 +28,15 @@ const FormInside: FC<AddEditProductProps> = ({ editProduct }) => {
 
   return (
     <div>
-      <div className="flex justify-between items-start">
-        <h1 className="text-xl mb-5 font-medium">
-          {isEdit ? "Edit Product" : "Add Product"}
-        </h1>
+      <div className="flex justify-between items-start mb-5">
+        <div className="flex items-center gap-5">
+          <Link href="/admin">
+            <Back />
+          </Link>
+          <h1 className="text-xl font-medium">
+            {isEdit ? "Edit Product" : "Add Product"}
+          </h1>
+        </div>
         <Button type="submit" isSuccess disabled={pending}>
           Save
         </Button>

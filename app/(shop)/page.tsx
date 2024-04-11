@@ -1,5 +1,5 @@
 import ProductGrid from "@/components/product/product-grid";
-import { getProducts } from "@/lib/shopify";
+import { fetchProductsForGrid } from "@/features/server/admin/product";
 
 export const metadata = {
   description:
@@ -10,7 +10,7 @@ export const metadata = {
 };
 
 const Home = async () => {
-  const products = await getProducts({});
+  const products = await fetchProductsForGrid();
   return <ProductGrid products={products} />;
 };
 

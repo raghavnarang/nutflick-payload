@@ -14,6 +14,7 @@ import { cookies } from "next/headers";
 import { getPublicUrlFromPath, uploadFile } from "@/lib/storage";
 import { createServerClient } from "@supabase/ssr";
 import type { Database } from "@/lib/supabase/db-schema";
+import { revalidatePath } from "next/cache";
 
 type FnProductVariant<P> = P extends InsertProduct
   ? FnInternalProductVariant<InsertProductVariant>
@@ -273,6 +274,8 @@ export const insertProduct = async (
   const newVariants = await insertVariants(preparedVariants, supabase);
   await updateVariantSequence(newVariants, newProduct.id, supabase);
 
+  revalidatePath("/");
+
   return { ...newProduct, variants: newVariants };
 };
 
@@ -328,5 +331,69 @@ export const updateProduct = async (
     await deleteVariants(variantsToDelete, supabase);
   }
 
+  revalidatePath("/");
+
   return { ...updatedProduct, variants: upsertedVariants };
+};
+
+export const fetchProducts = async () => {
+  const sbClient = createClient(cookies());
+  const { data: products, error } = await sbClient.from("product").select();
+
+  if (error || !products) {
+    const errMsg = "Unable to fetch products";
+    console.log(error || errMsg);
+    throw Error(errMsg);
+  }
+
+  return products;
+};
+
+export const deleteProduct = async (productId: number) => {
+  const sbClient = createClient(cookies());
+  const variantDeleteResult = await sbClient
+    .from("product_variant")
+    .delete()
+    .eq("product_id", productId);
+  const productDeleteResult = await sbClient
+    .from("product")
+    .delete()
+    .eq("id", productId);
+
+  if (variantDeleteResult.error || productDeleteResult.error) {
+    console.log(variantDeleteResult.error || productDeleteResult.error);
+    throw new Error(
+      "Unable to delete product & it's variants. Data may be corrupted. Try to delete from DB directly"
+    );
+  }
+
+  revalidatePath("/");
+};
+
+export const fetchProductsForGrid = async () => {
+  const sbClient = createClient(cookies());
+  const { data: products, error: productsError } = await sbClient
+    .from("product")
+    .select(
+      `id, image, title, slug, variants:product_variant(id, title, price, comparePrice:compare_price, image)`
+    );
+
+  if (productsError || !products) {
+    const errMsg = "Unable to fetch products";
+    console.log(productsError || errMsg);
+    throw Error(errMsg);
+  }
+
+  return await Promise.all(
+    products.map(async (p) => ({
+      ...p,
+      image: p.image && (await getPublicUrlFromPath(p.image)),
+      variants: await Promise.all(
+        p.variants.map(async (v) => ({
+          ...v,
+          image: v.image && (await getPublicUrlFromPath(v.image)),
+        }))
+      ),
+    }))
+  );
 };

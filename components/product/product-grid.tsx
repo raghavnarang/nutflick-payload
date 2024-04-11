@@ -1,11 +1,12 @@
-import { Product } from "@/lib/shopify/types";
+
 import { FC, ReactNode } from "react";
 import ProductItem from "./product-item";
 import { cookies } from "next/headers";
 import { getCart } from "@/lib/shopify";
+import { ProductGridItem } from "@/shared/types/product";
 
 interface ProductGrid {
-  products: Product[];
+  products: ProductGridItem[];
 }
 
 const ProductGrid: FC<ProductGrid> = async ({ products }) => {
@@ -17,13 +18,13 @@ const ProductGrid: FC<ProductGrid> = async ({ products }) => {
       {products.reduce<ReactNode[]>(
         (productNodes, product) => [
           ...productNodes,
-          product.variants.map((variant) => (
+          product.variants?.map((variant) => (
             <ProductItem
               product={product}
               variant={variant}
-              cartItem={cart?.lines.find(
-                (item) => item.merchandise.id === variant.id
-              )}
+              // cartItem={cart?.lines.find(
+              //   (item) => item.merchandise.id === variant.id
+              // )}
               key={variant.id}
             />
           )),

@@ -1,11 +1,16 @@
 "use server";
 
 import { Status } from "@/shared/types/status";
-import { insertProduct, updateProduct } from "@/features/server/admin/product";
+import {
+  insertProduct,
+  updateProduct,
+  deleteProduct as deleteProductFromDB,
+} from "@/features/server/admin/product";
 import {
   addProductSchema,
   editProductSchema,
 } from "@/shared/zod-schemas/product";
+import { z } from "zod";
 
 export const addProduct = async (prevState: any, data: FormData) => {
   try {
@@ -42,6 +47,26 @@ export const editProduct = async (prevState: any, data: FormData) => {
       status: Status.success,
       message: "Product edited successfully",
       product,
+    };
+  } catch (e) {
+    console.log("Error", e);
+    return { status: Status.error, message: "Something went wrong" };
+  }
+};
+
+export const deleteProduct = async (productId: number) => {
+  try {
+    const result = z.number().safeParse(productId);
+    if (!result.success) {
+      console.log("Schema validation failed for delete product.", result.error);
+      return { status: Status.error, message: "Something went wrong" };
+    }
+
+    const id = result.data;
+    await deleteProductFromDB(id);
+    return {
+      status: Status.success,
+      message: "Product deleted successfully",
     };
   } catch (e) {
     console.log("Error", e);
