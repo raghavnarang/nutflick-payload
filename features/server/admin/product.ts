@@ -255,7 +255,13 @@ export const insertProduct = async (
 
   const { data: insertProductData, error: insertProductError } = await supabase
     .from("product")
-    .insert({ ...product, slug, variant_seq: "", image })
+    .insert({
+      ...product,
+      slug,
+      variant_seq: "",
+      image,
+      category_id: product.category_id ? product.category_id : null,
+    })
     .select();
 
   if (!insertProductData || insertProductData.length === 0) {
@@ -310,7 +316,11 @@ export const updateProduct = async (
 
   const { data: updateProductData, error: updateProductError } = await supabase
     .from("product")
-    .update({ ...product, image })
+    .update({
+      ...product,
+      image,
+      category_id: product.category_id ? product.category_id : null,
+    })
     .eq("id", id)
     .select();
 
@@ -368,32 +378,4 @@ export const deleteProduct = async (productId: number) => {
   }
 
   revalidatePath("/");
-};
-
-export const fetchProductsForGrid = async () => {
-  const sbClient = createClient(cookies());
-  const { data: products, error: productsError } = await sbClient
-    .from("product")
-    .select(
-      `id, image, title, slug, variants:product_variant(id, title, price, comparePrice:compare_price, image)`
-    );
-
-  if (productsError || !products) {
-    const errMsg = "Unable to fetch products";
-    console.log(productsError || errMsg);
-    throw Error(errMsg);
-  }
-
-  return await Promise.all(
-    products.map(async (p) => ({
-      ...p,
-      image: p.image && (await getPublicUrlFromPath(p.image)),
-      variants: await Promise.all(
-        p.variants.map(async (v) => ({
-          ...v,
-          image: v.image && (await getPublicUrlFromPath(v.image)),
-        }))
-      ),
-    }))
-  );
 };

@@ -9,6 +9,7 @@ interface AdminLayoutProps {
 
 const navItems: NavItem[] = [
   { text: "Products", link: "/admin" },
+  { text: "Categories", link: "/admin/category" },
   { text: "Orders", link: "/admin/orders" },
 ];
 

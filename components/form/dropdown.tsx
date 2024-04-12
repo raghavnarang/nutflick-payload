@@ -1,19 +1,15 @@
-import type { FC, InputHTMLAttributes } from "react";
+import type { FC, SelectHTMLAttributes } from "react";
 import cx from "classnames";
 
-interface TextboxProps extends InputHTMLAttributes<HTMLInputElement> {
+interface DropdownProps extends SelectHTMLAttributes<HTMLSelectElement> {
   label?: string;
-  prefix?: string;
-  suffix?: string;
   inputWrapperClassName?: string;
   number?: boolean;
   decimal?: boolean;
 }
 
-const Textbox: FC<TextboxProps> = ({
+const Dropdown: FC<DropdownProps> = ({
   label,
-  prefix,
-  suffix,
   inputWrapperClassName,
   number,
   decimal,
@@ -31,21 +27,13 @@ const Textbox: FC<TextboxProps> = ({
         inputWrapperClassName
       )}
     >
-      {prefix && (
-        <span className="px-3 bg-gray-200 flex items-center">{prefix}</span>
-      )}
-      <input
+      <select
         {...rest}
-        type={number || decimal ? "number" : "text"}
-        step={decimal ? 0.01 : undefined}
         id={rest.name}
         className={cx("outline-none py-1 px-2 w-full", rest.className)}
       />
-      {suffix && (
-        <span className="px-3 bg-gray-200 flex items-center">{suffix}</span>
-      )}
     </div>
   </div>
 );
 
-export default Textbox;
+export default Dropdown;

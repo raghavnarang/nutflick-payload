@@ -16,12 +16,15 @@ import ProductVariants from "./product-variants";
 import { Product } from "@/shared/types/product";
 import Back from "../Icons/back";
 import Link from "next/link";
+import { ProductCategory } from "@/shared/types/product-category";
+import Dropdown from "../form/dropdown";
 
 interface AddEditProductProps {
   editProduct?: Product;
+  categories?: ProductCategory[];
 }
 
-const FormInside: FC<AddEditProductProps> = ({ editProduct }) => {
+const FormInside: FC<AddEditProductProps> = ({ editProduct, categories }) => {
   const isEdit = !!editProduct;
 
   const { pending } = useFormStatus();
@@ -64,7 +67,22 @@ const FormInside: FC<AddEditProductProps> = ({ editProduct }) => {
             name="image"
             label="Product Image"
             src={editProduct?.image || undefined}
+            className="mb-5"
           />
+          {!!categories?.length && (
+            <Dropdown
+              name="category_id"
+              label="Category"
+              defaultValue={editProduct?.category_id || undefined}
+            >
+              <option value="">No Category</option>
+              {categories.map((cat) => (
+                <option value={cat.id} key={cat.id}>
+                  {cat.name}
+                </option>
+              ))}
+            </Dropdown>
+          )}
           {editProduct && (
             <input type="hidden" name="id" value={editProduct.id} />
           )}
@@ -78,7 +96,10 @@ const FormInside: FC<AddEditProductProps> = ({ editProduct }) => {
   );
 };
 
-const AddEditProduct: FC<AddEditProductProps> = ({ editProduct }) => {
+const AddEditProduct: FC<AddEditProductProps> = ({
+  editProduct,
+  categories,
+}) => {
   const actionFn = editProduct ? editProductAction : addProduct;
   const [result, action] = useFormState(actionFn, null);
 
@@ -102,7 +123,7 @@ const AddEditProduct: FC<AddEditProductProps> = ({ editProduct }) => {
 
   return (
     <form action={action}>
-      <FormInside editProduct={editProduct} />
+      <FormInside editProduct={editProduct} categories={categories} />
     </form>
   );
 };

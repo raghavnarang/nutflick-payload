@@ -5,6 +5,7 @@ export const addProductSchema = zfd.formData({
   title: zfd.text(),
   description: zfd.text(z.string().optional()),
   image: zfd.file(z.instanceof(File).optional()),
+  category_id: zfd.numeric(z.number().optional()),
   variants: zfd.repeatable(
     z
       .array(
@@ -26,6 +27,7 @@ export const editProductSchema = zfd.formData({
   title: zfd.text(),
   description: zfd.text(z.string().optional()),
   image: zfd.file(z.instanceof(File).optional()),
+  category_id: zfd.numeric(z.number().optional()),
   deleted_variants: zfd.repeatable(
     z.array(
       z

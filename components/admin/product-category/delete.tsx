@@ -3,24 +3,25 @@
 import Trash from "@/components/Icons/trash";
 import Button from "@/components/button";
 import Modal from "@/components/modal";
+import { deleteCategory } from "@/features/server/actions/admin/category";
 import { deleteProduct } from "@/features/server/actions/admin/product";
 import { useToast } from "@/features/toast";
 import { useRouter } from "next/navigation";
 import { type FC, useState, useEffect } from "react";
 
-interface DeleteProductProps {
-  productId: number;
-  productName?: string;
+interface DeleteCategoryProps {
+  id: number;
+  name?: string;
 }
 
-const DeleteProduct: FC<DeleteProductProps> = ({ productId, productName }) => {
+const DeleteCategory: FC<DeleteCategoryProps> = ({ id, name }) => {
   const [isOpen, setOpen] = useState(false);
   const [inProgress, setProgress] = useState(false);
   const [result, setResult] =
     useState<Awaited<ReturnType<typeof deleteProduct>>>();
 
-  const message = `Do you want to delete this product${
-    productName ? `: ${productName}` : ""
+  const message = `Do you want to delete this category${
+    name ? `: ${name}` : ""
   }?`;
 
   const router = useRouter();
@@ -47,7 +48,7 @@ const DeleteProduct: FC<DeleteProductProps> = ({ productId, productName }) => {
             text: "Delete",
             onClick: async () => {
               setProgress(true);
-              setResult(await deleteProduct(productId));
+              setResult(await deleteCategory(id));
               setProgress(false);
               setOpen(false);
             },
@@ -63,4 +64,4 @@ const DeleteProduct: FC<DeleteProductProps> = ({ productId, productName }) => {
   );
 };
 
-export default DeleteProduct;
+export default DeleteCategory;

@@ -1,5 +1,5 @@
 import ProductGrid from "@/components/product/product-grid";
-import { fetchProductsForGrid } from "@/features/server/admin/product";
+import { fetchProductsForGrid } from "@/features/server/common/product";
 
 export const metadata = {
   description:
