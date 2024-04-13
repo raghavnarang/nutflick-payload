@@ -4,6 +4,7 @@ import Footer from "@/components/footer";
 import { ensureStartsWith } from "@/lib/utils";
 import { Suspense } from "react";
 import { ToastProvider } from "@/features/toast";
+import { CartProvider } from "@/features/cart";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -49,7 +50,9 @@ export default function RootLayout({
         <div className="flex flex-col justify-between min-h-screen px-5">
           <div>
             <Suspense>
-              <ToastProvider>{children}</ToastProvider>
+              <ToastProvider>
+                <CartProvider>{children}</CartProvider>
+              </ToastProvider>
             </Suspense>
           </div>
           <Footer />

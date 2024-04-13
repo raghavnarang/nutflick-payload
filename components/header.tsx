@@ -12,7 +12,7 @@ interface HeaderProps {
   mobileNavItems?: NavProps["items"];
 }
 
-const Header: FC<HeaderProps> = async ({
+const Header: FC<HeaderProps> = ({
   mobileNavItems,
   mobileSideNavItems,
   navItems,

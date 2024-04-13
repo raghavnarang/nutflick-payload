@@ -8,7 +8,7 @@ export const fetchProductsForGrid = async () => {
   const { data: products, error: productsError } = await sbClient
     .from("product")
     .select(
-      `id, image, title, slug, variants:product_variant(id, title, price, comparePrice:compare_price, image)`
+      `id, image, title, slug, category:product_category(name) ,variants:product_variant(id, title, price, comparePrice:compare_price, image)`
     );
 
   if (productsError || !products) {
@@ -20,11 +20,11 @@ export const fetchProductsForGrid = async () => {
   return await Promise.all(
     products.map(async (p) => ({
       ...p,
-      image: p.image && (await getPublicUrlFromPath(p.image)),
+      image: p.image && (await getPublicUrlFromPath(p.image, sbClient)),
       variants: await Promise.all(
         p.variants.map(async (v) => ({
           ...v,
-          image: v.image && (await getPublicUrlFromPath(v.image)),
+          image: v.image && (await getPublicUrlFromPath(v.image, sbClient)),
         }))
       ),
     }))

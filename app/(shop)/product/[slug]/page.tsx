@@ -1,7 +1,6 @@
 import { getCart, getProduct } from "@/lib/shopify";
 import { Suspense, type FC } from "react";
 import Image from "next/image";
-import ErrorMessage from "@/components/error-message";
 import cx from "classnames";
 import Link from "next/link";
 import AddToCart from "@/components/cart/add-to-cart";

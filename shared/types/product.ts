@@ -1,3 +1,4 @@
+import { fetchProductsForGrid } from "@/features/server/common/product";
 import { Tables, TablesInsert, TablesUpdate } from "@/lib/supabase/db-schema";
 
 export interface ProductMinimal {
@@ -28,6 +29,12 @@ export interface ProductVariantGridItem
   comparePrice?: ProductVariant["compare_price"];
 }
 export interface ProductGridItem
-  extends Omit<Product, "created_at" | "description" | "variants"> {
+  extends Omit<
+    Product,
+    "created_at" | "description" | "variants" | "category_id"
+  > {
   variants?: ProductVariantGridItem[];
+  category: {
+    name: string;
+  } | null;
 }

@@ -13,6 +13,7 @@ import { createClient } from "@/lib/supabase/actions";
 import { cookies } from "next/headers";
 import { getPublicUrlFromPath, uploadFile } from "@/lib/storage";
 import { createServerClient } from "@supabase/ssr";
+import { createClient as createStaticClient } from "@supabase/supabase-js";
 import type { Database } from "@/lib/supabase/db-schema";
 import { revalidatePath } from "next/cache";
 
@@ -171,32 +172,31 @@ export const upsertVariants = async (
 
 export const fetchProduct = async (
   id: string,
-  dbClient: ReturnType<typeof createServerClient<Database>>
+  dbClient: ReturnType<
+    typeof createServerClient<Database> | typeof createStaticClient<Database>
+  >
 ) => {
-  const productsResponse = await dbClient.from("product").select().eq("id", id);
-  const variantsResponse = await dbClient
-    .from("product_variant")
-    .select()
-    .eq("product_id", id);
+  const productsResponse = await dbClient
+    .from("product")
+    .select("*, variants:product_variant(*)")
+    .eq("id", id);
 
   if (
     productsResponse.error ||
-    variantsResponse.error ||
     productsResponse.count === 0 ||
-    variantsResponse.count === 0
+    productsResponse.data[0].variants.length === 0
   ) {
     console.log("Products Fetch Error", productsResponse.error);
-    console.log("Variants Fetch Error", variantsResponse.error);
 
     throw Error("Something went wrong in fetching product");
   }
 
   const product = productsResponse.data[0];
   if (product.image) {
-    product.image = await getPublicUrlFromPath(product.image);
+    product.image = await getPublicUrlFromPath(product.image, dbClient);
   }
 
-  const variants = variantsResponse.data;
+  const variants = product.variants;
   const sequencedVariants: ProductVariant[] = [];
   const sequence = (
     !product.variant_seq ? null : JSON.parse(product.variant_seq as string)
@@ -208,7 +208,7 @@ export const fetchProduct = async (
       const variantDbIndex = variants.findIndex((v) => v.id === variantId);
       const variant = variants[variantDbIndex];
       if (variant.image) {
-        variant.image = await getPublicUrlFromPath(variant.image);
+        variant.image = await getPublicUrlFromPath(variant.image, dbClient);
       }
       sequencedVariants[index] = variants[variantDbIndex];
     }

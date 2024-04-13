@@ -7,7 +7,7 @@ interface CartNavItemUIProps {
   onlyIcon?: boolean;
 }
 
-const CartNavItemUI: FC<CartNavItemUIProps> = async ({
+const CartNavItemUI: FC<CartNavItemUIProps> = ({
   quantity = 0,
   onlyIcon = false,
 }) => (
