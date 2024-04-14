@@ -1,17 +1,15 @@
-import { getCart } from "@/lib/shopify";
 import { Suspense, type FC } from "react";
 import Image from "next/image";
 import cx from "classnames";
 import Link from "next/link";
 import AddToCart from "@/components/cart/add-to-cart";
-import { cookies } from "next/headers";
-import EditCartItem from "@/components/cart/edit-cart-item";
 import ProductRecommendations from "@/components/product/product-recommendations";
 import BigMessage from "@/components/big-message";
 import Sad from "@/components/Icons/sad";
 import { fetchProduct } from "@/features/server/admin/product";
 import { createClient } from "@/lib/supabase/static";
 import Photo from "@/components/Icons/photo";
+import { fetchProductsForGrid } from "@/features/server/common/product";
 
 interface ProductProps {
   params: { slug: [productSlug: string, variantSlug?: string] };
@@ -110,3 +108,16 @@ const Product: FC<ProductProps> = async ({
 };
 
 export default Product;
+
+export async function generateStaticParams() {
+  const products = await fetchProductsForGrid();
+
+  return products.reduce<{ slug: string[] }[]>(
+    (slugs, p) => [
+      ...slugs,
+      ...p.variants.map((v) => ({ slug: [p.slug, v.slug] })),
+      { slug: [p.slug] },
+    ],
+    []
+  );
+}
