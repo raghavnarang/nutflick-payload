@@ -1,14 +1,12 @@
 import "server-only";
 
 import type {
-  InsertProduct,
-  InsertProductVariant,
+  InsertProductVariant as PreparedProductVariantToInsert,
   Product,
   ProductVariant,
-  UpdateProduct,
-  UpdateProductVariant,
+  UpdateProductVariant as PreparedProductVariantToUpdate,
 } from "@/shared/types/product";
-import { slugify } from "@/shared/utils";
+import { getUniqueSlug, slugify } from "@/shared/utils";
 import { createClient } from "@/lib/supabase/actions";
 import { cookies } from "next/headers";
 import { getPublicUrlFromPath, uploadFile } from "@/lib/storage";
@@ -16,23 +14,11 @@ import { createServerClient } from "@supabase/ssr";
 import { createClient as createStaticClient } from "@supabase/supabase-js";
 import type { Database } from "@/lib/supabase/db-schema";
 import { revalidatePath } from "next/cache";
-
-type FnProductVariant<P> = P extends InsertProduct
-  ? FnInternalProductVariant<InsertProductVariant>
-  : FnInternalProductVariant<UpdateProductVariant>;
-
-type FnInternalProductVariant<V> = Omit<V, "image" | "product_id"> & {
-  image?: File;
-};
-
-type FnProduct<P> = Omit<P, "slug" | "variant_seq" | "image"> & {
-  variants: FnProductVariant<P>[];
-  image?: File;
-};
-
-type FnProductOrVariant =
-  | Omit<FnProduct<InsertProduct | UpdateProduct>, "variants">
-  | FnProductVariant<InsertProduct | UpdateProduct>;
+import type {
+  ProductToInsert,
+  ProductToUpdate,
+  ProductVariantToUpsert,
+} from "@/shared/types/zod-schema-types";
 
 type SupabaseClient = ReturnType<typeof createClient>;
 
@@ -41,19 +27,20 @@ enum UpsertOperation {
   UPDATE = 2,
 }
 
-export const prepareVariantForDBInsert = async (
-  variant: FnProductVariant<InsertProduct>,
+export const prepareVariant = async (
+  variant: ProductVariantToUpsert,
   product: Product,
-  index: number
+  dbClient: ReturnType<typeof createServerClient<Database>>
 ) => {
-  const slug = slugify(`${product.title} ${variant.title} ${index + 1}`);
-  const image = await getImageForDBUpsert(variant, slug);
+  const slug = slugify(variant.title);
+  const imageName = slugify(`${product.slug} ${slug}`);
+  const image = await getImageForDBUpsert(variant, imageName, dbClient);
 
-  return { ...variant, image, product_id: product.id };
+  return { ...variant, image, product_id: product.id, slug };
 };
 
 export const insertVariants = async (
-  variants: InsertProductVariant[],
+  variants: PreparedProductVariantToInsert[],
   sbClient: SupabaseClient
 ) => {
   if (variants.length === 0) {
@@ -74,7 +61,7 @@ export const insertVariants = async (
 };
 
 export const updateVariants = async (
-  variants: UpdateProductVariant[],
+  variants: PreparedProductVariantToUpdate[],
   sbClient: SupabaseClient
 ) => {
   if (variants.length === 0) {
@@ -125,30 +112,24 @@ export const updateVariantSequence = async (
 };
 
 export const upsertVariants = async (
-  variants: FnProductVariant<InsertProduct | UpdateProduct>[],
+  variants: ProductVariantToUpsert[],
   product: Product,
   sbClient: SupabaseClient
 ) => {
   const itemOperationsByIndex: UpsertOperation[] = [];
-  const variantsToInsert: InsertProductVariant[] = [];
-  const variantsToUpdate: UpdateProductVariant[] = [];
+  const variantsToInsert: PreparedProductVariantToInsert[] = [];
+  const variantsToUpdate: PreparedProductVariantToUpdate[] = [];
 
   for (let index = 0; index < variants.length; index++) {
     const variant = variants[index];
+    const preparedVariant = await prepareVariant(variant, product, sbClient);
 
     if (!variant.id) {
       itemOperationsByIndex.push(UpsertOperation.INSERT);
-      variantsToInsert.push(
-        await prepareVariantForDBInsert(
-          variant as FnProductVariant<InsertProduct>,
-          product,
-          index
-        )
-      );
+      variantsToInsert.push(preparedVariant);
     } else {
       itemOperationsByIndex.push(UpsertOperation.UPDATE);
-      const image = await getImageForDBUpsert(variant, product.slug);
-      variantsToUpdate.push({ ...variant, image });
+      variantsToUpdate.push(preparedVariant);
     }
   }
 
@@ -171,15 +152,17 @@ export const upsertVariants = async (
 };
 
 export const fetchProduct = async (
-  id: string,
+  id: number | string,
   dbClient: ReturnType<
     typeof createServerClient<Database> | typeof createStaticClient<Database>
   >
 ) => {
   const productsResponse = await dbClient
     .from("product")
-    .select("*, variants:product_variant(*)")
-    .eq("id", id);
+    .select(
+      "*, variants:product_variant(*), category:product_category(id, name)"
+    )
+    .eq(typeof id === "number" ? "id" : "slug", id);
 
   if (
     productsResponse.error ||
@@ -214,7 +197,11 @@ export const fetchProduct = async (
     }
   }
 
-  return { ...product, variants: sequencedVariants };
+  return {
+    ...product,
+    variants: sequencedVariants,
+    category_id: product.category?.id || null,
+  };
 };
 
 export const getProductSlug = async (id: number, sbClient: SupabaseClient) => {
@@ -233,25 +220,27 @@ export const getProductSlug = async (id: number, sbClient: SupabaseClient) => {
 };
 
 export const getImageForDBUpsert = async (
-  item: FnProductOrVariant,
-  slug: string
+  item: { image?: File },
+  slug: string,
+  dbClient: ReturnType<typeof createServerClient<Database>>
 ) => {
   if (item.image) {
-    return await uploadFile(item.image, slug);
+    return await uploadFile(item.image, slug, dbClient);
   }
 
   return "image" in item ? null : undefined;
 };
 
 export const insertProduct = async (
-  productWithVariants: FnProduct<InsertProduct>
+  productWithVariants: ProductToInsert
 ): Promise<Product> => {
   const { variants, ...product } = productWithVariants;
-  const slug = slugify(product.title);
 
   const supabase = createClient(cookies());
+  const slug = await getUniqueSlug(product.title, supabase);
 
-  const image = product.image && (await uploadFile(product.image, slug));
+  const image =
+    product.image && (await uploadFile(product.image, slug, supabase));
 
   const { data: insertProductData, error: insertProductError } = await supabase
     .from("product")
@@ -272,9 +261,7 @@ export const insertProduct = async (
   const newProduct = insertProductData[0];
 
   const preparedVariants = await Promise.all(
-    variants.map((variant, index) =>
-      prepareVariantForDBInsert(variant, newProduct, index)
-    )
+    variants.map((variant) => prepareVariant(variant, newProduct, supabase))
   );
 
   const newVariants = await insertVariants(preparedVariants, supabase);
@@ -301,10 +288,14 @@ export const deleteVariants = async (
 };
 
 export const updateProduct = async (
-  productWithVariants: FnProduct<UpdateProduct>,
-  variantsToDelete?: number[]
+  productWithVariants: ProductToUpdate
 ): Promise<Product> => {
-  const { variants, id, ...product } = productWithVariants;
+  const {
+    variants,
+    id,
+    deleted_variants: variantsToDelete,
+    ...product
+  } = productWithVariants;
   if (!id) {
     console.log("ID is not available");
     throw Error("Input data is invalid");
@@ -312,7 +303,7 @@ export const updateProduct = async (
 
   const supabase = createClient(cookies());
   const slug = await getProductSlug(id, supabase);
-  const image = await getImageForDBUpsert(product, slug);
+  const image = await getImageForDBUpsert(product, slug, supabase);
 
   const { data: updateProductData, error: updateProductError } = await supabase
     .from("product")

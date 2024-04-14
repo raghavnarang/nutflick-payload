@@ -126,6 +126,7 @@ export interface Database {
           included_shipping_cost: number | null
           price: number
           product_id: number
+          slug: string
           title: string
           weight: number
         }
@@ -137,6 +138,7 @@ export interface Database {
           included_shipping_cost?: number | null
           price: number
           product_id: number
+          slug: string
           title: string
           weight: number
         }
@@ -148,6 +150,7 @@ export interface Database {
           included_shipping_cost?: number | null
           price?: number
           product_id?: number
+          slug?: string
           title?: string
           weight?: number
         }

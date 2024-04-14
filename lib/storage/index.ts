@@ -1,14 +1,15 @@
 import "server-only";
 
-import { cookies } from "next/headers";
-import { createClient } from "../supabase/server";
 import { createClient as createStaticClient } from "@supabase/supabase-js";
 import { createServerClient } from "@supabase/ssr";
 import { Database } from "../supabase/db-schema";
 
-export const uploadFile = async (file: File, name: string) => {
-  const supabase = createClient(cookies());
-  const { data, error } = await supabase.storage
+export const uploadFile = async (
+  file: File,
+  name: string,
+  dbClient: ReturnType<typeof createServerClient<Database>>
+) => {
+  const { data, error } = await dbClient.storage
     .from(process.env.SUPABASE_PUBLIC_BUCKET!)
     .upload(name + "." + file.name.split(".")[1], file, { upsert: true });
 

@@ -17,13 +17,9 @@ interface ProductItemProps {
 }
 
 const ProductItem: FC<ProductItemProps> = ({ product, variant }) => {
-  const { slug } = product;
   const hasMultipleVariants = product.variants && product.variants.length > 1;
 
-  const link = {
-    pathname: `/product/${slug}`,
-    query: hasMultipleVariants ? { variant: variant.id } : {},
-  };
+  const link = `/product/${product.slug}/${variant.slug}`;
 
   const image = variant.image || product.image;
 
@@ -41,7 +37,9 @@ const ProductItem: FC<ProductItemProps> = ({ product, variant }) => {
         {image ? (
           <Image
             src={image}
-            alt={product.title}
+            alt={
+              product.title + hasMultipleVariants ? ` - ${variant.title}` : ""
+            }
             fill
             className="object-cover rounded-lg z-0"
           />

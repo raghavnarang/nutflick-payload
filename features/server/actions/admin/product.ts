@@ -41,8 +41,7 @@ export const editProduct = async (prevState: any, data: FormData) => {
       return { status: Status.error, message: "Something went wrong" };
     }
 
-    const { deleted_variants: variantsToDelete, ...productData } = result.data;
-    const product = await updateProduct(productData, variantsToDelete);
+    const product = await updateProduct(result.data);
     return {
       status: Status.success,
       message: "Product edited successfully",

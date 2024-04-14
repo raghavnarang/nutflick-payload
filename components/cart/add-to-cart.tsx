@@ -4,7 +4,7 @@ import { type FC } from "react";
 import cx from "classnames";
 import Cart from "../Icons/cart";
 import Button from "../button";
-import {
+import type {
   ProductGridItem,
   ProductVariantGridItem,
 } from "@/shared/types/product";
@@ -29,12 +29,15 @@ const AddToCart: FC<AddToCartProps> = ({
   const cartItem = cart.items.find((ci) => ci.variantId === variant.id);
   if (cartItem) {
     return (
-      <EditCartItem
-        variantId={variant.id}
-        qty={cartItem.qty}
-        className={cx({ "!flex-row": !bigButton })}
-        bigButton={bigButton}
-      />
+      <>
+        {bigButton && <p className="text-lg mb-3">Quantity (in cart)</p>}
+        <EditCartItem
+          variantId={variant.id}
+          qty={cartItem.qty}
+          className={cx({ "!flex-row": !bigButton })}
+          bigButton={bigButton}
+        />
+      </>
     );
   }
 

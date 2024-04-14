@@ -6,11 +6,11 @@ import { cookies } from "next/headers";
 import { FC } from "react";
 
 interface EditProductProps {
-  params: { slug: string };
+  params: { id: string };
 }
 
-const EditProduct: FC<EditProductProps> = async ({ params: { slug } }) => {
-  const product = await fetchProduct(slug, createClient(cookies()));
+const EditProduct: FC<EditProductProps> = async ({ params: { id } }) => {
+  const product = await fetchProduct(+id, createClient(cookies()));
   const categories = await fetchCategories();
 
   return <AddEditProduct editProduct={product} categories={categories} />;

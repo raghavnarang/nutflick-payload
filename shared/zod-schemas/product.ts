@@ -19,6 +19,11 @@ export const addProductSchema = zfd.formData({
         })
       )
       .min(1)
+      .refine(
+        (variants) =>
+          new Set(variants.map((v) => v.title)).size === variants.length,
+        { message: "Product variant titles must be unique" }
+      )
   ),
 });
 
@@ -50,5 +55,10 @@ export const editProductSchema = zfd.formData({
         })
       )
       .min(1)
+      .refine(
+        (variants) =>
+          new Set(variants.map((v) => v.title)).size === variants.length,
+        { message: "Product variant titles must be unique" }
+      )
   ),
 });

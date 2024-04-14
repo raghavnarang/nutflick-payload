@@ -1,15 +1,17 @@
-import { getProductRecommendations } from "@/lib/shopify";
 import { FC } from "react";
 import ProductGrid from "./product-grid";
+import { fetchRecommendedProducts } from "@/features/server/common/product";
 
 interface ProductRecommendationsProps {
-  productId: string;
+  categoryId: number;
+  productId: number;
 }
 
 const ProductRecommendations: FC<ProductRecommendationsProps> = async ({
   productId,
+  categoryId
 }) => {
-  const products = await getProductRecommendations(productId);
+  const products = await fetchRecommendedProducts(categoryId, productId);
 
   if (products.length === 0) return null;
   return (
