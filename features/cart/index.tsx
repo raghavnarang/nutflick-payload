@@ -1,6 +1,6 @@
 "use client";
 
-import type { Cart } from "@/shared/types/cart";
+import type { Cart, CartProduct } from "@/shared/types/cart";
 import type {
   ProductGridItem,
   ProductVariantGridItem,
@@ -14,13 +14,13 @@ const defaultIncrementFn = (
   variant: ProductVariantGridItem | number,
   product?: ProductGridItem
 ) => {};
-const defaultDecrementFn = (variantId: number) => {};
 
 const CartContext = createContext({
   cart: defaultCart,
   increment: defaultIncrementFn,
-  decrement: defaultDecrementFn,
+  decrement: (variantId: number) => {},
   clear: (variantId?: number) => {},
+  setCartItems: (items: CartProduct[]) => {},
 });
 
 const CART_LOCAL_STORAGE_KEY = "nutflick_cart";
@@ -53,12 +53,7 @@ export const CartProvider: FC<{ children: ReactNode }> = ({ children }) => {
       newCartItems.push(getCartProduct(product, variant));
     }
 
-    const newCart = { ...cart, items: newCartItems };
-    window.localStorage.setItem(
-      CART_LOCAL_STORAGE_KEY,
-      JSON.stringify(newCart)
-    );
-    setCart(newCart);
+    setCartItems(newCartItems);
   };
 
   const decrement = (variantId: number) => {
@@ -77,22 +72,16 @@ export const CartProvider: FC<{ children: ReactNode }> = ({ children }) => {
       newCartItems = newCartItems.filter((ci) => ci.variantId !== variantId);
     }
 
-    const newCart = { ...cart, items: newCartItems };
-    window.localStorage.setItem(
-      CART_LOCAL_STORAGE_KEY,
-      JSON.stringify(newCart)
-    );
-    setCart(newCart);
+    setCartItems(newCartItems);
   };
 
-  const clear = (variantId?: number) => {
-    const newCart = {
-      ...cart,
-      items: !variantId
-        ? []
-        : cart.items.filter((ci) => ci.variantId !== variantId),
-    };
+  const clear = (variantId?: number) =>
+    setCartItems(
+      !variantId ? [] : cart.items.filter((ci) => ci.variantId !== variantId)
+    );
 
+  const setCartItems = (items: CartProduct[]) => {
+    const newCart = { ...cart, items };
     window.localStorage.setItem(
       CART_LOCAL_STORAGE_KEY,
       JSON.stringify(newCart)
@@ -101,7 +90,9 @@ export const CartProvider: FC<{ children: ReactNode }> = ({ children }) => {
   };
 
   return (
-    <CartContext.Provider value={{ cart, increment, decrement, clear }}>
+    <CartContext.Provider
+      value={{ cart, increment, decrement, clear, setCartItems }}
+    >
       {children}
     </CartContext.Provider>
   );

@@ -51,7 +51,7 @@ const CartSummary: FC<CartSummaryProps> = ({ cart }) => {
         </div>
       </div>
       <Button large>
-        <Link href="#">Proceed to Checkout</Link>
+        <Link href="/checkout">Proceed to Checkout</Link>
       </Button>
     </div>
   );

@@ -59,6 +59,68 @@ export interface Database {
   }
   public: {
     Tables: {
+      cart_product: {
+        Row: {
+          checkout_id: number
+          created_at: string
+          id: number
+          qty: number
+          variant_id: number
+        }
+        Insert: {
+          checkout_id: number
+          created_at?: string
+          id?: number
+          qty: number
+          variant_id: number
+        }
+        Update: {
+          checkout_id?: number
+          created_at?: string
+          id?: number
+          qty?: number
+          variant_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cart_product_checkout_id_fkey"
+            columns: ["checkout_id"]
+            referencedRelation: "checkout"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cart_product_variant_id_fkey"
+            columns: ["variant_id"]
+            referencedRelation: "product_variant"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      checkout: {
+        Row: {
+          created_at: string
+          id: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "checkout_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       product: {
         Row: {
           category_id: number | null

@@ -63,7 +63,7 @@ export async function middleware(request: NextRequest) {
     const refUrl = new URL(pathName, request.url);
     const ref = `${refUrl.pathname}${refUrl.search}`;
     const loginUrl = new URL("/login", request.url);
-    loginUrl.searchParams.append('ref', ref)
+    loginUrl.searchParams.append("ref", ref);
 
     return NextResponse.redirect(loginUrl);
   } else if (isLoggedIn && isAuthUrl) {
@@ -84,5 +84,11 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/account/:path*", "/login", "/verify-request", "/admin/:path*"],
+  matcher: [
+    "/account/:path*",
+    "/login",
+    "/verify-request",
+    "/admin/:path*",
+    "/checkout/:path*",
+  ],
 };

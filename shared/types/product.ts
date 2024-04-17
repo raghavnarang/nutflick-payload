@@ -1,4 +1,3 @@
-import { fetchProductsForGrid } from "@/features/server/common/product";
 import { Tables, TablesInsert, TablesUpdate } from "@/lib/supabase/db-schema";
 
 export interface ProductMinimal {
