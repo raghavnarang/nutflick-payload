@@ -23,7 +23,7 @@ const Dropdown: FC<DropdownProps> = ({
     )}
     <div
       className={cx(
-        "border border-gray-400 focus:border-gray-600 rounded overflow-hidden flex",
+        "border border-gray-300 focus:border-gray-600 rounded overflow-hidden flex h-10",
         inputWrapperClassName
       )}
     >

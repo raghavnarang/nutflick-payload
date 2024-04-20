@@ -5,6 +5,7 @@ import DiscountTag from "./discount-tag";
 import ApplyDiscount from "./apply-discount";
 import Link from "next/link";
 import Button from "@/components/button";
+import Section from "@/components/section";
 
 interface CartSummaryProps {
   cart: Cart;
@@ -18,10 +19,7 @@ const CartSummary: FC<CartSummaryProps> = ({ cart }) => {
 
   return (
     <div className="lg:w-1/3 w-full">
-      <div className="bg-gray-50 rounded-lg mb-5">
-        <header className="md:px-8 px-4 h-16 flex items-center border-b border-solid border-gray-300">
-          <span className="text-lg">Cart Summary</span>
-        </header>
+      <Section title="Cart Summary">
         <div className="md:px-8 px-4 h-16 border-b border-solid border-gray-200 flex justify-between items-center text-gray-600">
           <span>Subtotal</span>
           <Price price={total} />
@@ -44,12 +42,9 @@ const CartSummary: FC<CartSummaryProps> = ({ cart }) => {
         </div>
         <div className="md:px-8 px-4 h-16 flex justify-between items-center">
           <span className="text-gray-600">Total</span>
-          <Price
-            className="text-lg"
-            price={total}
-          />
+          <Price className="text-lg" price={total} />
         </div>
-      </div>
+      </Section>
       <Button large>
         <Link href="/checkout">Proceed to Checkout</Link>
       </Button>

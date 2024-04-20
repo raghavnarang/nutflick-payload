@@ -9,19 +9,7 @@ export interface CartProduct {
   category?: string;
 }
 
-export interface Discount {
-  code: string;
-  percent?: number;
-  value?: number;
-}
-
-export interface Shipping {
-  label: string;
-  value: number;
-}
-
 export interface Cart {
   items: CartProduct[];
-  discount?: Discount;
-  shipping?: Shipping;
+  exp: number;
 }

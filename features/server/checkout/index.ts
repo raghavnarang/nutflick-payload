@@ -10,7 +10,6 @@ import { createServerClient } from "@supabase/ssr";
 import { Database } from "@/lib/supabase/db-schema";
 import type {
   InsertCartProduct,
-  UpdateCartProduct,
   CartProduct,
 } from "@/shared/types/cart-product";
 
@@ -228,3 +227,8 @@ export const validateCartAndGenerateCheckout = async (items: CartItem[]) => {
 
   return { items: validatedItems, checkoutId };
 };
+
+export const getCheckout = async (id: number|string) => {
+  const checkoutId = z.number().parse(id);
+  
+}

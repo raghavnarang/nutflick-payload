@@ -44,8 +44,8 @@ const Toast: FC<ToastProps> = ({ type = Status.pending, product, message }) => {
           <p>{product.title}</p>
         </div>
       )}
-      <p className="py-3 flex">
-        {Icon && <Icon className="mr-3" />}
+      <p className="py-3 flex items-center">
+        {Icon && <Icon className="mr-3 shrink-0" />}
         {message}
       </p>
     </div>

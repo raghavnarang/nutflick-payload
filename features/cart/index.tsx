@@ -9,7 +9,7 @@ import type { FC, ReactNode } from "react";
 import { createContext, useContext, useEffect, useState } from "react";
 import { getCartProduct } from "./utils";
 
-const defaultCart: Cart = { items: [] };
+const defaultCart: Cart = { items: [], exp: 0 };
 const defaultIncrementFn = (
   variant: ProductVariantGridItem | number,
   product?: ProductGridItem
@@ -23,14 +23,23 @@ const CartContext = createContext({
   setCartItems: (items: CartProduct[]) => {},
 });
 
-const CART_LOCAL_STORAGE_KEY = "nutflick_cart";
+const CART_LOCAL_STORAGE_KEY = "nc";
+const CART_SEVEN_DAYS = 1000 * 60 * 60 * 24 * 7;
 
 export const CartProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [cart, setCart] = useState(defaultCart);
 
   useEffect(() => {
     const cartJson = window.localStorage.getItem(CART_LOCAL_STORAGE_KEY);
-    if (cartJson) setCart(JSON.parse(cartJson) as Cart);
+    if (cartJson) {
+      const cartLS = JSON.parse(cartJson) as Cart;
+
+      if (Date.now() >= cartLS.exp) {
+        clear();
+      } else {
+        setCart(cartLS);
+      }
+    }
   }, []);
 
   const increment = (
@@ -86,7 +95,7 @@ export const CartProvider: FC<{ children: ReactNode }> = ({ children }) => {
       CART_LOCAL_STORAGE_KEY,
       JSON.stringify(newCart)
     );
-    setCart(newCart);
+    setCart({ ...newCart, exp: Date.now() + CART_SEVEN_DAYS });
   };
 
   return (

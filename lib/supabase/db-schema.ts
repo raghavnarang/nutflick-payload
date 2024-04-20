@@ -59,6 +59,49 @@ export interface Database {
   }
   public: {
     Tables: {
+      address: {
+        Row: {
+          address: string
+          city: string
+          created_at: string
+          id: number
+          name: string
+          phone: string
+          pincode: string
+          state: string
+          user_id: string
+        }
+        Insert: {
+          address: string
+          city: string
+          created_at?: string
+          id?: number
+          name: string
+          phone: string
+          pincode: string
+          state: string
+          user_id: string
+        }
+        Update: {
+          address?: string
+          city?: string
+          created_at?: string
+          id?: number
+          name?: string
+          phone?: string
+          pincode?: string
+          state?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "address_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       cart_product: {
         Row: {
           checkout_id: number
@@ -98,21 +141,30 @@ export interface Database {
       }
       checkout: {
         Row: {
+          address_id: number | null
           created_at: string
           id: number
           user_id: string
         }
         Insert: {
+          address_id?: number | null
           created_at?: string
           id?: number
           user_id: string
         }
         Update: {
+          address_id?: number | null
           created_at?: string
           id?: number
           user_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "checkout_address_id_fkey"
+            columns: ["address_id"]
+            referencedRelation: "address"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "checkout_user_id_fkey"
             columns: ["user_id"]
