@@ -2,7 +2,8 @@
 
 import "server-only";
 import { z } from "zod";
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/supabase/actions";
+import { createClient as createClientForServer } from "@/lib/supabase/server";
 import { cookies } from "next/headers";
 import { getCartProduct } from "@/features/cart/utils";
 import { getPublicUrlFromPath } from "@/lib/storage";
@@ -228,7 +229,25 @@ export const validateCartAndGenerateCheckout = async (items: CartItem[]) => {
   return { items: validatedItems, checkoutId };
 };
 
-export const getCheckout = async (id: number|string) => {
+export const getCheckout = async (id: number) => {
   const checkoutId = z.number().parse(id);
-  
-}
+  const dbClient = createClientForServer(cookies());
+  const { data: userData, error: userError } = await dbClient.auth.getUser();
+  if (userError || !userData) {
+    console.log(userError);
+    throw Error("Unable to get current user");
+  }
+
+  const { data: checkout, error } = await dbClient
+    .from("checkout")
+    .select("address(*)")
+    .eq("id", checkoutId)
+    .eq("user_id", userData.user.id);
+
+  if (error || !checkout || checkout.length === 0) {
+    console.log(error);
+    throw Error("Unable to find cart items in DB");
+  }
+
+  return checkout[0];
+};

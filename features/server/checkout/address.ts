@@ -1,23 +1,17 @@
-import type { AddressToInsert } from "@/shared/types/zod-schema-types";
+import type { AddressToInsert, AddressToUpdate } from "@/shared/types/zod-schema-types";
 import { createServerClient } from "@supabase/ssr";
 import type { Database } from "@/lib/supabase/db-schema";
+import { getCurrentUserId } from "../common/user";
 
-export const insertAddressToCheckout = async (
+export const insertAddress = async (
   addressInput: AddressToInsert,
-  checkoutId: number,
   dbClient: ReturnType<typeof createServerClient<Database>>
 ) => {
-  const { data: userData, error: userError } = await dbClient.auth.getUser();
-  if (userError || !userData) {
-    console.log(userError);
-    throw Error("Unable to get current user");
-  }
-
-  const userId = userData.user.id;
+  const userId = await getCurrentUserId(dbClient);
 
   const { data: address, error: addressError } = await dbClient
     .from("address")
-    .insert({ ...addressInput, user_id: userId })
+    .insert({ ...addressInput, user_id: userId, preferred: true })
     .select("id");
 
   if (addressError || !address || address.length === 0) {
@@ -25,9 +19,17 @@ export const insertAddressToCheckout = async (
     throw Error("Unable to add address");
   }
 
+  return address[0].id;
+};
+
+export const addAddressToCheckout = async (
+  checkoutId: number,
+  addressId: number,
+  dbClient: ReturnType<typeof createServerClient<Database>>
+) => {
   const { error: checkoutError } = await dbClient
     .from("checkout")
-    .update({ address_id: address[0].id })
+    .update({ address_id: addressId })
     .eq("id", checkoutId);
 
   if (checkoutError) {
@@ -39,16 +41,10 @@ export const insertAddressToCheckout = async (
 export const getUserAddresses = async (
   dbClient: ReturnType<typeof createServerClient<Database>>
 ) => {
-  const { data: userData, error: userError } = await dbClient.auth.getUser();
-  if (userError || !userData) {
-    console.log(userError);
-    throw Error("Unable to get current user");
-  }
-
-  const userId = userData.user.id;
+  const userId = await getCurrentUserId(dbClient);
   const { data: addresses, error: addressError } = await dbClient
     .from("address")
-    .select("id, name, phone, state, city, pincode, address")
+    .select("id, name, phone, state, city, pincode, address, preferred")
     .eq("user_id", userId);
 
   if (addressError || !addresses) {
@@ -57,4 +53,54 @@ export const getUserAddresses = async (
   }
 
   return addresses;
+};
+
+export const setPreferredAddress = async (
+  id: number,
+  dbClient: ReturnType<typeof createServerClient<Database>>,
+  setGivenAddressPreferred: boolean = false
+) => {
+  const userId = await getCurrentUserId(dbClient);
+  const { error: falsePreferenceError } = await dbClient
+    .from("address")
+    .update({ preferred: false })
+    .eq("user_id", userId)
+    .neq("id", id);
+
+  if (falsePreferenceError) {
+    console.log(falsePreferenceError);
+    throw Error("Unable to update user's address preferences");
+  }
+
+  if (!setGivenAddressPreferred) {
+    return;
+  }
+
+  const { error: truePreferenceError } = await dbClient
+    .from("address")
+    .update({ preferred: true })
+    .eq("user_id", userId)
+    .eq("id", id);
+
+  if (truePreferenceError) {
+    console.log(truePreferenceError);
+    throw Error("Unable to update user's address preferences");
+  }
+};
+
+export const updateAddress = async (
+  address: AddressToUpdate,
+  dbClient: ReturnType<typeof createServerClient<Database>>
+) => {
+  const userId = await getCurrentUserId(dbClient);
+  const { error } = await dbClient
+    .from("address")
+    .update({ ...address, preferred: true })
+    .eq("id", address.id)
+    .eq("user_id", userId);
+
+  if (error) {
+    console.log(error);
+    throw Error("Unable to update user's address");
+  }
 };

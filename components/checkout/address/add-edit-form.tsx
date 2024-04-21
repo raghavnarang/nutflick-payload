@@ -2,20 +2,31 @@
 
 import Dropdown from "@/components/form/dropdown";
 import Textbox from "@/components/form/textbox";
-import Section from "@/components/section";
 import SectionBody from "@/components/section/body";
 import states from "@/lib/states.json";
-import SectionFooter from "../section/footer";
-import Button from "../button";
+import SectionFooter from "../../section/footer";
+import Button from "../../button";
 import { useFormState, useFormStatus } from "react-dom";
-import { addAddressToCheckout } from "@/features/server/actions/checkout/address";
-import { FC } from "react";
+import {
+  addAddressToCheckout,
+  editAddressAndAddToCheckout,
+} from "@/features/server/actions/checkout/address";
+import { type FC, useEffect } from "react";
+import { useToast } from "@/features/toast";
+import { Status } from "@/shared/types/status";
+import type { Address } from "@/shared/types/address";
 
-const FormUI = () => {
+interface CheckoutAddressFormProps {
+  checkoutId: number;
+  address?: Address;
+  onSuccess?: () => void;
+}
+
+const FormUI: FC<{ address?: Address }> = ({ address }) => {
   const { pending } = useFormStatus();
 
   return (
-    <Section title="Delivery Address">
+    <>
       <SectionBody>
         <div className="grid grid-cols-3 gap-5">
           <div className="grid grid-cols-2 gap-5 col-span-3">
@@ -25,6 +36,7 @@ const FormUI = () => {
               placeholder="Enter Full Name"
               required
               disabled={pending}
+              defaultValue={address?.name}
             />
             <Textbox
               label="Phone"
@@ -35,6 +47,7 @@ const FormUI = () => {
               pattern="([0]{1})?[6-9]{1}[0-9]{9}"
               required
               disabled={pending}
+              defaultValue={address?.phone}
             />
           </div>
           <Textbox
@@ -44,6 +57,7 @@ const FormUI = () => {
             name="address"
             required
             disabled={pending}
+            defaultValue={address?.address}
           />
           <Textbox
             label="City"
@@ -51,8 +65,14 @@ const FormUI = () => {
             placeholder="Enter City"
             required
             disabled={pending}
+            defaultValue={address?.city}
           />
-          <Dropdown label="State" name="state" disabled={pending}>
+          <Dropdown
+            label="State"
+            name="state"
+            disabled={pending}
+            defaultValue={address?.state}
+          >
             <option>Select State</option>
             {Object.entries(states).map((state) => (
               <option value={state[1]} key={state[0]}>
@@ -69,30 +89,50 @@ const FormUI = () => {
             min={100000}
             required
             disabled={pending}
+            defaultValue={address?.pincode}
           />
+          {address?.id && <input type="hidden" name="id" value={address.id} />}
         </div>
       </SectionBody>
       <SectionFooter className="text-right">
         <Button type="submit" disabled={pending}>
-          Continue
+          {address ? "Update & Deliver Here" : "Save & Deliver Here"}
         </Button>
       </SectionFooter>
-    </Section>
+    </>
   );
 };
 
-interface CheckoutAddressFormProps {
-  checkoutId: number;
-}
-
-const CheckoutAddressForm: FC<CheckoutAddressFormProps> = ({ checkoutId }) => {
-  const actionWithCheckoutId = addAddressToCheckout.bind(null, checkoutId);
+const CheckoutAddressForm: FC<CheckoutAddressFormProps> = ({
+  checkoutId,
+  address,
+  onSuccess,
+}) => {
+  const originalAction = address
+    ? editAddressAndAddToCheckout
+    : addAddressToCheckout;
+  const actionWithCheckoutId = originalAction.bind(null, checkoutId);
   const [result, action] = useFormState(actionWithCheckoutId, null);
-  console.log(result);
+
+  const { addToast } = useToast();
+  useEffect(() => {
+    if (result) {
+      if (result.status === Status.error) {
+        addToast({
+          id: Date.now(),
+          type: result.status,
+          message: result.message,
+          isDismissable: true,
+        });
+      } else if (result.status === Status.success) {
+        onSuccess?.();
+      }
+    }
+  }, [result]);
 
   return (
     <form action={action}>
-      <FormUI />
+      <FormUI address={address} />
     </form>
   );
 };

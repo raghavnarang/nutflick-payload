@@ -68,6 +68,7 @@ export interface Database {
           name: string
           phone: string
           pincode: string
+          preferred: boolean | null
           state: string
           user_id: string
         }
@@ -79,6 +80,7 @@ export interface Database {
           name: string
           phone: string
           pincode: string
+          preferred?: boolean | null
           state: string
           user_id: string
         }
@@ -90,6 +92,7 @@ export interface Database {
           name?: string
           phone?: string
           pincode?: string
+          preferred?: boolean | null
           state?: string
           user_id?: string
         }

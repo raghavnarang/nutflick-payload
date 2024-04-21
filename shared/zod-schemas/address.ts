@@ -16,3 +16,17 @@ export const addAddressSchema = zfd.formData({
   city: zfd.text(),
   state: zfd.text(z.enum([statesArray[0], ...statesArray])),
 });
+
+export const updateAddressSchema = zfd.formData({
+  id: zfd.numeric(),
+  name: zfd.text(z.string().optional()),
+  phone: zfd
+    .numeric(z.number().min(6000000000).max(9999999999).optional())
+    .transform((val) => val?.toString()),
+  address: zfd.text(z.string().optional()),
+  pincode: zfd
+    .numeric(z.number().max(999999).optional())
+    .transform((val) => val?.toString()),
+  city: zfd.text(z.string().optional()),
+  state: zfd.text(z.enum([statesArray[0], ...statesArray]).optional()),
+});
