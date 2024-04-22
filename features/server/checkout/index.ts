@@ -13,6 +13,7 @@ import type {
   InsertCartProduct,
   CartProduct,
 } from "@/shared/types/cart-product";
+import { revalidatePath } from "next/cache";
 
 interface CartItem {
   id: number;
@@ -164,10 +165,13 @@ const generateCheckout = async (
   }
 
   if (!checkout || checkout.length === 0) {
-    return await insertCheckout(items, user.id, dbClient);
+    const checkoutId = await insertCheckout(items, user.id, dbClient);
+    revalidatePath(`/admin/checkout/${checkoutId}`);
+    return checkoutId
   }
 
   await syncCartProducts(items, checkout[0].id, dbClient);
+  revalidatePath(`/admin/checkout/${checkout[0].id}`);
   return checkout[0].id;
 };
 
