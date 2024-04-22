@@ -1,9 +1,9 @@
-import { Address } from "@/shared/types/address";
-import { FC } from "react";
+import type { MinimalAddress } from "@/shared/types/address";
+import type { FC } from "react";
 import SectionBody from "../../section/body";
 
 interface CheckoutAddressPrefilledProps {
-  address: Address;
+  address: MinimalAddress;
 }
 
 const CheckoutAddressPrefilled: FC<CheckoutAddressPrefilledProps> = ({
@@ -11,9 +11,7 @@ const CheckoutAddressPrefilled: FC<CheckoutAddressPrefilledProps> = ({
 }) => {
   return (
     <SectionBody>
-      <p className="text-lg mb-2">
-        {name}
-      </p>
+      <p className="text-lg mb-2">{name}</p>
       <p>{address}</p>
       <p>
         {city}, {state}, {pincode}

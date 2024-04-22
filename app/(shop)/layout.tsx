@@ -16,7 +16,7 @@ const ShopLayout: FC<ShopLayoutProps> = ({ children }) => {
       text: "My Account",
       link: "/account",
     },
-    <CartNavItem />,
+    <CartNavItem key="cart" />,
   ];
 
   return (

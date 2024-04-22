@@ -1,7 +1,14 @@
-import type { AddressToInsert, AddressToUpdate } from "@/shared/types/zod-schema-types";
+"use server";
+
+import type {
+  AddressToInsert,
+  AddressToUpdate,
+} from "@/shared/types/zod-schema-types";
 import { createServerClient } from "@supabase/ssr";
 import type { Database } from "@/lib/supabase/db-schema";
 import { getCurrentUserId } from "../common/user";
+import { createClient } from "@/lib/supabase/server";
+import { cookies } from "next/headers";
 
 export const insertAddress = async (
   addressInput: AddressToInsert,
@@ -22,25 +29,33 @@ export const insertAddress = async (
   return address[0].id;
 };
 
-export const addAddressToCheckout = async (
+export const linkAddressToCheckout = async (
   checkoutId: number,
   addressId: number,
   dbClient: ReturnType<typeof createServerClient<Database>>
 ) => {
-  const { error: checkoutError } = await dbClient
+  if (!dbClient) {
+    dbClient = createClient(cookies());
+  }
+  const userId = await getCurrentUserId(dbClient);
+  const { error } = await dbClient
     .from("checkout")
     .update({ address_id: addressId })
-    .eq("id", checkoutId);
+    .eq("id", checkoutId)
+    .eq("user_id", userId);
 
-  if (checkoutError) {
-    console.log(checkoutError);
+  if (error) {
+    console.log(error);
     throw Error("Unable to link address to checkout");
   }
 };
 
 export const getUserAddresses = async (
-  dbClient: ReturnType<typeof createServerClient<Database>>
+  dbClient?: ReturnType<typeof createServerClient<Database>>
 ) => {
+  if (!dbClient) {
+    dbClient = createClient(cookies());
+  }
   const userId = await getCurrentUserId(dbClient);
   const { data: addresses, error: addressError } = await dbClient
     .from("address")

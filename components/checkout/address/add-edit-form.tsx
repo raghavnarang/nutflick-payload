@@ -14,15 +14,19 @@ import {
 import { type FC, useEffect } from "react";
 import { useToast } from "@/features/toast";
 import { Status } from "@/shared/types/status";
-import type { Address } from "@/shared/types/address";
+import type { MinimalAddress } from "@/shared/types/address";
 
 interface CheckoutAddressFormProps {
   checkoutId: number;
-  address?: Address;
+  address?: MinimalAddress;
   onSuccess?: () => void;
+  onCancel?: () => void;
 }
 
-const FormUI: FC<{ address?: Address }> = ({ address }) => {
+const FormUI: FC<{ address?: MinimalAddress; onCancel?: () => void }> = ({
+  address,
+  onCancel,
+}) => {
   const { pending } = useFormStatus();
 
   return (
@@ -94,10 +98,21 @@ const FormUI: FC<{ address?: Address }> = ({ address }) => {
           {address?.id && <input type="hidden" name="id" value={address.id} />}
         </div>
       </SectionBody>
-      <SectionFooter className="text-right">
+      <SectionFooter className="flex gap-3">
         <Button type="submit" disabled={pending}>
           {address ? "Update & Deliver Here" : "Save & Deliver Here"}
         </Button>
+        {onCancel && (
+          <Button
+            isSecondary
+            onClick={(e) => {
+              e.preventDefault();
+              onCancel();
+            }}
+          >
+            Cancel
+          </Button>
+        )}
       </SectionFooter>
     </>
   );
@@ -107,6 +122,7 @@ const CheckoutAddressForm: FC<CheckoutAddressFormProps> = ({
   checkoutId,
   address,
   onSuccess,
+  onCancel,
 }) => {
   const originalAction = address
     ? editAddressAndAddToCheckout
@@ -132,7 +148,7 @@ const CheckoutAddressForm: FC<CheckoutAddressFormProps> = ({
 
   return (
     <form action={action}>
-      <FormUI address={address} />
+      <FormUI address={address} onCancel={onCancel} />
     </form>
   );
 };

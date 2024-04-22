@@ -5,13 +5,14 @@ import { addAddressSchema, updateAddressSchema } from "@/shared/zod-schemas/addr
 import { createClient } from "@/lib/supabase/actions";
 import { cookies } from "next/headers";
 import {
-  getUserAddresses,
   insertAddress,
   setPreferredAddress,
-  addAddressToCheckout as addAddressToCheckoutDB,
+  linkAddressToCheckout,
   updateAddress
 } from "../../checkout/address";
 import { revalidatePath } from "next/cache";
+import { z } from "zod";
+import { zfd } from "zod-form-data";
 
 export const addAddressToCheckout = async (
   checkoutId: number,
@@ -19,18 +20,14 @@ export const addAddressToCheckout = async (
   data: FormData
 ) => {
   try {
-    const result = addAddressSchema.safeParse(data);
-    if (!result.success) {
-      console.log("Schema validation failed for add address.", result.error);
-      return { status: Status.error, message: "Something went wrong" };
-    }
-
+    const address = addAddressSchema.parse(data);
+    const parsedCheckoutId = z.number().parse(checkoutId);
     const dbClient = createClient(cookies());
-    const id = await insertAddress(result.data, dbClient);
-    await addAddressToCheckoutDB(checkoutId, id, dbClient);
+    const id = await insertAddress(address, dbClient);
+    await linkAddressToCheckout(parsedCheckoutId, id, dbClient);
     await setPreferredAddress(id, dbClient);
 
-    revalidatePath(`/admin/checkout/${checkoutId}`);
+    revalidatePath(`/admin/checkout/${parsedCheckoutId}`);
 
     return {
       status: Status.success,
@@ -48,22 +45,43 @@ export const editAddressAndAddToCheckout = async (
   data: FormData
 ) => {
   try {
-    const result = updateAddressSchema.safeParse(data);
-    if (!result.success) {
-      console.log("Schema validation failed for edit category.", result.error);
-      return { status: Status.error, message: "Something went wrong" };
-    }
+    const address = updateAddressSchema.parse(data);
+    const parsedCheckoutId = z.number().parse(checkoutId);
+    const dbClient = createClient(cookies());
+    await updateAddress(address, dbClient);
+    await linkAddressToCheckout(parsedCheckoutId, address.id, dbClient);
+    await setPreferredAddress(address.id, dbClient);
+
+    revalidatePath(`/admin/checkout/${parsedCheckoutId}`);
+
+    return {
+      status: Status.success,
+      message: "Address updated successfully",
+    };
+  } catch (e) {
+    console.log("Error", e);
+    return { status: Status.error, message: "Something went wrong" };
+  }
+};
+
+export const selectAddressForCheckout = async (
+  checkoutId: number,
+  prevState: any,
+  data: FormData
+) => {
+  try {
+    const parsedCheckoutId = z.number().parse(checkoutId);
+    const addressId = zfd.formData({id: zfd.numeric()}).parse(data).id;
 
     const dbClient = createClient(cookies());
-    await updateAddress(result.data, dbClient);
-    await addAddressToCheckoutDB(checkoutId, result.data.id, dbClient);
-    await setPreferredAddress(result.data.id, dbClient);
+    await linkAddressToCheckout(parsedCheckoutId, addressId, dbClient);
+    await setPreferredAddress(addressId, dbClient);
 
     revalidatePath(`/admin/checkout/${checkoutId}`);
 
     return {
       status: Status.success,
-      message: "Address updated successfully",
+      message: "Address selected successfully",
     };
   } catch (e) {
     console.log("Error", e);

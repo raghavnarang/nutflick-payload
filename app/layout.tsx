@@ -5,6 +5,7 @@ import { ensureStartsWith } from "@/lib/utils";
 import { Suspense } from "react";
 import { ToastProvider } from "@/features/toast";
 import { CartProvider } from "@/features/cart";
+import ReactQueryProvider from "@/lib/react-query";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -50,9 +51,11 @@ export default function RootLayout({
         <div className="flex flex-col justify-between min-h-screen px-5">
           <div>
             <Suspense>
-              <ToastProvider>
-                <CartProvider>{children}</CartProvider>
-              </ToastProvider>
+              <ReactQueryProvider>
+                <ToastProvider>
+                  <CartProvider>{children}</CartProvider>
+                </ToastProvider>
+              </ReactQueryProvider>
             </Suspense>
           </div>
           <Footer />

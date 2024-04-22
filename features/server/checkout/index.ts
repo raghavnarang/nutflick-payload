@@ -240,7 +240,7 @@ export const getCheckout = async (id: number) => {
 
   const { data: checkout, error } = await dbClient
     .from("checkout")
-    .select("address(*)")
+    .select("address(id, name, phone, state, city, pincode, address)")
     .eq("id", checkoutId)
     .eq("user_id", userData.user.id);
 

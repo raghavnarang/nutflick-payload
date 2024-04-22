@@ -58,7 +58,7 @@ const ProductVariants: FC<ProductVariantsProps> = ({ editVariants }) => {
         />
       ))}
       {deletedVariantIds?.map((id, index) => (
-        <input type="hidden" name={`deleted_variants[${index}]`} value={id} />
+        <input type="hidden" name={`deleted_variants[${index}]`} value={id} key={id} />
       ))}
       <Button className="!bg-blue-500 text-white" onClick={addVariant}>
         <Plus className="mr-2" />

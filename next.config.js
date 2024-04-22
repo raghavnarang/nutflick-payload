@@ -12,10 +12,13 @@ const nextConfig = {
         protocol: "http",
         hostname: "localhost",
         port: "8000",
-        pathname: "/storage/v1/object/public/public_bucket/**"
+        pathname: "/storage/v1/object/public/public_bucket/**",
       },
     ],
   },
 };
 
-module.exports = nextConfig;
+const withBundleAnalyzer = require("@next/bundle-analyzer")();
+
+module.exports =
+  process.env.ANALYZE === "true" ? withBundleAnalyzer(nextConfig) : nextConfig;
