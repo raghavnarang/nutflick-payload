@@ -67,7 +67,7 @@ export const getUserAddresses = async (
     throw Error("Unable to get current user's addresses");
   }
 
-  return addresses;
+  return addresses.sort((a, b) => a.id - b.id);
 };
 
 export const setPreferredAddress = async (

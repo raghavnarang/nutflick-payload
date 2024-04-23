@@ -14,6 +14,7 @@ import type {
   CartProduct,
 } from "@/shared/types/cart-product";
 import { revalidatePath } from "next/cache";
+import { linkAddressToCheckout } from "./address";
 
 interface CartItem {
   id: number;
@@ -164,13 +165,23 @@ const generateCheckout = async (
     throw Error("checking existing checkout error");
   }
 
+  const { data } = await dbClient
+    .from("address")
+    .select("id")
+    .eq("user_id", user.id)
+    .eq("preferred", true);
+
   if (!checkout || checkout.length === 0) {
     const checkoutId = await insertCheckout(items, user.id, dbClient);
+    if (data?.[0]?.id)
+      await linkAddressToCheckout(checkoutId, data[0].id, dbClient);
     revalidatePath(`/admin/checkout/${checkoutId}`);
-    return checkoutId
+    return checkoutId;
   }
 
   await syncCartProducts(items, checkout[0].id, dbClient);
+  if (data?.[0]?.id)
+    await linkAddressToCheckout(checkout[0].id, data[0].id, dbClient);
   revalidatePath(`/admin/checkout/${checkout[0].id}`);
   return checkout[0].id;
 };
@@ -244,7 +255,9 @@ export const getCheckout = async (id: number) => {
 
   const { data: checkout, error } = await dbClient
     .from("checkout")
-    .select("address(id, name, phone, state, city, pincode, address)")
+    .select(
+      "address(id, name, phone, state, city, pincode, address), items:cart_product(id, qty, variant:product_variant(id, title, price, image, product(id, image, title)))"
+    )
     .eq("id", checkoutId)
     .eq("user_id", userData.user.id);
 

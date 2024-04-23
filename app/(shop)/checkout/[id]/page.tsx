@@ -1,5 +1,7 @@
 import Button from "@/components/button";
 import CheckoutAddress from "@/components/checkout/address";
+import Section from "@/components/section";
+import SectionBody from "@/components/section/body";
 import { getCheckout } from "@/features/server/checkout";
 import type { FC } from "react";
 
@@ -8,7 +10,8 @@ interface CheckoutProps {
 }
 
 const Checkout: FC<CheckoutProps> = async ({ params: { id } }) => {
-  const { address } = await getCheckout(+id);
+  const { address, items } = await getCheckout(+id);
+  console.log(items);
   return (
     <div className="flex justify-center">
       <div className="max-w-7xl w-full">
@@ -18,6 +21,9 @@ const Checkout: FC<CheckoutProps> = async ({ params: { id } }) => {
             <CheckoutAddress checkoutId={+id} address={address || undefined} />
           </div>
           <div className="lg:w-1/3 w-full">
+            <Section title="Order Details">
+              <SectionBody></SectionBody>
+            </Section>
             <Button large type="submit">
               Proceed to Payment
             </Button>

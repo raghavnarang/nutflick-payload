@@ -75,7 +75,7 @@ export const selectAddressForCheckout = async (
 
     const dbClient = createClient(cookies());
     await linkAddressToCheckout(parsedCheckoutId, addressId, dbClient);
-    await setPreferredAddress(addressId, dbClient);
+    await setPreferredAddress(addressId, dbClient, true);
 
     revalidatePath(`/admin/checkout/${checkoutId}`);
 

@@ -80,11 +80,11 @@ const FormUI: FC<Omit<CheckoutSelectAddress, "checkoutId">> = ({
 
   return (
     <>
-      <SectionBody className="flex flex-col gap-4">
+      <div className="flex flex-col">
         {addresses.map((address) => (
           <div
             className={cx(
-              "flex gap-4 items-center justify-between bg-white border border-gray-300 p-4 rounded hover:bg-gray-50 transition-colors",
+              "flex gap-4 items-center justify-between border-t first:border-none border-gray-200 p-4 hover:bg-white transition-colors",
               { "!bg-red-100 !hover:bg-red-100": selected === address.id }
             )}
             key={address.id}
@@ -122,7 +122,7 @@ const FormUI: FC<Omit<CheckoutSelectAddress, "checkoutId">> = ({
             </Button>
           </div>
         ))}
-      </SectionBody>
+      </div>
       <SectionFooter className="flex gap-3">
         <Button type="submit" disabled={pending}>
           Use this Address
