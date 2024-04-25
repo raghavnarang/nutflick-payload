@@ -11,10 +11,11 @@ import { createServerClient } from "@supabase/ssr";
 import { Database } from "@/lib/supabase/db-schema";
 import type {
   InsertCartProduct,
-  CartProduct,
+  CartProduct as CartProductDB,
 } from "@/shared/types/cart-product";
 import { revalidatePath } from "next/cache";
 import { linkAddressToCheckout } from "./address";
+import { CartProduct } from "@/shared/types/cart";
 
 interface CartItem {
   id: number;
@@ -37,8 +38,8 @@ const syncCartProducts = async (
   }
 
   const itemsToInsert: InsertCartProduct[] = [];
-  const itemsToUpdate: CartProduct[] = [];
-  const existingItems: CartProduct[] = [];
+  const itemsToUpdate: CartProductDB[] = [];
+  const existingItems: CartProductDB[] = [];
   const itemsToDelete = dbItems
     .filter((di) => !items.find((i) => i.id === di.variant_id))
     .map((i) => i.id);
@@ -256,7 +257,14 @@ export const getCheckout = async (id: number) => {
   const { data: checkout, error } = await dbClient
     .from("checkout")
     .select(
-      "address(id, name, phone, state, city, pincode, address), items:cart_product(id, qty, variant:product_variant(id, title, price, image, product(id, image, title)))"
+      `address(id, name, phone, state, city, pincode, address), 
+      items:cart_product(id, qty, 
+        variant:product_variant(id, title, price, image, slug, 
+          product(id, image, title, slug, 
+            category:product_category(name)
+          )
+        )
+      )`
     )
     .eq("id", checkoutId)
     .eq("user_id", userData.user.id);
@@ -266,5 +274,35 @@ export const getCheckout = async (id: number) => {
     throw Error("Unable to find cart items in DB");
   }
 
-  return checkout[0];
+  const items = await Promise.all(
+    checkout[0].items.map(async (item) => {
+      const product = item.variant?.product;
+      const variant = item.variant;
+
+      if (!product || !variant) {
+        return null;
+      }
+
+      return getCartProduct(
+        {
+          ...product,
+          image:
+            product.image &&
+            (await getPublicUrlFromPath(product.image, dbClient)),
+        },
+        {
+          ...variant,
+          image:
+            variant.image &&
+            (await getPublicUrlFromPath(variant.image, dbClient)),
+        },
+        true, item.qty
+      );
+    })
+  );
+
+  return {
+    ...checkout[0],
+    items: items.filter((i) => i !== null) as CartProduct[],
+  };
 };

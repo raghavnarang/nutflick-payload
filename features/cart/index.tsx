@@ -21,6 +21,7 @@ const CartContext = createContext({
   decrement: (variantId: number) => {},
   clear: (variantId?: number) => {},
   setCartItems: (items: CartProduct[]) => {},
+  setQty: (variantId: number, qty: number) => {},
 });
 
 const CART_LOCAL_STORAGE_KEY = "nc";
@@ -84,6 +85,22 @@ export const CartProvider: FC<{ children: ReactNode }> = ({ children }) => {
     setCartItems(newCartItems);
   };
 
+  const setQty = (variantId: number, qty: number) => {
+    if(!qty) {
+      return;
+    }
+
+    const newCartItems = cart.items.map((ci) => {
+      if (ci.variantId === variantId) {
+        return { ...ci, qty };
+      }
+
+      return ci;
+    });
+
+    setCartItems(newCartItems);
+  }
+
   const clear = (variantId?: number) =>
     setCartItems(
       !variantId ? [] : cart.items.filter((ci) => ci.variantId !== variantId)
@@ -100,7 +117,7 @@ export const CartProvider: FC<{ children: ReactNode }> = ({ children }) => {
 
   return (
     <CartContext.Provider
-      value={{ cart, increment, decrement, clear, setCartItems }}
+      value={{ cart, increment, decrement, clear, setCartItems, setQty }}
     >
       {children}
     </CartContext.Provider>

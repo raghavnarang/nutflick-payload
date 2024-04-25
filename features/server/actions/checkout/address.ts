@@ -1,5 +1,6 @@
 "use server";
 
+import 'server-only'
 import { Status } from "@/shared/types/status";
 import { addAddressSchema, updateAddressSchema } from "@/shared/zod-schemas/address";
 import { createClient } from "@/lib/supabase/actions";

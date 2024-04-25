@@ -1,5 +1,6 @@
 "use server";
 
+import 'server-only'
 import { Status } from "@/shared/types/status";
 import {
   insertProduct,

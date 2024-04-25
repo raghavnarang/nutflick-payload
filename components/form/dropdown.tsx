@@ -15,7 +15,7 @@ const Dropdown: FC<DropdownProps> = ({
   decimal,
   ...rest
 }) => (
-  <div className="flex flex-col">
+  <div className={cx("flex flex-col", { "opacity-50": rest.disabled })}>
     {label && (
       <label htmlFor={rest.name} className="mb-2">
         {label}

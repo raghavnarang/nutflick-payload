@@ -1,5 +1,6 @@
 "use server";
 
+import 'server-only'
 import { createClient } from "@/lib/supabase/actions";
 import { Status } from "@/shared/types/status";
 import { cookies } from "next/headers";

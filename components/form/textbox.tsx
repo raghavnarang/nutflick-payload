@@ -1,6 +1,5 @@
 import type { FC, InputHTMLAttributes } from "react";
 import cx from "classnames";
-import { FormVariant } from "@/shared/types/form";
 
 interface TextboxProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
@@ -10,7 +9,6 @@ interface TextboxProps extends InputHTMLAttributes<HTMLInputElement> {
   outerWrapperClassname?: string;
   number?: boolean;
   decimal?: boolean;
-  variant?: FormVariant;
 }
 
 const Textbox: FC<TextboxProps> = ({
@@ -21,7 +19,6 @@ const Textbox: FC<TextboxProps> = ({
   outerWrapperClassname,
   number,
   decimal,
-  variant,
   ...rest
 }) => (
   <div className={cx("flex flex-col", outerWrapperClassname)}>
