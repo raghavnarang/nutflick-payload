@@ -38,12 +38,10 @@ export const linkAddressToCheckout = async (
   if (!dbClient) {
     dbClient = createClient(cookies());
   }
-  const userId = await getCurrentUserId(dbClient);
   const { error } = await dbClient
     .from("checkout")
     .update({ address_id: addressId })
     .eq("id", checkoutId)
-    .eq("user_id", userId);
 
   if (error) {
     console.log(error);
@@ -76,11 +74,9 @@ export const setPreferredAddress = async (
   dbClient: ReturnType<typeof createServerClient<Database>>,
   setGivenAddressPreferred: boolean = false
 ) => {
-  const userId = await getCurrentUserId(dbClient);
   const { error: falsePreferenceError } = await dbClient
     .from("address")
     .update({ preferred: false })
-    .eq("user_id", userId)
     .neq("id", id);
 
   if (falsePreferenceError) {
@@ -95,7 +91,6 @@ export const setPreferredAddress = async (
   const { error: truePreferenceError } = await dbClient
     .from("address")
     .update({ preferred: true })
-    .eq("user_id", userId)
     .eq("id", id);
 
   if (truePreferenceError) {
@@ -108,12 +103,10 @@ export const updateAddress = async (
   address: AddressToUpdate,
   dbClient: ReturnType<typeof createServerClient<Database>>
 ) => {
-  const userId = await getCurrentUserId(dbClient);
   const { error } = await dbClient
     .from("address")
     .update({ ...address, preferred: true })
     .eq("id", address.id)
-    .eq("user_id", userId);
 
   if (error) {
     console.log(error);

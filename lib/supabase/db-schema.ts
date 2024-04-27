@@ -280,6 +280,27 @@ export interface Database {
           }
         ]
       }
+      tokens: {
+        Row: {
+          created_at: string
+          id: number
+          name: string
+          secret: string
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          name: string
+          secret: string
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          name?: string
+          secret?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

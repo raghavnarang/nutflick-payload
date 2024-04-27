@@ -9,7 +9,7 @@ import DeleteCheckoutProduct from "./delete";
 
 const CheckoutProduct: FC<CartProduct> = (item) => {
   return (
-    <div className="flex justify-between items-center border-b border-solid border-gray-200 p-4">
+    <div className="flex justify-between items-center border-b border-solid border-gray-200 md:px-8 px-4 py-4">
       <div className="flex">
         <Link
           href={item.link}

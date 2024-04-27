@@ -248,11 +248,6 @@ export const validateCartAndGenerateCheckout = async (items: CartItem[]) => {
 export const getCheckout = async (id: number) => {
   const checkoutId = z.number().parse(id);
   const dbClient = createClientForServer(cookies());
-  const { data: userData, error: userError } = await dbClient.auth.getUser();
-  if (userError || !userData) {
-    console.log(userError);
-    throw Error("Unable to get current user");
-  }
 
   const { data: checkout, error } = await dbClient
     .from("checkout")
@@ -266,8 +261,7 @@ export const getCheckout = async (id: number) => {
         )
       )`
     )
-    .eq("id", checkoutId)
-    .eq("user_id", userData.user.id);
+    .eq("id", checkoutId);
 
   if (error || !checkout || checkout.length === 0) {
     console.log(error);
@@ -296,7 +290,8 @@ export const getCheckout = async (id: number) => {
             variant.image &&
             (await getPublicUrlFromPath(variant.image, dbClient)),
         },
-        true, item.qty
+        true,
+        item.qty
       );
     })
   );

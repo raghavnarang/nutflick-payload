@@ -1,7 +1,11 @@
 import Button from "@/components/button";
+import EmptyCart from "@/components/cart/empty-cart";
 import CheckoutAddress from "@/components/checkout/address";
 import CheckoutProduct from "@/components/checkout/product";
+import SyncProductsToLS from "@/components/checkout/product/sync-ls";
+import Price from "@/components/product/price";
 import Section from "@/components/section";
+import SectionTitleValue from "@/components/section/title-value";
 import { getCheckout } from "@/features/server/checkout";
 import type { FC } from "react";
 
@@ -11,6 +15,17 @@ interface CheckoutProps {
 
 const Checkout: FC<CheckoutProps> = async ({ params: { id } }) => {
   const { address, items } = await getCheckout(+id);
+
+  if (items.length === 0) {
+    return (
+      <>
+        <SyncProductsToLS items={[]} />
+        <EmptyCart />
+      </>
+    );
+  }
+
+  const price = items.reduce((carry, item) => carry + item.price * item.qty, 0);
 
   return (
     <div className="flex justify-center">
@@ -25,6 +40,10 @@ const Checkout: FC<CheckoutProps> = async ({ params: { id } }) => {
               {items.map((item) => (
                 <CheckoutProduct key={item.variantId} {...item} />
               ))}
+              <SectionTitleValue title="Total">
+                <Price price={price} />
+              </SectionTitleValue>
+              <SyncProductsToLS items={items} />
             </Section>
             <Button large type="submit">
               Proceed to Payment
