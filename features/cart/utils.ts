@@ -22,4 +22,6 @@ export const getCartProduct = (
       : ""
   }`,
   category: product.category?.name,
+  weight: variant.weight,
+  costToBear: variant.costToBear || undefined
 });

@@ -7,6 +7,8 @@ export interface CartProduct {
   qty: number;
   link: string;
   category?: string;
+  weight?: number;
+  costToBear?: number;
 }
 
 export interface Cart {

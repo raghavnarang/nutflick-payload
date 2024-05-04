@@ -1,13 +1,16 @@
-import { getToken } from "./db";
+import { z } from "zod";
+import { fetchToken } from "./auth";
+import { SHIPROCKET_API_URL } from "./constants";
+import { getCourierProvidersFromApiResponse } from "./utils";
 
-const srFetch = (
+const srFetch = async (
   url: string,
   data?: any,
   method?: "GET" | "POST",
   token?: string
 ) => {
   const finalMethod = method || (data ? "POST" : "GET");
-  return fetch(url, {
+  const response = await fetch(url, {
     method: finalMethod,
     cache: "no-store",
     headers: {
@@ -18,6 +21,8 @@ const srFetch = (
       body: JSON.stringify(data),
     }),
   });
+
+  return response.json();
 };
 
 const srAuthenticatedFetch = async (
@@ -25,18 +30,37 @@ const srAuthenticatedFetch = async (
   data?: any,
   method?: "GET" | "POST"
 ) => {
-  const token = await getToken();
+  const token = await fetchToken();
   return srFetch(url, data, method, token);
 };
 
-export const fetchToken = async () => {
-  const response = await srFetch(
-    "https://apiv2.shiprocket.in/v1/external/auth/login",
-    {
-      email: process.env.SHIPROCKET_API_EMAIL,
-      password: process.env.SHIPROCKET_API_PASS,
-    }
+const getApiUrl = (path: string) => `${SHIPROCKET_API_URL}${path}`;
+
+export const fetchTokenFromApi = async () => {
+  const response = await srFetch(getApiUrl("/auth/login"), {
+    email: process.env.SHIPROCKET_API_EMAIL,
+    password: process.env.SHIPROCKET_API_PASS,
+  });
+
+  return z.object({ token: z.string() }).parse(response).token;
+};
+
+export const getServiceableCouriers = async (
+  from: string,
+  to: string,
+  weight: number,
+  cod = false
+) => {
+  const queryParams = new URLSearchParams({
+    cod: !cod ? "0" : "1",
+    weight: `${weight}`,
+    pickup_postcode: from,
+    delivery_postcode: to,
+  }).toString();
+
+  const response = await srAuthenticatedFetch(
+    getApiUrl(`/courier/serviceability?${queryParams}`)
   );
 
-  return (await response.json()).token as string;
+  return getCourierProvidersFromApiResponse(response);
 };

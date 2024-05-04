@@ -1,23 +1,23 @@
 import "server-only";
-import { createClient } from "../supabase/service";
-import { fetchToken } from "./api";
+import { createClient } from "@supabase/supabase-js";
 import {
   getSecret,
   insertSecret,
   updateSecret,
 } from "@/features/server/tokens";
-import { SHIPROCKET_TOKEN } from "./constants";
+import { SHIPROCKET_DB_TOKEN_KEY } from "./constants";
+import { Database } from "../supabase/db-schema";
 
-export const getToken = () => getSecret(SHIPROCKET_TOKEN);
+export const fetchTokenFromDB = (
+  dbClient?: ReturnType<typeof createClient<Database>>
+) => getSecret(SHIPROCKET_DB_TOKEN_KEY, dbClient);
 
-export const fetchAndStoreToken = async () => {
-  const token = await fetchToken();
+export const insertTokenToDB = (
+  token: string,
+  dbClient?: ReturnType<typeof createClient<Database>>
+) => insertSecret(SHIPROCKET_DB_TOKEN_KEY, token, dbClient);
 
-  const dbClient = createClient();
-  const dbToken = await getSecret(SHIPROCKET_TOKEN, dbClient);
-  if (!dbToken) {
-    await insertSecret(SHIPROCKET_TOKEN, token, dbClient);
-  } else {
-    await updateSecret(SHIPROCKET_TOKEN, token, dbClient);
-  }
-};
+export const updateTokenToDB = (
+  token: string,
+  dbClient?: ReturnType<typeof createClient<Database>>
+) => updateSecret(SHIPROCKET_DB_TOKEN_KEY, token, dbClient);

@@ -3,11 +3,13 @@ import EmptyCart from "@/components/cart/empty-cart";
 import CheckoutAddress from "@/components/checkout/address";
 import CheckoutProduct from "@/components/checkout/product";
 import SyncProductsToLS from "@/components/checkout/product/sync-ls";
+import CheckoutShippingSelector from "@/components/checkout/shipping/selector";
 import Price from "@/components/product/price";
 import Section from "@/components/section";
 import SectionTitleValue from "@/components/section/title-value";
 import { getCheckout } from "@/features/server/checkout";
-import type { FC } from "react";
+import { getOrderShippingItems } from "@/lib/shiprocket";
+import { type FC } from "react";
 
 interface CheckoutProps {
   params: { id: string };
@@ -25,7 +27,7 @@ const Checkout: FC<CheckoutProps> = async ({ params: { id } }) => {
     );
   }
 
-  const price = items.reduce((carry, item) => carry + item.price * item.qty, 0);
+  const total = items.reduce((carry, item) => carry + item.price * item.qty, 0);
 
   return (
     <div className="flex justify-center">
@@ -40,8 +42,11 @@ const Checkout: FC<CheckoutProps> = async ({ params: { id } }) => {
               {items.map((item) => (
                 <CheckoutProduct key={item.variantId} {...item} />
               ))}
+              {address && (
+                <CheckoutShippingSelector address={address} items={items} />
+              )}
               <SectionTitleValue title="Total">
-                <Price price={price} />
+                <Price price={total} />
               </SectionTitleValue>
               <SyncProductsToLS items={items} />
             </Section>

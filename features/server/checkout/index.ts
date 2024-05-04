@@ -207,7 +207,7 @@ export const validateCartAndGenerateCheckout = async (items: CartItem[]) => {
   const { data: variants, error } = await dbClient
     .from("product_variant")
     .select(
-      "id, title, image, slug, price, product(id, title, image, slug, category:product_category(name))"
+      "id, title, image, weight, slug, price, product(id, title, image, slug, category:product_category(name))"
     )
     .in("id", ids);
 
@@ -254,7 +254,7 @@ export const getCheckout = async (id: number) => {
     .select(
       `address(id, name, phone, state, city, pincode, address), 
       items:cart_product(id, qty, 
-        variant:product_variant(id, title, price, image, slug, 
+        variant:product_variant(id, title, price, image, slug, weight, costToBear:included_shipping_cost, 
           product(id, image, title, slug, 
             category:product_category(name)
           )
@@ -268,14 +268,14 @@ export const getCheckout = async (id: number) => {
     throw Error("Unable to find cart items in DB");
   }
 
-  const items = await Promise.all(
-    checkout[0].items.map(async (item) => {
-      const product = item.variant?.product;
-      const variant = item.variant;
+  const filteredItems = checkout[0].items.filter(
+    (i) => i.variant && i.variant.product
+  );
 
-      if (!product || !variant) {
-        return null;
-      }
+  const items = await Promise.all(
+    filteredItems.map(async (item) => {
+      const product = item.variant?.product!;
+      const variant = item.variant!;
 
       return getCartProduct(
         {
@@ -298,6 +298,6 @@ export const getCheckout = async (id: number) => {
 
   return {
     ...checkout[0],
-    items: items.filter((i) => i !== null) as CartProduct[],
+    items,
   };
 };

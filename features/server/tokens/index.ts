@@ -20,7 +20,7 @@ export const getSecret = async (
     throw error;
   }
 
-  return data?.[0]?.secret;
+  return data[0]?.secret;
 };
 
 export const insertSecret = async (

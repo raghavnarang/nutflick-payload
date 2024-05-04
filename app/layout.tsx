@@ -1,7 +1,7 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Footer from "@/components/footer";
-import { ensureStartsWith } from "@/lib/utils";
+import { ensureStartsWith } from "@/shared/utils";
 import { Suspense } from "react";
 import { ToastProvider } from "@/features/toast";
 import { CartProvider } from "@/features/cart";

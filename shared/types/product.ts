@@ -26,6 +26,8 @@ export interface ProductVariantGridItem
     | "compare_price"
   > {
   comparePrice?: ProductVariant["compare_price"];
+  weight?: ProductVariant["weight"],
+  costToBear?: ProductVariant["included_shipping_cost"]
 }
 export interface ProductGridItem
   extends Omit<
