@@ -49,7 +49,6 @@ export const getOrderShippingItems = async (
 
   try {
     couriers = await getServiceableCouriers(from, to, weight);
-    console.log(couriers)
   } catch (e) {
     return {
       message:
@@ -69,28 +68,20 @@ export const getOrderShippingItems = async (
     };
   }
 
-  /** Exclude Non Preferred Couriers */
-  couriers = couriers.filter(
-    (c) => !nonPrefCourierNames.some((npc) => c.name.includes(npc))
-  );
-
-  if (couriers.length === 0) {
-    return {
-      message: "Success",
-      status: Status.success,
-      couriers: defaultAdjustedCouriers,
-    };
-  }
-
   let surfaceCouriers = couriers.filter((c) => c.mode === ShippingMode.SURFACE);
   let airCouriers = couriers.filter((c) => c.mode === ShippingMode.AIR);
 
-  /** Preferred Couriers */
-  const prefAirCouriers = airCouriers.filter((c) =>
-    prefCourierNames.some((pc) => c.name.includes(pc))
+  /** Exclude Non Preferred Couriers and retain Preferred Couriers */
+  const prefAirCouriers = airCouriers.filter(
+    (c) =>
+      !nonPrefCourierNames.some((npc) => c.name.includes(npc)) &&
+      prefCourierNames.some((pc) => c.name.includes(pc))
   );
-  const prefSurfaceCouriers = surfaceCouriers.filter((c) =>
-    prefCourierNames.some((pc) => c.name.includes(pc))
+
+  const prefSurfaceCouriers = surfaceCouriers.filter(
+    (c) =>
+      !nonPrefCourierNames.some((npc) => c.name.includes(npc)) &&
+      prefCourierNames.some((pc) => c.name.includes(pc))
   );
 
   /** If there not any preferred, then use rest of the couriers */

@@ -91,13 +91,11 @@ const CheckoutAddress: FC<CheckoutAddressProps> = ({ address, checkoutId }) => {
 
   return (
     <Section title="Delivery Address">
-      <CheckoutAddressPrefilled address={address} />
-      <SectionFooter className="flex gap-3">
-        <Button onClick={() => setMode(Mode.EDIT)}>Edit address</Button>
-        <Button onClick={() => setMode(Mode.SELECT)}>
-          Use another address
-        </Button>
-      </SectionFooter>
+      <CheckoutAddressPrefilled
+        address={address}
+        onEdit={() => setMode(Mode.EDIT)}
+        onSelect={() => setMode(Mode.SELECT)}
+      />
     </Section>
   );
 };

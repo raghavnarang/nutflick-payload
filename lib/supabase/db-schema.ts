@@ -147,18 +147,21 @@ export interface Database {
           address_id: number | null
           created_at: string
           id: number
+          shipping_mode: number | null
           user_id: string
         }
         Insert: {
           address_id?: number | null
           created_at?: string
           id?: number
+          shipping_mode?: number | null
           user_id: string
         }
         Update: {
           address_id?: number | null
           created_at?: string
           id?: number
+          shipping_mode?: number | null
           user_id?: string
         }
         Relationships: [

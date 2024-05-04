@@ -17,6 +17,7 @@ import { useFormState, useFormStatus } from "react-dom";
 import cx from "classnames";
 import { MinimalAddress } from "@/shared/types/address";
 import Edit from "@/components/Icons/edit";
+import { useCheckout } from "@/features/checkout";
 
 interface CheckoutSelectAddress {
   selectedAddressId?: number;
@@ -35,7 +36,14 @@ const FormUI: FC<Omit<CheckoutSelectAddress, "checkoutId">> = ({
 }) => {
   const queryClient = useQueryClient();
   const [selected, setSelected] = useState(selectedAddressId);
-  const { pending } = useFormStatus();
+  const { isLoading: checkoutLoading, setLoading } = useCheckout();
+  const { pending: formLoading } = useFormStatus();
+
+  useEffect(() => {
+    if (formLoading) setLoading(true);
+  }, [formLoading]);
+
+  const pending = formLoading || checkoutLoading;
 
   const {
     data: addresses,
@@ -139,6 +147,7 @@ const FormUI: FC<Omit<CheckoutSelectAddress, "checkoutId">> = ({
         {onCancel && (
           <Button
             isSecondary
+            disabled={pending}
             onClick={(e) => {
               e.preventDefault();
               onCancel();
@@ -159,8 +168,10 @@ const CheckoutSelectAddress: FC<CheckoutSelectAddress> = (props) => {
   const [result, action] = useFormState(actionWithCheckoutId, null);
 
   const { addToast } = useToast();
+  const { setLoading } = useCheckout();
   useEffect(() => {
     if (result) {
+      setLoading(false)
       if (result.status === Status.error) {
         addToast({
           id: Date.now(),

@@ -259,7 +259,7 @@ export const getCheckout = async (id: number) => {
             category:product_category(name)
           )
         )
-      )`
+      ), shipping_mode`
     )
     .eq("id", checkoutId);
 

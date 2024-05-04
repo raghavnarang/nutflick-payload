@@ -2,10 +2,9 @@
 
 import Trash from "@/components/Icons/trash";
 import Button from "@/components/button";
-import {
-  removeCartProduct,
-} from "@/features/server/actions/checkout/product";
-import { useRef, type FC } from "react";
+import { useCheckout } from "@/features/checkout";
+import { removeCartProduct } from "@/features/server/actions/checkout/product";
+import { useEffect, type FC } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 
 interface DeleteCheckoutProductProps {
@@ -13,7 +12,14 @@ interface DeleteCheckoutProductProps {
 }
 
 const FormUI: FC<DeleteCheckoutProductProps> = ({ variantId }) => {
-  const { pending } = useFormStatus();
+  const { isLoading, setLoading } = useCheckout();
+  const { pending: formLoading } = useFormStatus();
+
+  useEffect(() => {
+    if (formLoading) setLoading(true);
+  }, [formLoading]);
+
+  const pending = formLoading || isLoading;
 
   return (
     <>
@@ -27,10 +33,9 @@ const FormUI: FC<DeleteCheckoutProductProps> = ({ variantId }) => {
 
 const DeleteCheckoutProduct: FC<DeleteCheckoutProductProps> = (props) => {
   const [, action] = useFormState(removeCartProduct, null);
-  const formRef = useRef<HTMLFormElement>(null);
 
   return (
-    <form action={action} ref={formRef}>
+    <form action={action}>
       <FormUI {...props} />
     </form>
   );

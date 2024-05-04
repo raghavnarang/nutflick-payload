@@ -1,6 +1,6 @@
 export enum ShippingMode {
-  SURFACE = "surface",
-  AIR = "air",
+  SURFACE = 1,
+  AIR = 2,
 }
 
 export interface ShippingCourier {

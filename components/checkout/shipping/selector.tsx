@@ -1,54 +1,52 @@
-import Radio from "@/components/form/radio";
+"use client";
+
 import Price from "@/components/product/price";
-import SectionBody from "@/components/section/body";
 import SectionRadio from "@/components/section/radio";
 import ShowToast from "@/components/show-toast";
-import { getOrderShippingItems } from "@/lib/shiprocket";
-import { MinimalAddress } from "@/shared/types/address";
-import { CartProduct } from "@/shared/types/cart";
-import { ShippingMode } from "@/shared/types/shipping";
-import { FC } from "react";
+import { useCheckout } from "@/features/checkout";
+import { changeShippingMode } from "@/features/server/actions/checkout/shipping";
+import { ShippingCourier, ShippingMode } from "@/shared/types/shipping";
+import { Status } from "@/shared/types/status";
+import { FC, useEffect, useRef } from "react";
+import { useFormState, useFormStatus } from "react-dom";
 
 interface CheckoutShippingSelectorProps {
-  address: MinimalAddress;
-  items: CartProduct[];
+  couriers: ShippingCourier[];
+  selected?: ShippingMode;
 }
 
-const CheckoutShippingSelector: FC<CheckoutShippingSelectorProps> = async ({
-  address,
-  items,
+const FormUI: FC<CheckoutShippingSelectorProps & { onChange?: () => void }> = ({
+  couriers,
+  onChange,
+  selected,
 }) => {
-  const { weight, costToBear } = items.reduce(
-    (c, i) => ({
-      weight: c.weight + i.qty * (i.weight || 0),
-      costToBear: c.costToBear + i.qty * (i.costToBear || 0),
-    }),
-    {
-      weight: 0,
-      costToBear: 0,
+  const { isLoading, setLoading } = useCheckout();
+  const { pending: formLoading } = useFormStatus();
+
+  useEffect(() => {
+    if (formLoading) setLoading(true);
+  }, [formLoading]);
+
+  const pending = formLoading || isLoading;
+
+  const isSelectedModeExists = !!couriers.find((c) => c.mode === selected);
+  useEffect(() => {
+    if (!isSelectedModeExists) {
+      onChange?.();
     }
-  );
-
-  if (!weight) {
-    return null;
-  }
-
-  const { couriers, ...toast } = await getOrderShippingItems(
-    process.env.SHIPPING_FROM_PIN!,
-    address?.pincode,
-    weight,
-    costToBear
-  );
+  }, [isSelectedModeExists]);
 
   return (
     <>
       {couriers.map((i, index) => (
         <SectionRadio
-          name="shipping_mode"
+          name="mode"
           key={i.mode}
           value={i.mode}
-          id={i.mode}
-          defaultChecked={index === 0}
+          id={`mode_${i.mode}`}
+          disabled={pending}
+          onChange={onChange}
+          checked={isSelectedModeExists ? selected === i.mode : index === 0}
           label={
             <p className="flex flex-col">
               <span>
@@ -72,8 +70,43 @@ const CheckoutShippingSelector: FC<CheckoutShippingSelectorProps> = async ({
           )}
         </SectionRadio>
       ))}
-      <ShowToast toast={toast} showErrorOnly />
     </>
+  );
+};
+
+const CheckoutShippingSelector: FC<CheckoutShippingSelectorProps> = (props) => {
+  const [result, action] = useFormState(changeShippingMode, null);
+  const ref = useRef<HTMLFormElement>(null);
+  const { setLoading, setShipping } = useCheckout();
+
+  useEffect(() => {
+    if (result) {
+      setLoading(false);
+    }
+  }, [result]);
+
+  /** Remove Loading onload as default loading state is true on provider level
+   * because the Shipping selector is expected not to be loaded, because calculation of shipping charges in progress */
+  useEffect(() => {
+    setLoading(false);
+  }, []);
+
+  useEffect(() => {
+    setShipping(
+      props.couriers.find((c) => c.mode === props.selected)?.rate || 0
+    );
+  }, [props.selected, props.couriers]);
+
+  return (
+    <form action={action} ref={ref}>
+      <FormUI
+        {...props}
+        onChange={() => {
+          ref.current?.requestSubmit();
+        }}
+      />
+      {result && <ShowToast toast={result} />}
+    </form>
   );
 };
 

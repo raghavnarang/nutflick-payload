@@ -15,6 +15,7 @@ import { type FC, useEffect } from "react";
 import { useToast } from "@/features/toast";
 import { Status } from "@/shared/types/status";
 import type { MinimalAddress } from "@/shared/types/address";
+import { useCheckout } from "@/features/checkout";
 
 interface CheckoutAddressFormProps {
   checkoutId: number;
@@ -27,7 +28,14 @@ const FormUI: FC<{ address?: MinimalAddress; onCancel?: () => void }> = ({
   address,
   onCancel,
 }) => {
-  const { pending } = useFormStatus();
+  const { isLoading, setLoading } = useCheckout();
+  const { pending: formLoading } = useFormStatus();
+
+  useEffect(() => {
+    if (formLoading) setLoading(true);
+  }, [formLoading]);
+
+  const pending = formLoading || isLoading;
 
   return (
     <>
@@ -105,6 +113,7 @@ const FormUI: FC<{ address?: MinimalAddress; onCancel?: () => void }> = ({
         {onCancel && (
           <Button
             isSecondary
+            disabled={pending}
             onClick={(e) => {
               e.preventDefault();
               onCancel();
@@ -131,8 +140,10 @@ const CheckoutAddressForm: FC<CheckoutAddressFormProps> = ({
   const [result, action] = useFormState(actionWithCheckoutId, null);
 
   const { addToast } = useToast();
+  const { setLoading } = useCheckout();
   useEffect(() => {
     if (result) {
+      setLoading(false);
       if (result.status === Status.error) {
         addToast({
           id: Date.now(),

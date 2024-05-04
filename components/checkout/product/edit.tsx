@@ -2,6 +2,7 @@
 
 import Dropdown from "@/components/form/dropdown";
 import { useCart } from "@/features/cart";
+import { useCheckout } from "@/features/checkout";
 import { changeCartProductQty } from "@/features/server/actions/checkout/product";
 import { useToast } from "@/features/toast";
 import { Status } from "@/shared/types/status";
@@ -18,7 +19,14 @@ const FormUI: FC<EditCheckoutProductProps & { onChange?: () => void }> = ({
   variantId,
   onChange,
 }) => {
-  const { pending } = useFormStatus();
+  const { isLoading, setLoading } = useCheckout();
+  const { pending: formLoading } = useFormStatus();
+
+  useEffect(() => {
+    if (formLoading) setLoading(true);
+  }, [formLoading]);
+
+  const pending = formLoading || isLoading;
 
   return (
     <>
@@ -45,6 +53,7 @@ const EditCheckoutProduct: FC<EditCheckoutProductProps> = (props) => {
 
   const { addToast } = useToast();
   const { setQty } = useCart();
+  const { setLoading } = useCheckout();
   useEffect(() => {
     if (result) {
       addToast({
@@ -53,6 +62,8 @@ const EditCheckoutProduct: FC<EditCheckoutProductProps> = (props) => {
         isDismissable: true,
         type: result.status,
       });
+
+      setLoading(false);
 
       if (result.status === Status.success && result.qty) {
         setQty(props.variantId, result.qty);
