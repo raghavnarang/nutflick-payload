@@ -1,3 +1,4 @@
+import 'server-only'
 import { z } from "zod";
 import { zfd } from "zod-form-data";
 import states from "@/lib/states.json";

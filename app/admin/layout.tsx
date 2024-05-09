@@ -10,7 +10,8 @@ interface AdminLayoutProps {
 const navItems: NavItem[] = [
   { text: "Products", link: "/admin" },
   { text: "Categories", link: "/admin/category" },
-  { text: "Orders", link: "/admin/orders" },
+  { text: "Orders", link: "/admin/order" },
+  { text: "Coupons", link: "/admin/coupon" },
 ];
 
 const AdminLayout: FC<AdminLayoutProps> = ({ children }) => (

@@ -4,6 +4,7 @@ import cx from "classnames";
 interface DropdownProps extends SelectHTMLAttributes<HTMLSelectElement> {
   label?: string;
   inputWrapperClassName?: string;
+  outerWrapperClassName?: string;
   number?: boolean;
   decimal?: boolean;
 }
@@ -13,9 +14,16 @@ const Dropdown: FC<DropdownProps> = ({
   inputWrapperClassName,
   number,
   decimal,
+  outerWrapperClassName,
   ...rest
 }) => (
-  <div className={cx("flex flex-col", { "opacity-50": rest.disabled })}>
+  <div
+    className={cx(
+      "flex flex-col",
+      { "opacity-50": rest.disabled },
+      outerWrapperClassName
+    )}
+  >
     {label && (
       <label htmlFor={rest.name} className="mb-2">
         {label}

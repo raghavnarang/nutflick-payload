@@ -1,4 +1,3 @@
-import Button from "@/components/button";
 import EmptyCart from "@/components/cart/empty-cart";
 import CheckoutAddress from "@/components/checkout/address";
 import CheckoutPaymentButton from "@/components/checkout/payment-button";
@@ -6,10 +5,8 @@ import CheckoutProduct from "@/components/checkout/product";
 import SyncProductsToLS from "@/components/checkout/product/sync-ls";
 import CheckoutShipping from "@/components/checkout/shipping";
 import CheckoutTotal from "@/components/checkout/total";
-import Price from "@/components/product/price";
 import Section from "@/components/section";
 import SectionLoader from "@/components/section/loader";
-import SectionTitleValue from "@/components/section/title-value";
 import { CheckoutProvider } from "@/features/checkout";
 import { getCheckout } from "@/features/server/checkout";
 import { Suspense, type FC } from "react";

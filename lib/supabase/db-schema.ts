@@ -179,6 +179,39 @@ export interface Database {
           }
         ]
       }
+      coupon: {
+        Row: {
+          checkout_visible: boolean | null
+          coupon: string
+          created_at: string
+          id: number
+          is_active: boolean
+          max_use: number | null
+          value: number
+          value_type: number
+        }
+        Insert: {
+          checkout_visible?: boolean | null
+          coupon: string
+          created_at?: string
+          id?: number
+          is_active?: boolean
+          max_use?: number | null
+          value: number
+          value_type?: number
+        }
+        Update: {
+          checkout_visible?: boolean | null
+          coupon?: string
+          created_at?: string
+          id?: number
+          is_active?: boolean
+          max_use?: number | null
+          value?: number
+          value_type?: number
+        }
+        Relationships: []
+      }
       product: {
         Row: {
           category_id: number | null

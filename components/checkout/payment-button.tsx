@@ -8,7 +8,7 @@ const CheckoutPaymentButton = () => {
 
   return (
     <Button disabled={isLoading} large type="submit">
-      Proceed to Payment
+      Place Order
     </Button>
   );
 };
