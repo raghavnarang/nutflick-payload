@@ -37,7 +37,7 @@ const Dropdown: FC<DropdownProps> = ({
     >
       <select
         {...rest}
-        id={rest.name}
+        id={rest.id || rest.name}
         className={cx("outline-none py-1 px-2 w-full", rest.className)}
       />
     </div>

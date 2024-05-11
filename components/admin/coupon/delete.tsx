@@ -3,23 +3,23 @@
 import Trash from "@/components/Icons/trash";
 import Button from "@/components/button";
 import Modal from "@/components/modal";
-import { deleteProduct } from "@/features/server/actions/admin/product";
+import { removeCoupon } from "@/features/server/actions/admin/coupon";
 import { useToast } from "@/features/toast";
 import { type FC, useState, useEffect, useTransition } from "react";
 
-interface DeleteProductProps {
-  productId: number;
-  productName?: string;
+interface DeleteCouponProps {
+  id: number;
+  couponName: string;
 }
 
-const DeleteProduct: FC<DeleteProductProps> = ({ productId, productName }) => {
+const DeleteCoupon: FC<DeleteCouponProps> = ({ id, couponName }) => {
   const [isOpen, setOpen] = useState(false);
   const [inProgress, startTransition] = useTransition();
   const [result, setResult] =
-    useState<Awaited<ReturnType<typeof deleteProduct>>>();
+    useState<Awaited<ReturnType<typeof removeCoupon>>>();
 
-  const message = `Do you want to delete this product${
-    productName ? `: ${productName}` : ""
+  const message = `Do you want to delete this coupon${
+    couponName ? `: ${couponName}` : ""
   }?`;
 
   const { addToast } = useToast();
@@ -45,7 +45,7 @@ const DeleteProduct: FC<DeleteProductProps> = ({ productId, productName }) => {
             text: "Delete",
             onClick: () => {
               startTransition(async () => {
-                setResult(await deleteProduct(productId));
+                setResult(await removeCoupon(id));
                 setOpen(false);
               });
             },
@@ -61,4 +61,4 @@ const DeleteProduct: FC<DeleteProductProps> = ({ productId, productName }) => {
   );
 };
 
-export default DeleteProduct;
+export default DeleteCoupon;

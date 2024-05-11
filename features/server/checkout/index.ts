@@ -252,7 +252,8 @@ export const getCheckout = async (id: number) => {
   const { data: checkout, error } = await dbClient
     .from("checkout")
     .select(
-      `address(id, name, phone, state, city, pincode, address), 
+      `address(id, name, phone, state, city, pincode, address),
+      coupon(id, coupon, value, value_type),
       items:cart_product(id, qty, 
         variant:product_variant(id, title, price, image, slug, weight, costToBear:included_shipping_cost, 
           product(id, image, title, slug, 

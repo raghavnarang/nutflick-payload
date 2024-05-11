@@ -1,11 +1,22 @@
 import { Plus } from "@/components/Icons";
 import Edit from "@/components/Icons/edit";
 import CouponToggleActivationListItem from "@/components/admin/coupon/toggle-activation-list-item";
-import DeleteProduct from "@/components/admin/product-list/delete-product";
 import Button from "@/components/button";
 import { getCoupons } from "@/features/server/admin/coupon";
 import Link from "next/link";
 import cx from "classnames";
+import DeleteCoupon from "@/components/admin/coupon/delete";
+import { CouponValueType } from "@/shared/types/coupon";
+import Price from "@/components/product/price";
+
+const SignalStatus = ({ isActive }: { isActive: boolean }) => (
+  <span
+    className={cx("rounded-full size-3 inline-block mr-2", {
+      "bg-green-500": isActive,
+      "bg-red-500": !isActive,
+    })}
+  />
+);
 
 const ProductList = async () => {
   const coupons = await getCoupons();
@@ -24,6 +35,10 @@ const ProductList = async () => {
           <tr className="text-left border-b bg-gray-50">
             <th className="py-2 px-4">ID</th>
             <th className="py-2 px-4 w-1/3">Coupon</th>
+            <th className="py-2 px-4">Is Active</th>
+            <th className="py-2 px-4">Is Visible on Checkout</th>
+            <th className="py-2 px-4">Value</th>
+            <th className="py-2 px-4">No. of Usages</th>
             <th className="py-2 px-4">Actions</th>
           </tr>
         </thead>
@@ -32,18 +47,38 @@ const ProductList = async () => {
             <tr key={coupon.id} className="border-b">
               <td className="py-2 px-4">{coupon.id}</td>
               <td className="py-2 px-4">
-                <span
-                  className={cx("rounded-full size-3 inline-block mr-2", {
-                    "bg-green-500": coupon.is_active,
-                    "bg-red-500": !coupon.is_active,
-                  })}
-                />
                 <Link
                   href={`/admin/coupon/${coupon.id}`}
                   className="border-b border-gray-200 hover:border-gray-500"
                 >
                   {coupon.coupon}
                 </Link>
+              </td>
+              <td className="py-2 px-4">
+                <SignalStatus isActive={coupon.is_active} />
+              </td>
+              <td className="py-2 px-4">
+                <SignalStatus isActive={coupon.checkout_visible || false} />
+              </td>
+              <td className="py-2 px-4">
+                {coupon.value_type === CouponValueType.FIXED ? (
+                  <Price price={coupon.value} />
+                ) : (
+                  coupon.value + "%"
+                )}
+                {coupon.max_discount && (
+                  <p className="italic text-sm text-gray-500">
+                    (Max Discount: <Price price={coupon.max_discount} />)
+                  </p>
+                )}
+                {coupon.min_cart_value && (
+                  <p className="italic text-sm text-gray-500">
+                    (Minimum Cart: <Price price={coupon.min_cart_value} />)
+                  </p>
+                )}
+              </td>
+              <td className="py-2 px-4">
+                {coupon.max_use ? `${coupon.max_use} times` : "∞"}
               </td>
               <td className="py-2 px-4 flex gap-2">
                 <CouponToggleActivationListItem
@@ -55,10 +90,7 @@ const ProductList = async () => {
                     Edit
                   </Button>
                 </Link>
-                <DeleteProduct
-                  productId={coupon.id}
-                  productName={coupon.coupon}
-                />
+                <DeleteCoupon id={coupon.id} couponName={coupon.coupon} />
               </td>
             </tr>
           ))}

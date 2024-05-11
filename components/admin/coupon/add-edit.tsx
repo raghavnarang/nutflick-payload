@@ -23,6 +23,9 @@ interface AddEditCouponProps {
 const FormUI: FC<AddEditCouponProps> = ({ editCoupon }) => {
   const isEdit = !!editCoupon;
   const [isInfiniteUsage, setInfiniteUsage] = useState(!editCoupon?.max_use);
+  const [type, setType] = useState(
+    editCoupon?.value_type || CouponValueType.FIXED
+  );
 
   const { pending } = useFormStatus();
 
@@ -68,17 +71,49 @@ const FormUI: FC<AddEditCouponProps> = ({ editCoupon }) => {
             outerWrapperClassname="w-full"
             disabled={pending}
             defaultValue={editCoupon?.value}
+            prefix={type === CouponValueType.FIXED ? "₹" : undefined}
+            suffix={type === CouponValueType.PERCENTAGE ? "%" : undefined}
           />
           <Dropdown
             label="Value Type"
             name="value_type"
             outerWrapperClassName="w-full"
             disabled={pending}
-            defaultValue={editCoupon?.value_type}
+            onChange={(e) =>
+              setType(parseInt(e.target.value) as CouponValueType)
+            }
+            value={type}
           >
-            <option value={CouponValueType.FIXED}>Fixed</option>
-            <option value={CouponValueType.PERCENTAGE}>Percentage %</option>
+            <option value={CouponValueType.FIXED}>Fixed (₹)</option>
+            <option value={CouponValueType.PERCENTAGE}>Percentage (%)</option>
           </Dropdown>
+        </div>
+        <div>
+          <p className="mb-3">Coupon Limits</p>
+          <div className="flex gap-10">
+            <Textbox
+              name="min_cart_value"
+              number
+              label="Minimum cart value required for using this coupon"
+              placeholder="Add Minimum Cart Value"
+              required
+              outerWrapperClassname="w-full"
+              disabled={pending}
+              defaultValue={editCoupon?.min_cart_value || undefined}
+              prefix="₹"
+            />
+            <Textbox
+              name="max_discount"
+              number
+              label="Maximum discount (Upto)"
+              placeholder="Add Maximum Discount Value"
+              required
+              outerWrapperClassname="w-full"
+              disabled={pending || type !== CouponValueType.PERCENTAGE}
+              defaultValue={editCoupon?.max_discount || undefined}
+              prefix="₹"
+            />
+          </div>
         </div>
         <div className="flex gap-10">
           <div className="flex flex-col gap-3 w-full">

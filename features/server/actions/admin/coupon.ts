@@ -4,6 +4,7 @@ import "server-only";
 import { Status } from "@/shared/types/status";
 import { addCouponSchema, editCouponSchema } from "@/shared/zod-schemas/coupon";
 import {
+  deleteCoupon,
   insertCoupon,
   toggleActivation,
   updateCoupon,
@@ -57,6 +58,24 @@ export const toggleCouponActivation = async (prev: any, id: number) => {
     return {
       status: Status.success,
       message: "Coupon Toggled Successfully",
+    };
+  } catch (e) {
+    console.log("Error", e);
+    return { status: Status.error, message: "Something went wrong" };
+  }
+};
+
+export const removeCoupon = async (id: number) => {
+  try {
+    const couponId = z.number().parse(id);
+    await deleteCoupon(couponId);
+
+    revalidatePath(`/admin/coupon`);
+    revalidatePath(`/checkout`);
+
+    return {
+      status: Status.success,
+      message: "Coupon Deleted Successfully",
     };
   } catch (e) {
     console.log("Error", e);

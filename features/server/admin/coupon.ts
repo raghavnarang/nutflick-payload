@@ -4,6 +4,7 @@ import { addCouponSchema, editCouponSchema } from "@/shared/zod-schemas/coupon";
 import { cookies } from "next/headers";
 import "server-only";
 import { z } from "zod";
+import { CouponValueType } from "@/shared/types/coupon";
 
 export const getCoupons = async () => {
   const dbClient = createServerClient(cookies());
@@ -22,7 +23,14 @@ export const insertCoupon = async (data: z.infer<typeof addCouponSchema>) => {
   const dbClient = createActionsClient(cookies());
   const { data: coupon, error } = await dbClient
     .from("coupon")
-    .insert(data)
+    .insert({
+      ...data,
+      max_use: data.max_use || null,
+      max_discount:
+        data.max_discount && data.value_type === CouponValueType.PERCENTAGE
+          ? data.max_discount
+          : null,
+    })
     .select("id");
 
   if (error || !coupon || coupon.length === 0) {
@@ -54,7 +62,14 @@ export const updateCoupon = async (data: z.infer<typeof editCouponSchema>) => {
   const dbClient = createActionsClient(cookies());
   const { error } = await dbClient
     .from("coupon")
-    .update({ ...data, max_use: data.max_use || null })
+    .update({
+      ...data,
+      max_use: data.max_use || null,
+      max_discount:
+        data.max_discount && data.value_type === CouponValueType.PERCENTAGE
+          ? data.max_discount
+          : null,
+    })
     .eq("id", data.id);
 
   if (error) {
@@ -64,6 +79,17 @@ export const updateCoupon = async (data: z.infer<typeof editCouponSchema>) => {
   }
 
   return data.id;
+};
+
+export const deleteCoupon = async (id: number) => {
+  const dbClient = createActionsClient(cookies());
+  const { error } = await dbClient.from("coupon").delete().eq("id", id);
+
+  if (error) {
+    const errMsg = "Unable to delete coupon";
+    console.log(error || errMsg);
+    throw Error(errMsg);
+  }
 };
 
 export const toggleActivation = async (id: number) => {
@@ -89,4 +115,21 @@ export const toggleActivation = async (id: number) => {
     console.log(updateErr || errMsg);
     throw Error(errMsg);
   }
+};
+
+export const getCheckoutCoupons = async () => {
+  const dbClient = createServerClient(cookies());
+  const { data: coupons, error } = await dbClient
+    .from("coupon")
+    .select()
+    .eq("is_active", true)
+    .eq("checkout_visible", true);
+
+  if (error || !coupons) {
+    const errMsg = "Unable to fetch checkout coupons";
+    console.log(error || errMsg);
+    throw Error(errMsg);
+  }
+
+  return coupons.sort((a, b) => a.id - b.id);
 };

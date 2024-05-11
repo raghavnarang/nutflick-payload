@@ -145,6 +145,7 @@ export interface Database {
       checkout: {
         Row: {
           address_id: number | null
+          coupon_id: number | null
           created_at: string
           id: number
           shipping_mode: number | null
@@ -152,6 +153,7 @@ export interface Database {
         }
         Insert: {
           address_id?: number | null
+          coupon_id?: number | null
           created_at?: string
           id?: number
           shipping_mode?: number | null
@@ -159,6 +161,7 @@ export interface Database {
         }
         Update: {
           address_id?: number | null
+          coupon_id?: number | null
           created_at?: string
           id?: number
           shipping_mode?: number | null
@@ -169,6 +172,12 @@ export interface Database {
             foreignKeyName: "checkout_address_id_fkey"
             columns: ["address_id"]
             referencedRelation: "address"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "checkout_coupon_id_fkey"
+            columns: ["coupon_id"]
+            referencedRelation: "coupon"
             referencedColumns: ["id"]
           },
           {
@@ -186,7 +195,9 @@ export interface Database {
           created_at: string
           id: number
           is_active: boolean
+          max_discount: number | null
           max_use: number | null
+          min_cart_value: number | null
           value: number
           value_type: number
         }
@@ -196,7 +207,9 @@ export interface Database {
           created_at?: string
           id?: number
           is_active?: boolean
+          max_discount?: number | null
           max_use?: number | null
+          min_cart_value?: number | null
           value: number
           value_type?: number
         }
@@ -206,7 +219,9 @@ export interface Database {
           created_at?: string
           id?: number
           is_active?: boolean
+          max_discount?: number | null
           max_use?: number | null
+          min_cart_value?: number | null
           value?: number
           value_type?: number
         }

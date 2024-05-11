@@ -71,23 +71,38 @@ export const getOrderShippingItems = async (
   let surfaceCouriers = couriers.filter((c) => c.mode === ShippingMode.SURFACE);
   let airCouriers = couriers.filter((c) => c.mode === ShippingMode.AIR);
 
-  /** Exclude Non Preferred Couriers and retain Preferred Couriers */
-  const prefAirCouriers = airCouriers.filter(
-    (c) =>
-      !nonPrefCourierNames.some((npc) => c.name.includes(npc)) &&
-      prefCourierNames.some((pc) => c.name.includes(pc))
+  /** Exclude Non Preferred Couriers */
+  const nonPrefExcludedAirCouriers = airCouriers.filter(
+    (c) => !nonPrefCourierNames.some((npc) => c.name.includes(npc))
   );
 
-  const prefSurfaceCouriers = surfaceCouriers.filter(
-    (c) =>
-      !nonPrefCourierNames.some((npc) => c.name.includes(npc)) &&
-      prefCourierNames.some((pc) => c.name.includes(pc))
+  const nonPrefExcludedSurfaceCouriers = surfaceCouriers.filter(
+    (c) => !nonPrefCourierNames.some((npc) => c.name.includes(npc))
   );
 
-  /** If there not any preferred, then use rest of the couriers */
+  /** Use Preferred Couriers */
+  const prefAirCouriers = airCouriers.filter((c) =>
+    prefCourierNames.some((pc) => c.name.includes(pc))
+  );
+
+  const prefSurfaceCouriers = surfaceCouriers.filter((c) =>
+    prefCourierNames.some((pc) => c.name.includes(pc))
+  );
+
+  /** Priority of Usage: 1. Preferred, 2. Rest excluding non Preferred, 3. All */
   surfaceCouriers =
-    prefSurfaceCouriers.length === 0 ? surfaceCouriers : prefSurfaceCouriers;
-  airCouriers = prefAirCouriers.length === 0 ? airCouriers : prefAirCouriers;
+    prefSurfaceCouriers.length !== 0
+      ? prefSurfaceCouriers
+      : nonPrefExcludedSurfaceCouriers.length !== 0
+      ? nonPrefExcludedSurfaceCouriers
+      : surfaceCouriers;
+
+  airCouriers =
+    prefAirCouriers.length !== 0
+      ? prefAirCouriers
+      : nonPrefExcludedAirCouriers.length !== 0
+      ? nonPrefExcludedAirCouriers
+      : airCouriers;
 
   /** Find the eligible couriers whichever has the lowest rate */
   let eligibleCouriers: ShippingCourier[] = [];

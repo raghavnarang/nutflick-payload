@@ -46,7 +46,7 @@ const CheckoutProduct: FC<CartProduct> = (item) => {
               className="block text-gray-600 text-sm md:text-base"
             />
             <div className="mt-2 flex gap-3">
-              <EditCheckoutProduct qty={item.qty} variantId={item.variantId} />
+              <EditCheckoutProduct qty={item.qty} variantId={item.variantId} key={item.variantId} />
               <DeleteCheckoutProduct variantId={item.variantId} />
             </div>
           </div>

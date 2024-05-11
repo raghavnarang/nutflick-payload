@@ -1,5 +1,6 @@
 import EmptyCart from "@/components/cart/empty-cart";
 import CheckoutAddress from "@/components/checkout/address";
+import CheckoutCoupons from "@/components/checkout/coupon";
 import CheckoutPaymentButton from "@/components/checkout/payment-button";
 import CheckoutProduct from "@/components/checkout/product";
 import SyncProductsToLS from "@/components/checkout/product/sync-ls";
@@ -42,13 +43,14 @@ const Checkout: FC<CheckoutProps> = async ({ params: { id } }) => {
         <div className="max-w-7xl w-full">
           <h1 className="text-2xl mb-10">Checkout</h1>
           <div className="flex justify-center items-start lg:flex-row flex-col lg:gap-10">
-            <div className="lg:w-2/3 w-full">
+            <div className="lg:w-1/2 w-full">
               <CheckoutAddress
                 checkoutId={+id}
                 address={address || undefined}
               />
+              {address && <CheckoutCoupons />}
             </div>
-            <div className="lg:w-1/3 w-full">
+            <div className="lg:w-1/2 w-full">
               <Section title="Order Details">
                 {items.map((item) => (
                   <CheckoutProduct key={item.variantId} {...item} />
@@ -72,7 +74,7 @@ const Checkout: FC<CheckoutProps> = async ({ params: { id } }) => {
                   })}
                 />
               </Section>
-              <CheckoutPaymentButton />
+              {address && <CheckoutPaymentButton />}
             </div>
           </div>
         </div>
