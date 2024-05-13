@@ -6,10 +6,13 @@ import CheckoutProduct from "@/components/checkout/product";
 import SyncProductsToLS from "@/components/checkout/product/sync-ls";
 import CheckoutShipping from "@/components/checkout/shipping";
 import CheckoutTotal from "@/components/checkout/total";
+import Price from "@/components/product/price";
 import Section from "@/components/section";
 import SectionLoader from "@/components/section/loader";
+import SectionTitleValue from "@/components/section/title-value";
 import { CheckoutProvider } from "@/features/checkout";
 import { getCheckout } from "@/features/server/checkout";
+import { CouponValueType } from "@/shared/types/coupon";
 import { Suspense, type FC } from "react";
 
 interface CheckoutProps {
@@ -20,6 +23,7 @@ const Checkout: FC<CheckoutProps> = async ({ params: { id } }) => {
   const {
     address,
     items,
+    coupon,
     shipping_mode: shippingMode,
   } = await getCheckout(+id);
 
@@ -37,6 +41,21 @@ const Checkout: FC<CheckoutProps> = async ({ params: { id } }) => {
     0
   );
 
+  let discount =
+    coupon?.value_type === CouponValueType.PERCENTAGE
+      ? subtotal * (coupon.value / 100)
+      : coupon?.value;
+
+  if (coupon?.max_discount && (discount || 0) > coupon.max_discount) {
+    discount = coupon.max_discount;
+  }
+
+  const preparedCoupon = coupon && {
+    id: coupon.id,
+    coupon: coupon.coupon,
+    value: discount || 0,
+  };
+
   return (
     <CheckoutProvider subtotal={subtotal || 0} defaultLoading={true}>
       <div className="flex justify-center">
@@ -48,7 +67,12 @@ const Checkout: FC<CheckoutProps> = async ({ params: { id } }) => {
                 checkoutId={+id}
                 address={address || undefined}
               />
-              {address && <CheckoutCoupons />}
+              {address && (
+                <CheckoutCoupons
+                  subtotal={subtotal}
+                  coupon={preparedCoupon || undefined}
+                />
+              )}
             </div>
             <div className="lg:w-1/2 w-full">
               <Section title="Order Details">
@@ -66,7 +90,14 @@ const Checkout: FC<CheckoutProps> = async ({ params: { id } }) => {
                     />
                   )}
                 </Suspense>
-                <CheckoutTotal />
+                {preparedCoupon && (
+                  <SectionTitleValue
+                    title={`Discount (${coupon.coupon.toUpperCase()})`}
+                  >
+                    <Price price={preparedCoupon.value} negative />
+                  </SectionTitleValue>
+                )}
+                <CheckoutTotal coupon={preparedCoupon || undefined} />
                 <SyncProductsToLS
                   items={items.map((i) => {
                     const { weight, costToBear, ...rest } = i;

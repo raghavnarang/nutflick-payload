@@ -152,9 +152,8 @@ const FormUI: FC<Omit<CheckoutSelectAddress, "checkoutId">> = ({
               e.preventDefault();
               onCancel();
             }}
-            icon={Back}
           >
-            Go Back
+            Cancel
           </Button>
         )}
       </SectionFooter>
@@ -168,10 +167,8 @@ const CheckoutSelectAddress: FC<CheckoutSelectAddress> = (props) => {
   const [result, action] = useFormState(actionWithCheckoutId, null);
 
   const { addToast } = useToast();
-  const { setLoading } = useCheckout();
   useEffect(() => {
     if (result) {
-      setLoading(false)
       if (result.status === Status.error) {
         addToast({
           id: Date.now(),

@@ -25,6 +25,7 @@ export const insertCoupon = async (data: z.infer<typeof addCouponSchema>) => {
     .from("coupon")
     .insert({
       ...data,
+      coupon: data.coupon.toLowerCase(),
       max_use: data.max_use || null,
       max_discount:
         data.max_discount && data.value_type === CouponValueType.PERCENTAGE
@@ -64,6 +65,7 @@ export const updateCoupon = async (data: z.infer<typeof editCouponSchema>) => {
     .from("coupon")
     .update({
       ...data,
+      coupon: data.coupon?.toLowerCase(),
       max_use: data.max_use || null,
       max_discount:
         data.max_discount && data.value_type === CouponValueType.PERCENTAGE
@@ -115,21 +117,4 @@ export const toggleActivation = async (id: number) => {
     console.log(updateErr || errMsg);
     throw Error(errMsg);
   }
-};
-
-export const getCheckoutCoupons = async () => {
-  const dbClient = createServerClient(cookies());
-  const { data: coupons, error } = await dbClient
-    .from("coupon")
-    .select()
-    .eq("is_active", true)
-    .eq("checkout_visible", true);
-
-  if (error || !coupons) {
-    const errMsg = "Unable to fetch checkout coupons";
-    console.log(error || errMsg);
-    throw Error(errMsg);
-  }
-
-  return coupons.sort((a, b) => a.id - b.id);
 };

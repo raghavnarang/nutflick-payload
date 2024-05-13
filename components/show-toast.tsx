@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import { useToast } from "@/features/toast";
 import { Status } from "@/shared/types/status";
@@ -10,9 +10,14 @@ interface ShowToastProps {
     message: string;
   };
   showErrorOnly?: boolean;
+  onSuccess?: () => void;
 }
 
-const ShowToast: FC<ShowToastProps> = ({ toast, showErrorOnly = false }) => {
+const ShowToast: FC<ShowToastProps> = ({
+  toast,
+  showErrorOnly = false,
+  onSuccess,
+}) => {
   const { addToast } = useToast();
   useEffect(() => {
     if (toast.status === Status.error || !showErrorOnly) {
@@ -23,9 +28,12 @@ const ShowToast: FC<ShowToastProps> = ({ toast, showErrorOnly = false }) => {
         isDismissable: true,
       });
     }
+    if (toast.status === Status.success) {
+      onSuccess?.();
+    }
   }, [toast, showErrorOnly]);
 
   return null;
 };
 
-export default ShowToast
+export default ShowToast;

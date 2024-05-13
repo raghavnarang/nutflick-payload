@@ -21,7 +21,7 @@ export const changeCartProductQty = async (prev: any, data: FormData) => {
 
     const checkoutId = await updateCartProductQty(variantId, qty);
 
-    revalidatePath(`/admin/checkout/${checkoutId}`);
+    revalidatePath(`/checkout/${checkoutId}`);
 
     return {
       message: "Updated Quantity",
@@ -30,6 +30,7 @@ export const changeCartProductQty = async (prev: any, data: FormData) => {
     };
   } catch (e) {
     console.log(e);
+    revalidatePath("/checkout");
     return {
       message: "Unable to change cart product quantity",
       status: Status.error,
@@ -45,7 +46,7 @@ export const removeCartProduct = async (prev: any, data: FormData) => {
 
     const checkoutId = await deleteCartProduct(variantId);
 
-    revalidatePath(`/admin/checkout/${checkoutId}`);
+    revalidatePath(`/checkout/${checkoutId}`);
 
     return {
       message: "Deleted Product from Checkout",
@@ -53,6 +54,7 @@ export const removeCartProduct = async (prev: any, data: FormData) => {
     };
   } catch (e) {
     console.log(e);
+    revalidatePath("/checkout");
     return {
       message: "Unable to delete cart product",
       status: Status.error,

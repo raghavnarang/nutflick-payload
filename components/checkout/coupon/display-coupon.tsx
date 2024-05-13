@@ -1,0 +1,78 @@
+import Button from "@/components/button";
+import Price from "@/components/product/price";
+import { CouponValueType, type Coupon } from "@/shared/types/coupon";
+import type { FC } from "react";
+import cx from "classnames";
+import CheckoutApplyCoupon from "./apply-coupon";
+
+interface CheckoutDisplayCouponProps
+  extends Omit<
+    Coupon,
+    "max_use" | "is_active" | "checkout_visible" | "created_at"
+  > {
+  subtotal: number;
+  onSuccess?: () => void;
+}
+
+const CheckoutDisplayCoupon: FC<CheckoutDisplayCouponProps> = (props) => {
+  const isApplicable =
+    !props.min_cart_value || props.subtotal >= props.min_cart_value;
+  return (
+    <div className="border-t border-gray-200 md:px-8 px-4 py-5" key={props.id}>
+      <div className="flex justify-between items-center gap-5 mb-3">
+        <span
+          className={cx(
+            "uppercase font-semibold tracking-widest border-4 border-dashed rounded-lg px-3 py-1",
+            {
+              "border-red-400": isApplicable,
+              "border-gray-300": !isApplicable,
+            }
+          )}
+        >
+          {props.coupon}
+        </span>
+        <div className="text-right">
+          <p className="font-semibold">
+            {props.value_type === CouponValueType.FIXED ? (
+              <Price price={props.value} />
+            ) : (
+              `${props.value}%`
+            )}{" "}
+            off
+          </p>
+          {props.max_discount && (
+            <p className="text-gray-600 text-sm">
+              upto <Price price={props.max_discount} />
+            </p>
+          )}
+        </div>
+      </div>
+      <div
+        className={cx("flex items-center", {
+          "justify-end": isApplicable,
+          "justify-between": !isApplicable,
+        })}
+      >
+        {!isApplicable && (
+          <span className="border border-blue-300 text-blue-800 bg-blue-100 text-sm rounded px-3 py-1 inline-block">
+            Add more items worth{" "}
+            <Price price={(props.min_cart_value || 0) - props.subtotal} /> to
+            use this coupon
+          </span>
+        )}
+        {!isApplicable ? (
+          <Button small disabled>
+            Apply
+          </Button>
+        ) : (
+          <CheckoutApplyCoupon
+            coupon={props.coupon}
+            onSuccess={props.onSuccess}
+          />
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default CheckoutDisplayCoupon;

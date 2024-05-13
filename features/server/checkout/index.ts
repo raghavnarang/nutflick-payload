@@ -15,7 +15,6 @@ import type {
 } from "@/shared/types/cart-product";
 import { revalidatePath } from "next/cache";
 import { linkAddressToCheckout } from "./address";
-import { CartProduct } from "@/shared/types/cart";
 
 interface CartItem {
   id: number;
@@ -176,14 +175,14 @@ const generateCheckout = async (
     const checkoutId = await insertCheckout(items, user.id, dbClient);
     if (data?.[0]?.id)
       await linkAddressToCheckout(checkoutId, data[0].id, dbClient);
-    revalidatePath(`/admin/checkout/${checkoutId}`);
+    revalidatePath(`/checkout/${checkoutId}`);
     return checkoutId;
   }
 
   await syncCartProducts(items, checkout[0].id, dbClient);
   if (data?.[0]?.id)
     await linkAddressToCheckout(checkout[0].id, data[0].id, dbClient);
-  revalidatePath(`/admin/checkout/${checkout[0].id}`);
+  revalidatePath(`/checkout/${checkout[0].id}`);
   return checkout[0].id;
 };
 
@@ -253,7 +252,7 @@ export const getCheckout = async (id: number) => {
     .from("checkout")
     .select(
       `address(id, name, phone, state, city, pincode, address),
-      coupon(id, coupon, value, value_type),
+      coupon(id, coupon, value, value_type, max_discount),
       items:cart_product(id, qty, 
         variant:product_variant(id, title, price, image, slug, weight, costToBear:included_shipping_cost, 
           product(id, image, title, slug, 

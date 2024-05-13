@@ -77,19 +77,7 @@ const FormUI: FC<CheckoutShippingSelectorProps & { onChange?: () => void }> = ({
 const CheckoutShippingSelector: FC<CheckoutShippingSelectorProps> = (props) => {
   const [result, action] = useFormState(changeShippingMode, null);
   const ref = useRef<HTMLFormElement>(null);
-  const { setLoading, setShipping } = useCheckout();
-
-  useEffect(() => {
-    if (result) {
-      setLoading(false);
-    }
-  }, [result]);
-
-  /** Remove Loading onload as default loading state is true on provider level
-   * because the Shipping selector is expected not to be loaded, because calculation of shipping charges in progress */
-  useEffect(() => {
-    setLoading(false);
-  }, []);
+  const { setShipping } = useCheckout();
 
   useEffect(() => {
     setShipping(

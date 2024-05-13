@@ -53,7 +53,6 @@ const EditCheckoutProduct: FC<EditCheckoutProductProps> = (props) => {
 
   const { addToast } = useToast();
   const { setQty } = useCart();
-  const { setLoading } = useCheckout();
   useEffect(() => {
     if (result) {
       addToast({
@@ -62,8 +61,6 @@ const EditCheckoutProduct: FC<EditCheckoutProductProps> = (props) => {
         isDismissable: true,
         type: result.status,
       });
-
-      setLoading(false);
 
       if (result.status === Status.success && result.qty) {
         setQty(props.variantId, result.qty);

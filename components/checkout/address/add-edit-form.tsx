@@ -140,10 +140,8 @@ const CheckoutAddressForm: FC<CheckoutAddressFormProps> = ({
   const [result, action] = useFormState(actionWithCheckoutId, null);
 
   const { addToast } = useToast();
-  const { setLoading } = useCheckout();
   useEffect(() => {
     if (result) {
-      setLoading(false);
       if (result.status === Status.error) {
         addToast({
           id: Date.now(),

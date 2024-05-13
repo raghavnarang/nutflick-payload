@@ -16,7 +16,7 @@ export const changeShippingMode = async (prev: any, data: FormData) => {
 
     const checkoutId = await updateShippingMode(mode || ShippingMode.SURFACE);
 
-    revalidatePath(`/admin/checkout/${checkoutId}`);
+    revalidatePath(`/checkout/${checkoutId}`);
 
     return {
       message: "Updated shipping mode",
@@ -24,6 +24,7 @@ export const changeShippingMode = async (prev: any, data: FormData) => {
     };
   } catch (e) {
     console.log(e);
+    revalidatePath("/checkout");
     return {
       message: "Unable to change shipping mode",
       status: Status.error,

@@ -1,15 +1,18 @@
 "use server";
 
-import 'server-only'
+import "server-only";
 import { Status } from "@/shared/types/status";
-import { addAddressSchema, updateAddressSchema } from "@/shared/zod-schemas/address";
+import {
+  addAddressSchema,
+  updateAddressSchema,
+} from "@/shared/zod-schemas/address";
 import { createClient } from "@/lib/supabase/actions";
 import { cookies } from "next/headers";
 import {
   insertAddress,
   setPreferredAddress,
   linkAddressToCheckout,
-  updateAddress
+  updateAddress,
 } from "../../checkout/address";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
@@ -28,7 +31,7 @@ export const addAddressToCheckout = async (
     await linkAddressToCheckout(parsedCheckoutId, id, dbClient);
     await setPreferredAddress(id, dbClient);
 
-    revalidatePath(`/admin/checkout/${parsedCheckoutId}`);
+    revalidatePath(`/checkout/${parsedCheckoutId}`);
 
     return {
       status: Status.success,
@@ -36,6 +39,7 @@ export const addAddressToCheckout = async (
     };
   } catch (e) {
     console.log("Error", e);
+    revalidatePath("/checkout");
     return { status: Status.error, message: "Something went wrong" };
   }
 };
@@ -53,7 +57,7 @@ export const editAddressAndAddToCheckout = async (
     await linkAddressToCheckout(parsedCheckoutId, address.id, dbClient);
     await setPreferredAddress(address.id, dbClient);
 
-    revalidatePath(`/admin/checkout/${parsedCheckoutId}`);
+    revalidatePath(`/checkout/${parsedCheckoutId}`);
 
     return {
       status: Status.success,
@@ -61,6 +65,7 @@ export const editAddressAndAddToCheckout = async (
     };
   } catch (e) {
     console.log("Error", e);
+    revalidatePath("/checkout");
     return { status: Status.error, message: "Something went wrong" };
   }
 };
@@ -72,13 +77,13 @@ export const selectAddressForCheckout = async (
 ) => {
   try {
     const parsedCheckoutId = z.number().parse(checkoutId);
-    const addressId = zfd.formData({id: zfd.numeric()}).parse(data).id;
+    const addressId = zfd.formData({ id: zfd.numeric() }).parse(data).id;
 
     const dbClient = createClient(cookies());
     await linkAddressToCheckout(parsedCheckoutId, addressId, dbClient);
     await setPreferredAddress(addressId, dbClient, true);
 
-    revalidatePath(`/admin/checkout/${checkoutId}`);
+    revalidatePath(`/checkout/${checkoutId}`);
 
     return {
       status: Status.success,
@@ -86,6 +91,7 @@ export const selectAddressForCheckout = async (
     };
   } catch (e) {
     console.log("Error", e);
+    revalidatePath("/checkout");
     return { status: Status.error, message: "Something went wrong" };
   }
 };

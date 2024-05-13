@@ -96,7 +96,6 @@ const FormUI: FC<AddEditCouponProps> = ({ editCoupon }) => {
               number
               label="Minimum cart value required for using this coupon"
               placeholder="Add Minimum Cart Value"
-              required
               outerWrapperClassname="w-full"
               disabled={pending}
               defaultValue={editCoupon?.min_cart_value || undefined}
@@ -107,7 +106,6 @@ const FormUI: FC<AddEditCouponProps> = ({ editCoupon }) => {
               number
               label="Maximum discount (Upto)"
               placeholder="Add Maximum Discount Value"
-              required
               outerWrapperClassname="w-full"
               disabled={pending || type !== CouponValueType.PERCENTAGE}
               defaultValue={editCoupon?.max_discount || undefined}
