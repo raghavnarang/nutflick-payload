@@ -19,7 +19,7 @@ const CheckoutDisplayCoupon: FC<CheckoutDisplayCouponProps> = (props) => {
     !props.min_cart_value || props.subtotal >= props.min_cart_value;
   return (
     <div className="border-t border-gray-200 md:px-8 px-4 py-5" key={props.id}>
-      <div className="flex justify-between items-center gap-5 mb-3">
+      <div className="flex flex-col sm:flex-row justify-between items-center sm:gap-5 gap-3 mb-3">
         <span
           className={cx(
             "uppercase font-semibold tracking-widest border-4 border-dashed rounded-lg px-3 py-1",
@@ -31,7 +31,7 @@ const CheckoutDisplayCoupon: FC<CheckoutDisplayCouponProps> = (props) => {
         >
           {props.coupon}
         </span>
-        <div className="text-right">
+        <div className="sm:text-right text-center">
           <p className="font-semibold">
             {props.value_type === CouponValueType.FIXED ? (
               <Price price={props.value} />
@@ -48,9 +48,9 @@ const CheckoutDisplayCoupon: FC<CheckoutDisplayCouponProps> = (props) => {
         </div>
       </div>
       <div
-        className={cx("flex items-center", {
+        className={cx("flex items-center flex-col-reverse sm:flex-row", {
           "justify-end": isApplicable,
-          "justify-between": !isApplicable,
+          "justify-between gap-5": !isApplicable,
         })}
       >
         {!isApplicable && (

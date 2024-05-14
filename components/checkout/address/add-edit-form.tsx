@@ -40,8 +40,8 @@ const FormUI: FC<{ address?: MinimalAddress; onCancel?: () => void }> = ({
   return (
     <>
       <SectionBody>
-        <div className="grid grid-cols-3 gap-5">
-          <div className="grid grid-cols-2 gap-5 col-span-3">
+        <div className="grid sm:grid-cols-3 grid-cols-1 gap-5">
+          <div className="grid sm:grid-cols-2 grid-cols-1 gap-5 sm:col-span-3 col-span-1">
             <Textbox
               label="Full Name"
               name="name"
@@ -63,7 +63,7 @@ const FormUI: FC<{ address?: MinimalAddress; onCancel?: () => void }> = ({
             />
           </div>
           <Textbox
-            outerWrapperClassname="col-span-3"
+            outerWrapperClassname="sm:col-span-3 col-span-1"
             placeholder="Enter Address"
             label="Address"
             name="address"
@@ -106,7 +106,7 @@ const FormUI: FC<{ address?: MinimalAddress; onCancel?: () => void }> = ({
           {address?.id && <input type="hidden" name="id" value={address.id} />}
         </div>
       </SectionBody>
-      <SectionFooter className="flex gap-3">
+      <SectionFooter className="flex flex-col sm:flex-row gap-3">
         <Button type="submit" disabled={pending}>
           {address ? "Update & Deliver Here" : "Save & Deliver Here"}
         </Button>

@@ -13,9 +13,9 @@ const CheckoutCouponSelected: FC<CheckoutCouponSelectedProps> = ({
   subtotal,
   ...coupon
 }) => (
-  <div className="flex justify-between items-center w-full gap-5 md:px-8 px-4 py-5 bg-gray-50 rounded-lg mb-10">
+  <div className="flex flex-col sm:flex-row justify-between items-center w-full gap-5 md:px-8 px-4 py-5 bg-gray-50 rounded-lg mb-10">
     <div className="flex items-center gap-2">
-      <Tick className="text-green-600 inline-block !size-8" />
+      <Tick className="text-green-600 inline-block !size-8 flex-shrink-0" />
       <p>
         You saved{" "}
         <Price price={coupon.value} className="text-green-600 font-semibold" />{" "}

@@ -28,7 +28,7 @@ const CheckoutAddressPrefilled: FC<CheckoutAddressPrefilledProps> = ({
         </p>
         <p>Phone: {phone}</p>
       </SectionBody>
-      <SectionFooter className="flex gap-3">
+      <SectionFooter className="flex gap-3 flex-col sm:flex-row">
         <Button onClick={onEdit} disabled={isLoading}>
           Edit address
         </Button>

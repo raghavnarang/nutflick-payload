@@ -29,7 +29,7 @@ const FormUI: FC<CheckoutApplyCouponProps> = ({ coupon }) => {
       </Button>
     </>
   ) : (
-    <div className="flex justify-between w-full gap-5 md:px-8 px-4 py-5">
+    <div className="flex justify-between w-full sm:gap-5 gap-3 md:px-8 px-4 py-5">
       <Textbox
         name="coupon"
         placeholder="Enter Coupon Name"
