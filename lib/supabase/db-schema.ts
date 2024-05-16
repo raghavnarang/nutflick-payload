@@ -227,6 +227,137 @@ export interface Database {
         }
         Relationships: []
       }
+      order: {
+        Row: {
+          address: string
+          address_id: number | null
+          city: string
+          coupon: string | null
+          coupon_id: number | null
+          created_at: string
+          discount: number | null
+          id: number
+          mobile: string
+          name: string
+          pincode: string
+          shipping_cost: number | null
+          shipping_mode: number | null
+          state: string
+          user_id: string
+        }
+        Insert: {
+          address: string
+          address_id?: number | null
+          city: string
+          coupon?: string | null
+          coupon_id?: number | null
+          created_at?: string
+          discount?: number | null
+          id?: number
+          mobile: string
+          name: string
+          pincode: string
+          shipping_cost?: number | null
+          shipping_mode?: number | null
+          state: string
+          user_id: string
+        }
+        Update: {
+          address?: string
+          address_id?: number | null
+          city?: string
+          coupon?: string | null
+          coupon_id?: number | null
+          created_at?: string
+          discount?: number | null
+          id?: number
+          mobile?: string
+          name?: string
+          pincode?: string
+          shipping_cost?: number | null
+          shipping_mode?: number | null
+          state?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_address_id_fkey"
+            columns: ["address_id"]
+            referencedRelation: "address"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_coupon_id_fkey"
+            columns: ["coupon_id"]
+            referencedRelation: "coupon"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      order_product: {
+        Row: {
+          created_at: string
+          id: number
+          order_id: number
+          price: number
+          product_id: number | null
+          product_title: string
+          qty: number
+          variant_id: number | null
+          variant_title: string
+          weight: number
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          order_id: number
+          price: number
+          product_id?: number | null
+          product_title: string
+          qty: number
+          variant_id?: number | null
+          variant_title: string
+          weight: number
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          order_id?: number
+          price?: number
+          product_id?: number | null
+          product_title?: string
+          qty?: number
+          variant_id?: number | null
+          variant_title?: string
+          weight?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_product_order_id_fkey"
+            columns: ["order_id"]
+            referencedRelation: "order"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_product_product_id_fkey"
+            columns: ["product_id"]
+            referencedRelation: "product"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_product_variant_id_fkey"
+            columns: ["variant_id"]
+            referencedRelation: "product_variant"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       product: {
         Row: {
           category_id: number | null
