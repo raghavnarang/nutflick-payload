@@ -47,7 +47,7 @@ const CheckoutCouponsList: FC<CheckoutCouponsListProps> = ({
     );
   }
 
-  if (isError || !coupons || coupons.length === 0) {
+  if (isError || !coupons) {
     return (
       <SectionBody>
         <BigMessage
