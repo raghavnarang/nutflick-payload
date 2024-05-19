@@ -32,31 +32,6 @@ export interface Database {
       [_ in never]: never
     }
   }
-  pgbouncer: {
-    Tables: {
-      [_ in never]: never
-    }
-    Views: {
-      [_ in never]: never
-    }
-    Functions: {
-      get_auth: {
-        Args: {
-          p_usename: string
-        }
-        Returns: {
-          username: string
-          password: string
-        }[]
-      }
-    }
-    Enums: {
-      [_ in never]: never
-    }
-    CompositeTypes: {
-      [_ in never]: never
-    }
-  }
   public: {
     Tables: {
       address: {
@@ -237,12 +212,13 @@ export interface Database {
           created_at: string
           discount: number | null
           id: number
-          mobile: string
           name: string
+          phone: string
           pincode: string
           shipping_cost: number | null
           shipping_mode: number | null
           state: string
+          status: number
           user_id: string
         }
         Insert: {
@@ -254,12 +230,13 @@ export interface Database {
           created_at?: string
           discount?: number | null
           id?: number
-          mobile: string
           name: string
+          phone: string
           pincode: string
           shipping_cost?: number | null
           shipping_mode?: number | null
           state: string
+          status?: number
           user_id: string
         }
         Update: {
@@ -271,12 +248,13 @@ export interface Database {
           created_at?: string
           discount?: number | null
           id?: number
-          mobile?: string
           name?: string
+          phone?: string
           pincode?: string
           shipping_cost?: number | null
           shipping_mode?: number | null
           state?: string
+          status?: number
           user_id?: string
         }
         Relationships: [
@@ -302,6 +280,8 @@ export interface Database {
       }
       order_product: {
         Row: {
+          category_id: number | null
+          category_name: string | null
           created_at: string
           id: number
           order_id: number
@@ -314,6 +294,8 @@ export interface Database {
           weight: number
         }
         Insert: {
+          category_id?: number | null
+          category_name?: string | null
           created_at?: string
           id?: number
           order_id: number
@@ -326,6 +308,8 @@ export interface Database {
           weight: number
         }
         Update: {
+          category_id?: number | null
+          category_name?: string | null
           created_at?: string
           id?: number
           order_id?: number
@@ -338,6 +322,12 @@ export interface Database {
           weight?: number
         }
         Relationships: [
+          {
+            foreignKeyName: "order_product_category_id_fkey"
+            columns: ["category_id"]
+            referencedRelation: "product_category"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "order_product_order_id_fkey"
             columns: ["order_id"]

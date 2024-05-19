@@ -96,7 +96,7 @@ const ProductList = async () => {
           ))}
           {coupons.length === 0 && (
             <tr>
-              <td colSpan={3} className="p-10 text-center">
+              <td colSpan={7} className="p-10 text-center">
                 No Coupons
               </td>
             </tr>
