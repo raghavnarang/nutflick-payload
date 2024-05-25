@@ -11,6 +11,9 @@ declare class Razorpay {
       name: string;
       contact: string;
     };
+    modal?: {
+      ondismiss?: () => void;
+    };
   });
 
   open(): void;

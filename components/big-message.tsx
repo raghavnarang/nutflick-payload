@@ -1,6 +1,7 @@
 import type { FC, ReactNode } from "react";
 import type { Icon } from "./Icons/types";
 import Button from "./button";
+import Link, { LinkProps } from "next/link";
 
 interface BigMessageProps {
   icon: FC<Icon>;
@@ -8,10 +9,12 @@ interface BigMessageProps {
   button?: {
     text: ReactNode;
     onClick?: () => void;
+    link?: LinkProps;
   };
   secondaryButton?: {
     text: ReactNode;
     onClick?: () => void;
+    link?: LinkProps;
   };
   disabled?: boolean;
 }
@@ -35,7 +38,11 @@ const BigMessage: FC<BigMessageProps> = ({
             className="mt-7 !w-1/2"
             disabled={disabled}
           >
-            {button.text}
+            {button.link ? (
+              <Link {...button.link}>{button.text}</Link>
+            ) : (
+              button.text
+            )}
           </Button>
         )}
         {secondaryButton && (
@@ -46,7 +53,11 @@ const BigMessage: FC<BigMessageProps> = ({
             className="mt-7 !w-1/2"
             disabled={disabled}
           >
-            {secondaryButton.text}
+            {secondaryButton.link ? (
+              <Link {...secondaryButton.link}>{secondaryButton.text}</Link>
+            ) : (
+              secondaryButton.text
+            )}
           </Button>
         )}
       </div>
