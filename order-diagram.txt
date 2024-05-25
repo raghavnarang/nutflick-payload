@@ -1,0 +1,34 @@
+// Use DBML to define your database structure
+// Docs: https://dbml.dbdiagram.io/docs
+
+Table order {
+  id integer
+  coupon_id integer
+  discount float
+  coupon string
+  shipping_mode integer
+  shipping_cost float
+  address_id integer
+  name string
+  mobile string
+  address string
+  city string
+  state string
+  pincode integer
+  user_id uuid
+  /** Add Razorpay related columns */
+}
+
+Table order_product {
+  id integer
+  product_id integer
+  variant_id integer
+  order_id integer
+  product_title string
+  variant_title string
+  weight integer
+  qty integer
+  price float
+}
+
+Ref: order_product.order_id > order.id // many-to-one

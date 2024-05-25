@@ -1,17 +1,18 @@
 "use server";
 
 import "server-only";
-import { createClient } from "@/lib/supabase/actions";
-import { cookies } from "next/headers";
 import { getCurrentUserId } from "../common/user";
 import { getOrderShippingItems } from "@/lib/shiprocket";
 import { ShippingMode } from "@/shared/types/shipping";
 import { CouponValueType } from "@/shared/types/coupon";
 import type { InsertOrder } from "@/shared/types/order";
+import { createServerClient } from "@supabase/ssr";
+import { Database } from "@/lib/supabase/db-schema";
 
-export const createOrderForCurrentUser = async () => {
-  const dbClient = createClient(cookies());
-  const userId = await getCurrentUserId(dbClient);
+export const createOrderForCurrentUser = async (
+  dbClient: ReturnType<typeof createServerClient<Database>>
+) => {
+  const userId = await getCurrentUserId();
   const { data: checkout, error } = await dbClient
     .from("checkout")
     .select(
@@ -141,7 +142,12 @@ export const createOrderForCurrentUser = async () => {
 
   const { error: insertOrderProductsError } = await dbClient
     .from("order_product")
-    .insert(orderProducts.map((op) => ({ ...op, order_id: orderIds[0].id })));
+    .insert(
+      orderProducts.map((op) => {
+        const { included_shipping_cost, ...rest } = op;
+        return { ...rest, order_id: orderIds[0].id };
+      })
+    );
 
   if (insertOrderProductsError) {
     console.log(insertOrderProductsError);
@@ -157,4 +163,11 @@ export const createOrderForCurrentUser = async () => {
     console.log(deleteCheckoutError);
     throw Error("Unable to delete checkout after order creation");
   }
+
+  return {
+    id: orderIds[0].id,
+    total: subtotal + (order.shipping_cost || 0) - (order.discount || 0),
+    name: order.name,
+    phone: order.phone,
+  };
 };

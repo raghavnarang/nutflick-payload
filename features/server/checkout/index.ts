@@ -75,35 +75,28 @@ const syncCartProducts = async (
   }
 
   if (itemsToInsert.length > 0) {
-    const { data: inserted, error: insertError } = await dbClient
+    const { error: insertError } = await dbClient
       .from("cart_product")
       .insert(itemsToInsert)
       .select();
 
-    if (insertError || !inserted || inserted.length === 0) {
+    if (insertError) {
       console.log(insertError);
       throw Error("insert new cart products error");
     }
-
-    existingItems.push(...inserted);
   }
 
   for (const item of itemsToUpdate) {
-    const { data: updated, error: updateError } = await dbClient
+    const { error: updateError } = await dbClient
       .from("cart_product")
       .update({ qty: item.qty })
-      .eq("id", item.id)
-      .select();
+      .eq("id", item.id);
 
-    if (updateError || !updated || updated.length === 0) {
+    if (updateError) {
       console.log(updateError);
       throw Error("update existing cart products error");
     }
-
-    existingItems.push(...updated);
   }
-
-  return existingItems;
 };
 
 const insertCheckout = async (
@@ -298,6 +291,6 @@ export const getCheckout = async (id: number) => {
 
   return {
     ...checkout[0],
-    items,
+    items: items.sort((a, b) => a.variantId - b.variantId),
   };
 };

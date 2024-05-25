@@ -1,15 +1,18 @@
-'use client'
+"use client";
 
 import { useCheckout } from "@/features/checkout";
 import Button from "../button";
+import Link from "next/link";
 
 const CheckoutPaymentButton = () => {
   const { isLoading } = useCheckout();
 
   return (
-    <Button disabled={isLoading} large type="submit">
-      Place Order
-    </Button>
+    <Link href="/place-order" prefetch={false}>
+      <Button disabled={isLoading} large>
+        Place Order
+      </Button>
+    </Link>
   );
 };
 

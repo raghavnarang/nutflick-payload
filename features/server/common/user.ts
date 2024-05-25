@@ -1,10 +1,15 @@
 import "server-only";
 import { Database } from "@/lib/supabase/db-schema";
+import { createClient } from "@/lib/supabase/server";
 import { createServerClient } from "@supabase/ssr";
+import { cookies } from "next/headers";
 
 export const getCurrentUserId = async (
-  dbClient: ReturnType<typeof createServerClient<Database>>
+  dbClient?: ReturnType<typeof createServerClient<Database>>
 ) => {
+  if (!dbClient) {
+    dbClient = createClient(cookies());
+  }
   const { data: userData, error: userError } = await dbClient.auth.getUser();
   if (userError || !userData) {
     console.log(userError);

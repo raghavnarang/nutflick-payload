@@ -70,6 +70,7 @@ const CheckoutCouponsList: FC<CheckoutCouponsListProps> = ({
       <CheckoutApplyCoupon onSuccess={onSuccess} />
       {coupons.map((coupon) => (
         <CheckoutDisplayCoupon
+          key={coupon.id}
           {...coupon}
           subtotal={subtotal}
           onSuccess={onSuccess}

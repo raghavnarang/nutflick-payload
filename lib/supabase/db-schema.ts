@@ -206,6 +206,7 @@ export interface Database {
         Row: {
           address: string
           address_id: number | null
+          checkout_id: number | null
           city: string
           coupon: string | null
           coupon_id: number | null
@@ -224,6 +225,7 @@ export interface Database {
         Insert: {
           address: string
           address_id?: number | null
+          checkout_id?: number | null
           city: string
           coupon?: string | null
           coupon_id?: number | null
@@ -242,6 +244,7 @@ export interface Database {
         Update: {
           address?: string
           address_id?: number | null
+          checkout_id?: number | null
           city?: string
           coupon?: string | null
           coupon_id?: number | null
@@ -262,6 +265,12 @@ export interface Database {
             foreignKeyName: "order_address_id_fkey"
             columns: ["address_id"]
             referencedRelation: "address"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_checkout_id_fkey"
+            columns: ["checkout_id"]
+            referencedRelation: "checkout"
             referencedColumns: ["id"]
           },
           {
@@ -448,6 +457,40 @@ export interface Database {
             foreignKeyName: "product_variant_product_id_fkey"
             columns: ["product_id"]
             referencedRelation: "product"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      razorpay_orders: {
+        Row: {
+          created_at: string
+          id: number
+          order_id: number | null
+          rzp_order_id: string | null
+          rzp_payment_id: string | null
+          rzp_signature: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          order_id?: number | null
+          rzp_order_id?: string | null
+          rzp_payment_id?: string | null
+          rzp_signature?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          order_id?: number | null
+          rzp_order_id?: string | null
+          rzp_payment_id?: string | null
+          rzp_signature?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "razorpay_orders_order_id_fkey"
+            columns: ["order_id"]
+            referencedRelation: "order"
             referencedColumns: ["id"]
           }
         ]

@@ -2,7 +2,7 @@
 
 import { useToast } from "@/features/toast";
 import { Status } from "@/shared/types/status";
-import { useEffect, type FC } from "react";
+import { memo, useEffect, type FC } from "react";
 
 interface ShowToastProps {
   toast: {
@@ -11,12 +11,14 @@ interface ShowToastProps {
   };
   showErrorOnly?: boolean;
   onSuccess?: () => void;
+  onError?: () => void;
 }
 
 const ShowToast: FC<ShowToastProps> = ({
   toast,
   showErrorOnly = false,
   onSuccess,
+  onError,
 }) => {
   const { addToast } = useToast();
   useEffect(() => {
@@ -30,6 +32,9 @@ const ShowToast: FC<ShowToastProps> = ({
     }
     if (toast.status === Status.success) {
       onSuccess?.();
+    }
+    if (toast.status === Status.error) {
+      onError?.();
     }
   }, [toast, showErrorOnly]);
 
