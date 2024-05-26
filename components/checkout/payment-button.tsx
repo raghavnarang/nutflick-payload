@@ -2,17 +2,20 @@
 
 import { useCheckout } from "@/features/checkout";
 import Button from "../button";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const CheckoutPaymentButton = () => {
   const { isLoading } = useCheckout();
+  const router = useRouter();
 
   return (
-    <Link href="/place-order" prefetch={false}>
-      <Button disabled={isLoading} large>
-        Place Order
-      </Button>
-    </Link>
+    <Button
+      disabled={isLoading}
+      large
+      onClick={() => router.push("/place-order")}
+    >
+      Place Order
+    </Button>
   );
 };
 

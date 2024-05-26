@@ -206,7 +206,6 @@ export interface Database {
         Row: {
           address: string
           address_id: number | null
-          checkout_id: number | null
           city: string
           coupon: string | null
           coupon_id: number | null
@@ -219,13 +218,11 @@ export interface Database {
           shipping_cost: number | null
           shipping_mode: number | null
           state: string
-          status: number
           user_id: string
         }
         Insert: {
           address: string
           address_id?: number | null
-          checkout_id?: number | null
           city: string
           coupon?: string | null
           coupon_id?: number | null
@@ -238,13 +235,11 @@ export interface Database {
           shipping_cost?: number | null
           shipping_mode?: number | null
           state: string
-          status?: number
           user_id: string
         }
         Update: {
           address?: string
           address_id?: number | null
-          checkout_id?: number | null
           city?: string
           coupon?: string | null
           coupon_id?: number | null
@@ -257,7 +252,6 @@ export interface Database {
           shipping_cost?: number | null
           shipping_mode?: number | null
           state?: string
-          status?: number
           user_id?: string
         }
         Relationships: [
@@ -265,12 +259,6 @@ export interface Database {
             foreignKeyName: "order_address_id_fkey"
             columns: ["address_id"]
             referencedRelation: "address"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "order_checkout_id_fkey"
-            columns: ["checkout_id"]
-            referencedRelation: "checkout"
             referencedColumns: ["id"]
           },
           {

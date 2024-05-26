@@ -19,8 +19,11 @@ const PlaceOrder = async () => {
   }
 
   return (
-    result.status === Status.success &&
-    result.order && <StartPayment {...result.order} />
+    <>
+      {result.status === Status.success && result.order && (
+        <StartPayment {...result.order} />
+      )}
+    </>
   );
 };
 
