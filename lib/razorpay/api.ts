@@ -1,5 +1,6 @@
 import "server-only";
 import { RazorpayOrderStatus } from "./types/order";
+import { RazorpayPaymentStatus } from "./types/payment";
 
 export const rzpFetch = async (
   url: string,
@@ -57,7 +58,7 @@ export const getPaymentStatus = async (id: string) => {
   const response = await rzpFetch(`https://api.razorpay.com/v1/payments/${id}`);
 
   if (response && response.id && response.status) {
-    return response.status as RazorpayOrderStatus;
+    return response.status as RazorpayPaymentStatus;
   }
 
   throw new Error(
@@ -72,7 +73,11 @@ export const capturePayment = async (id: string, amount: number) => {
     { amount: amount * 100, currency: "INR" }
   );
 
-  if (response && response.id) {
+  if (
+    response &&
+    response.id &&
+    response.status === RazorpayPaymentStatus.CAPTURED
+  ) {
     return true;
   }
 

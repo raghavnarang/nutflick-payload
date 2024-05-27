@@ -8,6 +8,17 @@ import { CouponValueType } from "@/shared/types/coupon";
 import type { InsertOrder } from "@/shared/types/order";
 import { createServerClient } from "@supabase/ssr";
 import { Database } from "@/lib/supabase/db-schema";
+import { z } from "zod";
+import {
+  capturePayment,
+  getOrderStatus,
+  getPaymentStatus,
+} from "@/lib/razorpay/api";
+import { RazorpayOrderStatus } from "@/lib/razorpay/types/order";
+import { RazorpayPaymentStatus } from "@/lib/razorpay/types/payment";
+import { createClient } from "@/lib/supabase/server";
+import { createClient as createServiceClient } from "@/lib/supabase/service";
+import { cookies } from "next/headers";
 
 export const createOrderForCurrentUser = async (
   dbClient: ReturnType<typeof createServerClient<Database>>
@@ -170,4 +181,88 @@ export const createOrderForCurrentUser = async (
     name: order.name,
     phone: order.phone,
   };
+};
+
+export const getOrder = async (
+  id: number,
+  dbClient?: ReturnType<typeof createServerClient<Database>>
+) => {
+  if (!dbClient) {
+    dbClient = createClient(cookies());
+  }
+
+  const { data: order, error } = await dbClient
+    .from("order")
+    .select(
+      "discount, shipping_cost, shipping_mode, products:order_product(product_title, variant_title, qty, price, category_name)"
+    )
+    .eq("id", id);
+
+  if (error || !order || order.length === 0 || order[0].products.length === 0) {
+    console.log(error);
+    throw new Error("Unable to find order");
+  }
+
+  const total =
+    order[0].products.reduce((total, p) => total + p.price * p.qty, 0) -
+    (order[0].discount || 0) +
+    (order[0].shipping_cost || 0);
+
+  return { ...order[0], total };
+};
+
+export const getOrderPaymentStatus = async (
+  orderId: number,
+  shouldCaptureAuthorised: boolean = false
+) => {
+  const dbClient = createServiceClient();
+  orderId = z.number().parse(orderId);
+
+  /** getOrder will fail if order doesn't belong to current user */
+  const { total, ...order } = await getOrder(orderId);
+
+  const { data: rzpOrder, error } = await dbClient
+    .from("razorpay_orders")
+    .select("rzp_payment_id, rzp_order_id")
+    .eq("order_id", orderId);
+
+  if (
+    error ||
+    !rzpOrder ||
+    !rzpOrder[0].rzp_order_id ||
+    !rzpOrder[0].rzp_payment_id
+  ) {
+    console.log(error);
+    throw new Error("There is not any payment found for this order");
+  }
+
+  const { rzp_order_id: rzpOrderId, rzp_payment_id: rzpPaymentId } =
+    rzpOrder[0];
+
+  const [orderStatus, paymentStatus] = await Promise.all([
+    getOrderStatus(rzpOrderId),
+    getPaymentStatus(rzpPaymentId),
+  ]);
+
+  if (
+    orderStatus === RazorpayOrderStatus.PAID &&
+    paymentStatus === RazorpayPaymentStatus.CAPTURED
+  ) {
+    return paymentStatus;
+  }
+
+  if (
+    orderStatus === RazorpayOrderStatus.ATTEMPTED &&
+    paymentStatus === RazorpayPaymentStatus.AUTHORIZED
+  ) {
+    if (!shouldCaptureAuthorised) {
+      return paymentStatus;
+    }
+
+    return (await capturePayment(rzpPaymentId, total))
+      ? RazorpayPaymentStatus.CAPTURED
+      : RazorpayPaymentStatus.FAILED;
+  }
+
+  return RazorpayPaymentStatus.FAILED;
 };
