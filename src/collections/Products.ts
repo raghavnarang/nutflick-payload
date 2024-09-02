@@ -10,7 +10,9 @@ export const Products: CollectionConfig = {
   },
   access: {
     create: isAdmin,
-    read: () => true,
+    read: ({ req }) => {
+      return !req.url?.includes('/admin') || req.user?.collection === 'users'
+    },
     readVersions: isAdmin,
     update: isAdmin,
     delete: isAdmin,

@@ -16,6 +16,8 @@ const prepareUpdatedCart = (items: CartItem[], cart: Cart) => {
 
 export interface CartStore {
   cart: Cart
+  isHydrated: boolean
+  setHydrated: (val: boolean) => void
   increment: (variantId: string, product?: Product) => void
   decrement: (variantId: string) => void
   setQty: (variantId: string, qty: number) => void
@@ -29,6 +31,8 @@ export const createCartStore = (initState: Cart = defaultCart) => {
     persist(
       (set, get) => ({
         cart: initState,
+        isHydrated: false,
+        setHydrated: (val) => set((state) => ({ ...state, isHydrated: val })),
         increment: (variantId, product) => {
           let isCartUpdated = false
           const newCartItems = get().cart.items.map((ci) => {
@@ -48,7 +52,7 @@ export const createCartStore = (initState: Cart = defaultCart) => {
             }
           }
 
-          set((state) => prepareUpdatedCart(newCartItems, state.cart))
+          set((state) => ({ ...state, ...prepareUpdatedCart(newCartItems, state.cart) }))
         },
         decrement: (variantId) => {
           let isItemUpdated = false
@@ -66,7 +70,7 @@ export const createCartStore = (initState: Cart = defaultCart) => {
             newCartItems = newCartItems.filter((ci) => ci.variantId !== variantId)
           }
 
-          set((state) => prepareUpdatedCart(newCartItems, state.cart))
+          set((state) => ({ ...state, ...prepareUpdatedCart(newCartItems, state.cart) }))
         },
         setQty: (variantId, qty) => {
           if (!qty) {
@@ -81,7 +85,7 @@ export const createCartStore = (initState: Cart = defaultCart) => {
             return ci
           })
 
-          set((state) => prepareUpdatedCart(newCartItems, state.cart))
+          set((state) => ({ ...state, ...prepareUpdatedCart(newCartItems, state.cart) }))
         },
         clear: (product) => {
           const newCartItems = !product
@@ -91,14 +95,14 @@ export const createCartStore = (initState: Cart = defaultCart) => {
                   ci.productId !== product.id ||
                   !product.variants?.find((v) => v.id === ci.variantId),
               )
-          set((state) => prepareUpdatedCart(newCartItems, state.cart))
+          set((state) => ({ ...state, ...prepareUpdatedCart(newCartItems, state.cart) }))
         },
         clearVariant: (variantId) => {
           const newCartItems = get().cart.items.filter((ci) => variantId !== ci.variantId)
-          set((state) => prepareUpdatedCart(newCartItems, state.cart))
+          set((state) => ({ ...state, ...prepareUpdatedCart(newCartItems, state.cart) }))
         },
         setCartItems: (items: CartItem[]) =>
-          set((state) => prepareUpdatedCart([...items], state.cart)),
+          set((state) => ({ ...state, ...prepareUpdatedCart([...items], state.cart) })),
       }),
       {
         name: CART_LOCAL_STORAGE_KEY,
@@ -106,6 +110,7 @@ export const createCartStore = (initState: Cart = defaultCart) => {
           if (state && state.cart.exp > 0 && Date.now() >= state.cart.exp) {
             state.clear()
           }
+          state?.setHydrated(true)
         },
       },
     ),
