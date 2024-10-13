@@ -39,13 +39,13 @@ const ProductItem: FC<ProductItemProps> = ({ product }) => {
 
       {product.variants && product.variants.length > 0 && (
         <div className="mt-3">
+          <Price price={product.variants[0].price} className="text-xl mr-2" />
           {product.variants[0].comparePrice && (
             <Price
               price={product.variants[0].comparePrice}
               className="line-through text-gray-500"
             />
           )}
-          <Price price={product.variants[0].price} className="text-xl ml-2" />
         </div>
       )}
       <div className="mt-3">

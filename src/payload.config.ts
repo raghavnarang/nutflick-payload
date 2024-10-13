@@ -11,6 +11,9 @@ import { Media } from './collections/Media'
 import { Products } from './collections/Products'
 import { Categories } from './collections/Categories'
 import { Customers } from './collections/Customers'
+import { Addresses } from './collections/Addresses'
+import ShippingOptions from './globals/shipping'
+import { Coupons } from './collections/Coupons'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -21,13 +24,14 @@ export default buildConfig({
     importMap: {
       baseDir: path.resolve(dirname),
     },
-    autoLogin:{
-      email:'raghavvnarang@gmail.com',
-      password:'admin',
-      prefillOnly: true
-    }
+    autoLogin: {
+      email: 'raghavvnarang@gmail.com',
+      password: 'admin',
+      prefillOnly: true,
+    },
   },
-  collections: [Users, Media, Products, Categories, Customers],
+  collections: [Users, Media, Products, Categories, Customers, Addresses, Coupons],
+  globals: [ShippingOptions],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {

@@ -17,13 +17,18 @@ export interface Config {
     products: Product;
     categories: Category;
     customers: Customer;
+    addresses: Address;
+    coupons: Coupon;
+    'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
   };
   db: {
     defaultIDType: number;
   };
-  globals: {};
+  globals: {
+    'shipping-options': ShippingOption;
+  };
   locale: null;
   user:
     | (User & {
@@ -164,6 +169,128 @@ export interface Customer {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "addresses".
+ */
+export interface Address {
+  id: number;
+  customer: {
+    relationTo: 'customers';
+    value: number | Customer;
+  };
+  name: string;
+  address: string;
+  phone: string;
+  city: string;
+  state:
+    | 'AN'
+    | 'AP'
+    | 'AR'
+    | 'AS'
+    | 'BR'
+    | 'CG'
+    | 'CH'
+    | 'DN'
+    | 'DD'
+    | 'DL'
+    | 'GA'
+    | 'GJ'
+    | 'HR'
+    | 'HP'
+    | 'JK'
+    | 'JH'
+    | 'KA'
+    | 'KL'
+    | 'LA'
+    | 'LD'
+    | 'MP'
+    | 'MH'
+    | 'MN'
+    | 'ML'
+    | 'MZ'
+    | 'NL'
+    | 'OR'
+    | 'PY'
+    | 'PB'
+    | 'RJ'
+    | 'SK'
+    | 'TN'
+    | 'TS'
+    | 'TR'
+    | 'UP'
+    | 'UK'
+    | 'WB';
+  pincode: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "coupons".
+ */
+export interface Coupon {
+  id: number;
+  is_active?: boolean | null;
+  coupon: string;
+  value: number;
+  type: 'fixed' | 'percent';
+  min_cart_value?: number | null;
+  max_discount?: number | null;
+  is_infinite: '1' | '0';
+  max_use?: number | null;
+  checkout_visible?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payload-locked-documents".
+ */
+export interface PayloadLockedDocument {
+  id: number;
+  document?:
+    | ({
+        relationTo: 'users';
+        value: number | User;
+      } | null)
+    | ({
+        relationTo: 'media';
+        value: number | Media;
+      } | null)
+    | ({
+        relationTo: 'products';
+        value: number | Product;
+      } | null)
+    | ({
+        relationTo: 'categories';
+        value: number | Category;
+      } | null)
+    | ({
+        relationTo: 'customers';
+        value: number | Customer;
+      } | null)
+    | ({
+        relationTo: 'addresses';
+        value: number | Address;
+      } | null)
+    | ({
+        relationTo: 'coupons';
+        value: number | Coupon;
+      } | null);
+  globalSlug?: string | null;
+  user:
+    | {
+        relationTo: 'users';
+        value: number | User;
+      }
+    | {
+        relationTo: 'customers';
+        value: number | Customer;
+      };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-preferences".
  */
 export interface PayloadPreference {
@@ -200,6 +327,21 @@ export interface PayloadMigration {
   batch?: number | null;
   updatedAt: string;
   createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "shipping-options".
+ */
+export interface ShippingOption {
+  id: number;
+  option: {
+    mode: string;
+    rate: number;
+    days?: number | null;
+    id?: string | null;
+  }[];
+  updatedAt?: string | null;
+  createdAt?: string | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

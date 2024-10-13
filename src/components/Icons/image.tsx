@@ -1,5 +1,5 @@
 import type { FC } from "react";
-import cx from "classnames";
+import cx from "clsx";
 import { Icon } from "./types";
 
 const Image: FC<Icon> = ({ className }) => (

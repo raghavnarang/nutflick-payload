@@ -38,11 +38,23 @@ const EditCartItemUI: FC<EditCartItemUIProps> = ({
         'mb-5': bigButton,
       })}
     >
-      <button className="disabled:opacity-50" onClick={onMinusClick}>
+      <button
+        className="disabled:opacity-50"
+        onClick={(e) => {
+          e.preventDefault()
+          onMinusClick?.()
+        }}
+      >
         <Minus className="text-red-500" />
       </button>
       <span className="px-3">{qty}</span>
-      <button className="disabled:opacity-50" onClick={onPlusClick}>
+      <button
+        className="disabled:opacity-50"
+        onClick={(e) => {
+          e.preventDefault()
+          onPlusClick?.()
+        }}
+      >
         <Plus className="text-red-500" />
       </button>
     </div>

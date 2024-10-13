@@ -1,5 +1,5 @@
 import type { FC } from "react";
-import cx from "classnames";
+import cx from "clsx";
 import { Icon } from "./types";
 
 const Cross: FC<Icon> = ({ className }) => (
