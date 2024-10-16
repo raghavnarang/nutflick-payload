@@ -10,13 +10,19 @@ export const Customers: CollectionConfig = {
     // Email added by default
     // Add more fields as needed
     {
-      type: 'radio',
-      name: 'isGuest',
-      options: [
-        { value: 'no', label: 'No' },
-        { value: 'yes', label: 'Yes' },
-      ],
-      defaultValue: 'no',
+      type: 'relationship',
+      name: 'preferredAddress',
+      relationTo: 'addresses',
+      hasMany: false,
+      filterOptions: ({ id }) => {
+        // id is not available during creation
+        if (!id) {
+          return false
+        }
+        return {
+          customer: { equals: id },
+        }
+      },
     },
   ],
 }

@@ -14,6 +14,7 @@ import { Customers } from './collections/Customers'
 import { Addresses } from './collections/Addresses'
 import ShippingOptions from './globals/shipping'
 import { Coupons } from './collections/Coupons'
+import { Orders } from './collections/Orders'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -30,7 +31,7 @@ export default buildConfig({
       prefillOnly: true,
     },
   },
-  collections: [Users, Media, Products, Categories, Customers, Addresses, Coupons],
+  collections: [Users, Media, Products, Categories, Customers, Addresses, Coupons, Orders],
   globals: [ShippingOptions],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',

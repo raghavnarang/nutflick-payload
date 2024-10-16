@@ -19,6 +19,7 @@ export interface Config {
     customers: Customer;
     addresses: Address;
     coupons: Coupon;
+    orders: Order;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
@@ -155,7 +156,7 @@ export interface Category {
  */
 export interface Customer {
   id: number;
-  isGuest?: ('no' | 'yes') | null;
+  preferredAddress?: (number | null) | Address;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -173,10 +174,7 @@ export interface Customer {
  */
 export interface Address {
   id: number;
-  customer: {
-    relationTo: 'customers';
-    value: number | Customer;
-  };
+  customer: number | Customer;
   name: string;
   address: string;
   phone: string;
@@ -243,6 +241,81 @@ export interface Coupon {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "orders".
+ */
+export interface Order {
+  id: number;
+  customer: number | Customer;
+  addressRef: number | Address;
+  name: string;
+  address: string;
+  phone: string;
+  city: string;
+  state:
+    | 'AN'
+    | 'AP'
+    | 'AR'
+    | 'AS'
+    | 'BR'
+    | 'CG'
+    | 'CH'
+    | 'DN'
+    | 'DD'
+    | 'DL'
+    | 'GA'
+    | 'GJ'
+    | 'HR'
+    | 'HP'
+    | 'JK'
+    | 'JH'
+    | 'KA'
+    | 'KL'
+    | 'LA'
+    | 'LD'
+    | 'MP'
+    | 'MH'
+    | 'MN'
+    | 'ML'
+    | 'MZ'
+    | 'NL'
+    | 'OR'
+    | 'PY'
+    | 'PB'
+    | 'RJ'
+    | 'SK'
+    | 'TN'
+    | 'TS'
+    | 'TR'
+    | 'UP'
+    | 'UK'
+    | 'WB';
+  pincode: string;
+  products: {
+    productRef: number | Product;
+    variantId: string;
+    title: string;
+    qty: number;
+    price: number;
+    weight: number;
+    includedShippingCost?: number | null;
+    id?: string | null;
+  }[];
+  couponRef?: (number | null) | Coupon;
+  coupon?: string | null;
+  discount?: number | null;
+  mode?: string | null;
+  rate?: number | null;
+  razorpay?: {
+    orderId?: string | null;
+    paymentId?: string | null;
+    signature?: string | null;
+    total?: number | null;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
@@ -275,6 +348,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'coupons';
         value: number | Coupon;
+      } | null)
+    | ({
+        relationTo: 'orders';
+        value: number | Order;
       } | null);
   globalSlug?: string | null;
   user:

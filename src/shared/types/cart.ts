@@ -8,6 +8,7 @@ export interface CartItem {
   productSlug: string
   variantSlug: string
   category?: string
+  shippingCovered?: number | null
 }
 
 export interface Cart {

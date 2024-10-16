@@ -9,12 +9,7 @@ export const getMeUser = async (
     validUserRedirect?: string
   },
 ) => {
-  const jwtAuth = payload.authStrategies.find((s) => s.name === 'local-jwt')?.authenticate
-  if (!jwtAuth) {
-    return null
-  }
-
-  const { user } = await jwtAuth({ headers: await headers(), payload })
+  const { user } = await payload.auth({ headers: await headers() })
 
   const { nullUserRedirect, validUserRedirect } = args || {}
   if (validUserRedirect && user) {

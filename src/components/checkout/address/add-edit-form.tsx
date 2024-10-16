@@ -70,7 +70,7 @@ const CheckoutAddressForm: FC<CheckoutAddressFormProps> = ({ address, email }) =
         <Dropdown label="State" name="state" disabled={pending} defaultValue={address?.state}>
           <option>Select State</option>
           {Object.entries(states).map((state) => (
-            <option value={state[1]} key={state[0]}>
+            <option value={state[0]} key={state[0]}>
               {state[1]}
             </option>
           ))}

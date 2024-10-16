@@ -19,20 +19,20 @@ export const Addresses: CollectionConfig = {
       type: 'relationship',
       name: 'customer',
       required: true,
-      relationTo: ['customers'],
+      hasMany: false,
+      relationTo: 'customers',
       hooks: {
         beforeValidate: [
-          ({ req: { user }, value }) =>
-            user?.collection === 'customers' ? { value: user.id, relationTo: 'customers' } : value,
+          ({ req: { user }, value }) => (user?.collection === 'customers' ? user.id : value),
         ],
       },
       access: {
         create: ({ req: { user }, data }) =>
           user?.collection === 'users' ||
-          (user?.collection === 'customers' && data?.customer?.value === user.id),
+          (user?.collection === 'customers' && data?.customer === user.id),
         update: ({ req: { user }, data }) =>
           user?.collection === 'users' ||
-          (user?.collection === 'customers' && data?.customer?.value === user.id),
+          (user?.collection === 'customers' && data?.customer === user.id),
         read: ({ req: { user } }) => user?.collection === 'users',
       },
     },

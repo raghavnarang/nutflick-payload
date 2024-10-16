@@ -23,6 +23,7 @@
     "clsx": "^2.1.1",
     "cross-env": "^7.0.3",
     "graphql": "^16.8.1",
+    "jsonwebtoken": "^9.0.2",
     "next": "15.0.0-canary.186",
     "payload": "3.0.0-beta.113",
     "react": "19.0.0-rc-09111202-20241011",
@@ -31,9 +32,11 @@
     "sharp": "0.32.6",
     "uuid": "^10.0.0",
     "zod": "^3.23.8",
+    "zod-form-data": "^2.0.2",
     "zustand": "^4.5.5"
   },
   "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.7",
     "@types/node": "^20.14.15",
     "@types/react": "npm:types-react@19.0.0-rc.0",
     "@types/react-dom": "npm:types-react-dom@19.0.0-rc.0",

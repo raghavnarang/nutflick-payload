@@ -8,7 +8,7 @@ import Photo from '@/components/Icons/photo'
 import Price from '@/components/product/price'
 import EditCartItem from '@/components/cart/edit-cart-item'
 
-const CheckoutProduct: FC<CartItem> = (item) => {
+const CheckoutProduct: FC<CartItem & { name: string }> = ({ name, ...item }) => {
   const itemLink = `/product/${item.productSlug}/${item.variantSlug}`
   return (
     <div className="flex justify-between items-center border-b border-solid border-gray-200 md:px-8 px-4 py-4">
@@ -47,11 +47,9 @@ const CheckoutProduct: FC<CartItem> = (item) => {
       </div>
 
       <Price price={item.price * item.qty} className="text-right hidden md:block" />
-      <input
-        type="hidden"
-        name={`products[${item.productId}][${item.variantId}]`}
-        value={item.qty}
-      />
+      <input type="hidden" name={`${name}[productId]`} value={item.productId} />
+      <input type="hidden" name={`${name}[variantId]`} value={item.variantId} />
+      <input type="hidden" name={`${name}[qty]`} value={item.qty} />
     </div>
   )
 }

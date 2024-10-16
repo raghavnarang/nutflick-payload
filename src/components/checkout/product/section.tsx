@@ -7,8 +7,8 @@ const CheckoutProductSection = () => {
   const cart = useCartStore((state) => state.cart)
   return (
     <>
-      {cart.items.map((item) => (
-        <CheckoutProduct key={item.variantId} {...item} />
+      {cart.items.map((item, index) => (
+        <CheckoutProduct key={item.variantId} {...item} name={`products[${index}]`} />
       ))}
     </>
   )

@@ -16,7 +16,7 @@ const CheckoutCouponSummary = () => {
     coupon && (
       <SectionTitleValue title={`Discount (${coupon.coupon.toUpperCase()})`}>
         <Price price={discount} negative className='text-green-600 font-semibold' />
-        <input type="hidden" name="coupon" value={coupon.id} />
+        <input type="hidden" name="coupon" value={coupon.coupon} />
       </SectionTitleValue>
     )
   )

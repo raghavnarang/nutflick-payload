@@ -10,7 +10,22 @@ export const getDiscountValue = (coupon: Coupon, subtotal: number = 0) => {
   return coupon.max_discount && coupon.max_discount <= discount ? coupon.max_discount : discount
 }
 
+export const getAdjustedShippingRate = (
+  items: { includedShippingCost?: number | null; qty: number }[],
+  rate: number,
+) => {
+  const adjustedRate =
+    rate - items.reduce((total, item) => total + (item.includedShippingCost || 0) * item.qty, 0)
+
+  return adjustedRate <= 0 ? 0 : adjustedRate
+}
+
 export const useCartSubtotal = () => {
   const cart = useCartStore((state) => state.cart)
   return cart.items.reduce((total, item) => total + item.price * item.qty, 0)
+}
+
+export const useGetShippingCovered = () => {
+  const cart = useCartStore((state) => state.cart)
+  return cart.items.reduce((total, item) => total + (item.shippingCovered || 0) * item.qty, 0)
 }
