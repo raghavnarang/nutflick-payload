@@ -1,7 +1,7 @@
 'use client'
 
 import Script from 'next/script'
-import { FC, useState } from 'react'
+import { FC, useEffect, useRef, useState } from 'react'
 import BigMessage from '../big-message'
 import Warning from '../Icons/warning'
 import TransactionProgress from './transaction-progress'
@@ -41,6 +41,22 @@ const StartPayment: FC<StartPaymentProps> = ({ total, name, phone, rzpOrderId })
     rzp.open()
   }
 
+  const isInitialCheckoutLoaded = useRef(false);
+  useEffect(() => {
+    if (isInitialCheckoutLoaded.current) {
+      return;
+    }
+
+    if (typeof Razorpay === "function") {
+      clear();
+      openCheckout();
+    }
+
+    return () => {
+      isInitialCheckoutLoaded.current = true;
+    };
+  }, []);
+
   return (
     <>
       {!isDismissed ? (
@@ -64,6 +80,7 @@ const StartPayment: FC<StartPaymentProps> = ({ total, name, phone, rzpOrderId })
         onLoad={() => {
           clear()
           openCheckout()
+          isInitialCheckoutLoaded.current = true;
         }}
       />
     </>

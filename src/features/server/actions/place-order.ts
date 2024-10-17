@@ -8,7 +8,7 @@ import config from '@payload-config'
 import states from '@/features/states.json'
 import type { BasePayload, PayloadRequest } from 'payload'
 import { getCookieExpiration } from 'payload'
-import { getOrCreateCustomer } from '../auth/customer'
+import { createCustomerCookie, getOrCreateCustomer } from '../auth/customer'
 import { ServerResponse } from '../utils'
 import { getOrderProductsFromCartItems } from '../product'
 import { getApplicableCoupon } from '../coupon'
@@ -156,27 +156,4 @@ const placeGuestOrder = async (checkout: PlaceGuestOrderArgs) => {
 
   // Redirect to place-order page
   redirect('/place-order')
-}
-
-const createCustomerCookie = async (tokenData: any, payload: BasePayload) => {
-  const collectionConfig = payload.collections['customers'].config
-  const authConfig = collectionConfig.auth
-
-  const token = jwt.sign(tokenData, payload.secret, { expiresIn: authConfig.tokenExpiration })
-  const cookieStore = await cookies()
-
-  const sameSite =
-    typeof authConfig.cookies.sameSite === 'string'
-      ? authConfig.cookies.sameSite.toLowerCase()
-      : authConfig.cookies.sameSite
-        ? 'strict'
-        : undefined
-
-  cookieStore.set(`${payload.config.cookiePrefix}-token`, token, {
-    expires: getCookieExpiration({ seconds: authConfig.tokenExpiration }),
-    httpOnly: true,
-    path: '/',
-    sameSite: sameSite as any,
-    secure: authConfig.cookies.secure,
-  })
 }
