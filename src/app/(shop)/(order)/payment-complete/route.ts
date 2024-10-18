@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
 
   const userData = await getGuestPendingOrderTokenData()
   if (!userData) {
-    return Response.json({ error: 'No pending order found for current user' }, { status: 403 })
+    redirect(`/shop-error?message=No pending order found for current user`)
   }
 
   const payload = await getPayloadHMR({ config })
@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
     depth: 0,
   })
   if (!order || !order.razorpay || !order.razorpay.orderId) {
-    return Response.json({ error: 'No valid order found for current user' }, { status: 403 })
+    redirect(`/shop-error?message=No valid order found for current user`)
   }
 
   const dbRzpOrderId = order.razorpay.orderId
@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
   )
 
   if (generatedSignature !== rzpParams.razorpay_signature) {
-    return Response.json({ error: 'payment data is invalid' }, { status: 403 })
+    redirect(`/shop-error?message=Payment data is invalid`)
   }
 
   await payload.update({

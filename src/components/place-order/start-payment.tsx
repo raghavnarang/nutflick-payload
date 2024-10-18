@@ -24,7 +24,7 @@ const StartPayment: FC<StartPaymentProps> = ({ total, name, phone, rzpOrderId })
       amount: total * 100,
       currency: 'INR',
       order_id: rzpOrderId,
-      callback_url: `${process.env.NEXT_PUBLIC_VERCEL_URL}/payment-complete`,
+      callback_url: `${process.env.NEXT_PUBLIC_VERCEL_URL}/payment-completee`,
       image:
         'https://xghbfedvknsyjypohzpv.supabase.co/storage/v1/object/public/public_bucket/logo_square.png?t=2024-05-25T09%3A53%3A42.975Z',
       name: 'Nutflick',
