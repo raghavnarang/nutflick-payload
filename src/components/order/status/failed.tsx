@@ -1,7 +1,7 @@
 import Error from '@/components/Icons/error'
 import type { Order } from '@/payload-types'
 
-export default function OrderRefundedStatus({ order }: { order: Order }) {
+export default function OrderFailedStatus({ order }: { order: Order }) {
   const paymentIdText = order.razorpay?.paymentId ? `| Payment: ${order.razorpay.paymentId}` : ''
 
   return (

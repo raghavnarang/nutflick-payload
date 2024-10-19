@@ -16,7 +16,7 @@ export default function OrderConfirmedStatus({
       <div className="text-center md:text-start">
         <p className="text-2xl">Your Order is confirmed</p>
         {shipping?.days && (
-          <p className="text-gray-500 text-sm">Delivery: ~${shipping.days} business days</p>
+          <p className="text-gray-500 text-sm">Delivery: ~{shipping.days} business days</p>
         )}
         <p className="text-gray-500 text-sm">
           Order: #{order.id} {paymentIdText}
