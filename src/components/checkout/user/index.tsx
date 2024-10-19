@@ -1,9 +1,4 @@
-import Textbox from '@/components/form/textbox'
-import Section from '@/components/section'
-import SectionBody from '@/components/section/body'
-import Link from 'next/link'
 import { useState } from 'react'
-import { useFormStatus } from 'react-dom'
 import CheckoutUserEmailTextbox from './email-textbox'
 import CheckoutUserEmailPrefilled from './email-prefilled'
 

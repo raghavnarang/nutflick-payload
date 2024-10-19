@@ -13,14 +13,16 @@ import Section from '@/components/section'
 import { useCartStore } from '@/features/cart/cart-store/provider'
 import { placeOrder } from '@/features/server/actions/place-order'
 import { useToastStore } from '@/features/toast/store'
+import { Address } from '@/payload-types'
 import { useTransition } from 'react'
 import type { FormEventHandler } from 'react'
 
 interface CheckoutClientProps {
   email?: string
+  address?: Address
 }
 
-const CheckoutClient = ({ email }: CheckoutClientProps) => {
+const CheckoutClient = ({ email, address }: CheckoutClientProps) => {
   const cart = useCartStore((state) => state.cart)
   const addToast = useToastStore((state) => state.addToast)
   const [, startTransition] = useTransition()
@@ -45,7 +47,7 @@ const CheckoutClient = ({ email }: CheckoutClientProps) => {
             <div className="flex justify-center items-start lg:flex-row flex-col lg:gap-10">
               <div className="lg:w-1/2 w-full">
                 <CheckoutUser email={email} />
-                <CheckoutAddress />
+                <CheckoutAddress address={address} />
                 <CheckoutCoupons />
               </div>
               <div className="lg:w-1/2 w-full">

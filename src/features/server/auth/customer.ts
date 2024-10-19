@@ -85,6 +85,8 @@ export const getGuestPendingOrderTokenData = async () => {
 
 export const getGuestTokenData = async () => {
   const userData = (await verifyUserToken()) as {
+    id: number
+    collection: 'customers'
     type: TokenSessionType
     order: number
     email: string

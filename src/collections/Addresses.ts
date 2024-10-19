@@ -21,20 +21,6 @@ export const Addresses: CollectionConfig = {
       required: true,
       hasMany: false,
       relationTo: 'customers',
-      hooks: {
-        beforeValidate: [
-          ({ req: { user }, value }) => (user?.collection === 'customers' ? user.id : value),
-        ],
-      },
-      access: {
-        create: ({ req: { user }, data }) =>
-          user?.collection === 'users' ||
-          (user?.collection === 'customers' && data?.customer === user.id),
-        update: ({ req: { user }, data }) =>
-          user?.collection === 'users' ||
-          (user?.collection === 'customers' && data?.customer === user.id),
-        read: ({ req: { user } }) => user?.collection === 'users',
-      },
     },
     {
       type: 'text',

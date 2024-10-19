@@ -14,15 +14,15 @@ export const Customers: CollectionConfig = {
       name: 'preferredAddress',
       relationTo: 'addresses',
       hasMany: false,
-      // filterOptions: ({ id }) => {
-      //   // id is not available during creation
-      //   if (!id) {
-      //     return false
-      //   }
-      //   return {
-      //     customer: { equals: id },
-      //   }
-      // },
+      filterOptions: ({ id }) => {
+        // id is not available during creation
+        if (!id) {
+          return false
+        }
+        return {
+          customer: { equals: id },
+        }
+      },
     },
   ],
 }
