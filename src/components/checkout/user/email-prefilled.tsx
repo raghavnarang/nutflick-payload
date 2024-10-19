@@ -31,7 +31,7 @@ export default function CheckoutUserEmailPrefilled({ email, onEdit }: Props) {
             Login here
           </Link>
         </p>
-        <input type="hidden" value={email} />
+        <input type="hidden" value={email} name="email" />
       </SectionBody>
     </Section>
   )

@@ -35,7 +35,7 @@ export default function CheckoutUserEmailTextbox({ email, onEditCancel }: Props)
 
   const defaultText = (
     <p className="mt-3 text-sm text-gray-500">
-      Enter your email or{' '}
+      Already have account?{' '}
       <Link href="/login" className="text-red-600">
         Login here
       </Link>
