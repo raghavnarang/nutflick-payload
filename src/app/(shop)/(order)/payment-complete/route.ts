@@ -3,12 +3,11 @@ import { sha256 } from 'js-sha256'
 import { NextRequest } from 'next/server'
 import { zfd } from 'zod-form-data'
 import {
-  createCustomerCookie,
+  createGuestCustomerCookie,
   getGuestPendingOrderTokenData,
 } from '@/features/server/auth/customer'
 import { getPayloadHMR } from '@payloadcms/next/utilities'
 import config from '@payload-config'
-import { TokenSessionType } from '@/shared/types/token'
 import { redirect } from 'next/navigation'
 import { getMeUser } from '@/features/server/auth/me'
 
@@ -28,6 +27,10 @@ export async function POST(request: NextRequest) {
 
   const payload = await getPayloadHMR({ config })
   const user = await getMeUser(payload)
+  if (!user || user.collection !== 'customers') {
+    redirect(`/shop-error?message=Current user is not a customer`)
+  }
+
   const order = await payload.findByID({
     collection: 'orders',
     id: userData.order,
@@ -60,15 +63,7 @@ export async function POST(request: NextRequest) {
     id: order.id,
   })
 
-  // Create GUEST token cookie
-  const tokenData = {
-    id: userData.id,
-    collection: 'customers',
-    email: userData.email,
-    type: TokenSessionType.GUEST,
-  }
-
-  await createCustomerCookie(tokenData, payload)
+  await createGuestCustomerCookie(user, payload)
 
   redirect(`/order-complete/${order.id}`)
 }

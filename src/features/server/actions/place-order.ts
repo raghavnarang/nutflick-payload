@@ -6,9 +6,8 @@ import { zfd } from 'zod-form-data'
 import { getPayloadHMR } from '@payloadcms/next/utilities'
 import config from '@payload-config'
 import states from '@/features/states.json'
-import type { BasePayload, PayloadRequest } from 'payload'
-import { getCookieExpiration } from 'payload'
-import { createCustomerCookie, getOrCreateCustomer } from '../auth/customer'
+import type { PayloadRequest } from 'payload'
+import { createGuestpendingOrderCustomerCookie, getOrCreateCustomer } from '../auth/customer'
 import { ServerResponse } from '../utils'
 import { getOrderProductsFromCartItems } from '../product'
 import { getApplicableCoupon } from '../coupon'
@@ -19,9 +18,6 @@ import {
   getDiscountValue,
   isCouponApplicable,
 } from '@/features/checkout/utils'
-import { TokenSessionType } from '@/shared/types/token'
-import jwt from 'jsonwebtoken'
-import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { createOrder as createRzpOrder } from '@/features/razorpay/api'
 
@@ -144,15 +140,7 @@ const placeGuestOrder = async (checkout: PlaceGuestOrderArgs) => {
   }
 
   // Create GUEST_PENDING_ORDER token cookie
-  const tokenData = {
-    id: customer.id,
-    collection: 'customers',
-    email: customer.email,
-    type: TokenSessionType.GUEST_PENDING_ORDER,
-    order: order.id,
-  }
-
-  await createCustomerCookie(tokenData, payload)
+  await createGuestpendingOrderCustomerCookie(customer, order.id, payload)
 
   // Redirect to place-order page
   redirect('/place-order')

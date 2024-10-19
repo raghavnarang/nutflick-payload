@@ -9,6 +9,7 @@ import { getPayloadHMR } from '@payloadcms/next/utilities'
 import { cookies } from 'next/headers'
 import jwt from 'jsonwebtoken'
 import { TokenSessionType } from '@/shared/types/token'
+import type { Customer } from '@/payload-types'
 
 const emailSchema = z.string().email()
 const passwordSchema = z.string().min(5)
@@ -57,7 +58,7 @@ export const getOrCreateCustomer = async (
   })
 }
 
-export const getGuestPendingOrderTokenData = async () => {
+const verifyUserToken = async () => {
   const payload = await getPayloadHMR({ config })
   const cookieStore = await cookies()
   const token = cookieStore.get(`${payload.config.cookiePrefix}-token`)?.value
@@ -65,7 +66,11 @@ export const getGuestPendingOrderTokenData = async () => {
     return null
   }
 
-  const userData = jwt.verify(token, payload.secret) as {
+  return jwt.verify(token, payload.secret)
+}
+
+export const getGuestPendingOrderTokenData = async () => {
+  const userData = (await verifyUserToken()) as {
     type: TokenSessionType
     order: number
     id: number
@@ -78,11 +83,31 @@ export const getGuestPendingOrderTokenData = async () => {
   return userData
 }
 
-export const createCustomerCookie = async (tokenData: any, payload: BasePayload) => {
+export const getGuestTokenData = async () => {
+  const userData = (await verifyUserToken()) as {
+    type: TokenSessionType
+    order: number
+    email: string
+  }
+
+  if (!userData || userData.type !== TokenSessionType.GUEST) {
+    return null
+  }
+
+  return userData
+}
+
+export const createCustomerCookie = async (
+  tokenData: any,
+  payload: BasePayload,
+  expiration?: number,
+) => {
   const collectionConfig = payload.collections['customers'].config
   const authConfig = collectionConfig.auth
 
-  const token = jwt.sign(tokenData, payload.secret, { expiresIn: authConfig.tokenExpiration })
+  const token = jwt.sign(tokenData, payload.secret, {
+    expiresIn: expiration || authConfig.tokenExpiration,
+  })
   const cookieStore = await cookies()
 
   const sameSite =
@@ -93,10 +118,42 @@ export const createCustomerCookie = async (tokenData: any, payload: BasePayload)
         : undefined
 
   cookieStore.set(`${payload.config.cookiePrefix}-token`, token, {
-    expires: getCookieExpiration({ seconds: authConfig.tokenExpiration }),
+    expires: getCookieExpiration({ seconds: expiration || authConfig.tokenExpiration }),
     httpOnly: true,
     path: '/',
     sameSite: sameSite as any,
     secure: authConfig.cookies.secure,
   })
+}
+
+// Create GUEST token cookie
+export async function createGuestCustomerCookie(user: Customer, payload: BasePayload) {
+  const tokenData = {
+    id: user.id,
+    collection: 'customers',
+    email: user.email,
+    type: TokenSessionType.GUEST,
+  }
+
+  // Expire after 1 week
+  const expiration = 7 * 24 * 60 * 60
+
+  await createCustomerCookie(tokenData, payload, expiration)
+}
+
+// Create GUEST_PENDING_ORDER token cookie
+export async function createGuestpendingOrderCustomerCookie(
+  user: Customer,
+  orderId: number,
+  payload: BasePayload,
+) {
+  const tokenData = {
+    id: user.id,
+    collection: 'customers',
+    email: user.email,
+    type: TokenSessionType.GUEST_PENDING_ORDER,
+    order: orderId,
+  }
+
+  await createCustomerCookie(tokenData, payload)
 }

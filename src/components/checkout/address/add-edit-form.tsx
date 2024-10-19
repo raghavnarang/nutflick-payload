@@ -19,16 +19,6 @@ const CheckoutAddressForm: FC<CheckoutAddressFormProps> = ({ address, email }) =
   return (
     <SectionBody>
       <div className="grid sm:grid-cols-3 grid-cols-1 gap-5">
-        <Textbox
-          outerWrapperClassname="sm:col-span-3 col-span-1"
-          placeholder="Enter Email"
-          label="Email"
-          name="email"
-          type="email"
-          required
-          disabled={pending}
-          defaultValue={email}
-        />
         <div className="grid sm:grid-cols-2 grid-cols-1 gap-5 sm:col-span-3 col-span-1">
           <Textbox
             label="Full Name"

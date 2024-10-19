@@ -1,21 +1,17 @@
 import 'server-only'
-import { sha256 } from 'js-sha256'
-import { NextRequest } from 'next/server'
-import { zfd } from 'zod-form-data'
 import {
-  createCustomerCookie,
+  createGuestCustomerCookie,
   getGuestPendingOrderTokenData,
 } from '@/features/server/auth/customer'
 import { getPayloadHMR } from '@payloadcms/next/utilities'
 import config from '@payload-config'
-import { TokenSessionType } from '@/shared/types/token'
 import { redirect } from 'next/navigation'
 import { getMeUser } from '@/features/server/auth/me'
 import { getOrderPayments } from '@/features/razorpay/api'
 import { RazorpayPaymentStatus } from '@/features/razorpay/types/payment'
 
 // Verify if current pending order's payment done
-export async function GET(request: NextRequest) {
+export async function GET() {
   const userData = await getGuestPendingOrderTokenData()
   if (!userData) {
     redirect(`/shop-error?message=No pending order found for current user`)
@@ -23,7 +19,7 @@ export async function GET(request: NextRequest) {
 
   const payload = await getPayloadHMR({ config })
   const user = await getMeUser(payload)
-  if (!user) {
+  if (!user || user.collection === 'customers') {
     redirect(`/shop-error?message=Not valid user found against current session`)
   }
 
@@ -50,15 +46,7 @@ export async function GET(request: NextRequest) {
     id: order.id,
   })
 
-  await createCustomerCookie(
-    {
-      id: user.id,
-      collection: 'customers',
-      email: user.email,
-      type: TokenSessionType.GUEST,
-    },
-    payload,
-  )
+  await createGuestCustomerCookie(user, payload)
 
   redirect(`/order-complete/${order.id}`)
 }
