@@ -7,14 +7,48 @@ import states from '@/features/states.json'
 import { useFormStatus } from 'react-dom'
 import { Address } from '@/payload-types'
 import type { FC } from 'react'
+import Link from 'next/link'
 
 interface CheckoutAddressFormProps {
   address?: Address
-  email?: string
+  onEditCancel?: () => void
 }
 
-const CheckoutAddressForm: FC<CheckoutAddressFormProps> = ({ address, email }) => {
+const CheckoutAddressForm: FC<CheckoutAddressFormProps> = ({ address, onEditCancel }) => {
   const { pending } = useFormStatus()
+
+  const editCancelText = (
+    <p className="text-sm text-gray-500 mt-5">
+      {address && (
+        <>
+          <Link
+            href="#"
+            className="text-red-600"
+            onClick={(e) => {
+              e.preventDefault()
+              onEditCancel?.()
+            }}
+          >
+            Cancel
+          </Link>{' '}
+          editing address or{' '}
+        </>
+      )}
+      <Link href="/login" className="text-red-600">
+        Login
+      </Link>{' '}
+      to use one of your saved addresses
+    </p>
+  )
+
+  const defaultText = (
+    <p className="text-sm text-gray-500 mt-5">
+      <Link href="/login" className="text-red-600">
+        Login
+      </Link>{' '}
+      to use one of your saved addresses
+    </p>
+  )
 
   return (
     <SectionBody>
@@ -78,6 +112,7 @@ const CheckoutAddressForm: FC<CheckoutAddressFormProps> = ({ address, email }) =
         />
         {address?.id && <input type="hidden" name="id" value={address.id} />}
       </div>
+      {onEditCancel ? editCancelText : defaultText}
     </SectionBody>
   )
 }

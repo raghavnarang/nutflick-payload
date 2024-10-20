@@ -6,12 +6,12 @@ import { zfd } from 'zod-form-data'
 import { getPayloadHMR } from '@payloadcms/next/utilities'
 import config from '@payload-config'
 import states from '@/features/states.json'
-import type { PayloadRequest } from 'payload'
+import type { BasePayload, PayloadRequest } from 'payload'
 import { createGuestpendingOrderCustomerCookie, getOrCreateCustomer } from '../auth/customer'
 import { ServerResponse } from '../utils'
 import { getOrderProductsFromCartItems } from '../product'
 import { getApplicableCoupon } from '../coupon'
-import { Coupon } from '@/payload-types'
+import { Address, Coupon, Customer } from '@/payload-types'
 import { getShippingOptions } from '../shipping'
 import {
   getAdjustedShippingRate,
@@ -23,28 +23,42 @@ import { createOrder as createRzpOrder } from '@/features/razorpay/api'
 
 const statesArray = Object.keys(states)
 
-const placeOrderSchema = zfd.formData({
-  email: zfd.text(z.string().email().optional()),
-  name: zfd.text(),
-  phone: zfd.numeric(z.number().min(6000000000).max(9999999999)).transform((val) => val.toString()),
-  address: zfd.text(),
-  pincode: zfd.numeric(z.number().max(999999)).transform((val) => val.toString()),
-  city: zfd.text(),
-  state: zfd
-    .text(z.enum([statesArray[0], ...statesArray]))
-    .transform((val) => val as keyof typeof states),
-  products: zfd.repeatable(
-    z.array(
-      z.object({
-        productId: zfd.numeric(),
-        variantId: zfd.text(),
-        qty: zfd.numeric(),
-      }),
+const placeOrderSchema = zfd
+  .formData({
+    email: zfd.text(z.string().email().optional()),
+    address_id: zfd.numeric(z.number().optional()),
+    name: zfd.text(z.string().optional()),
+    phone: zfd
+      .numeric(z.number().min(6000000000).max(9999999999).optional())
+      .transform((val) => val?.toString()),
+    address: zfd.text(z.string().optional()),
+    pincode: zfd.numeric(z.number().max(999999).optional()).transform((val) => val?.toString()),
+    city: zfd.text(z.string().optional()),
+    state: zfd
+      .text(z.enum([statesArray[0], ...statesArray]).optional())
+      .transform((val) => val as keyof typeof states),
+    products: zfd.repeatable(
+      z.array(
+        z.object({
+          productId: zfd.numeric(),
+          variantId: zfd.text(),
+          qty: zfd.numeric(),
+        }),
+      ),
     ),
-  ),
-  shipping: zfd.text(),
-  coupon: zfd.text(z.string().optional()),
-})
+    shipping: zfd.text(),
+    coupon: zfd.text(z.string().optional()),
+  })
+  .refine(
+    (data) =>
+      !data.address_id
+        ? data.name && data.address && data.phone && data.city && data.state && data.pincode
+        : true,
+    {
+      message: 'address fields are required when any address is not selected',
+      path: ['name', 'address', 'phone', 'city', 'state', 'pincode'],
+    },
+  )
 
 type PlaceGuestOrderArgs = z.infer<typeof placeOrderSchema> & { email: string }
 
@@ -83,12 +97,11 @@ const placeGuestOrder = async (checkout: PlaceGuestOrderArgs) => {
     }
   }
 
-  // Create Address
-  const address = await payload.create({
-    collection: 'addresses',
-    data: { ...checkout, customer: customer.id },
-    req,
-  })
+  // Get Address from input, or create new address from provided address fields
+  const address = await getOrCreateAddress(checkout, customer, payload, req)
+  if (!address) {
+    return ServerResponse('No address found', 'error')
+  }
 
   // Set Created address as preferred address
   await payload.update({
@@ -144,4 +157,57 @@ const placeGuestOrder = async (checkout: PlaceGuestOrderArgs) => {
 
   // Redirect to place-order page
   redirect('/place-order')
+}
+
+// Get or create address from checkout input fields
+async function getOrCreateAddress(
+  checkout: Partial<Address> & { address_id?: number },
+  customer: Customer,
+  payload: BasePayload,
+  req?: PayloadRequest,
+) {
+  // If address id is provided, then use that for preferred address & order address
+  let address: Address | null = null
+  if (checkout.address_id) {
+    address = await payload.findByID({
+      collection: 'addresses',
+      id: checkout.address_id,
+      overrideAccess: false,
+      user: { ...customer, collection: 'customers' },
+    })
+  }
+
+  console.log(address, 'address')
+
+  if (address) {
+    return address
+  }
+
+  // If address not found, create one
+  // Before creating address, make sure all required address fields are supplied (already verified via zod lib)
+  if (
+    !checkout.name ||
+    !checkout.address ||
+    !checkout.city ||
+    !checkout.state ||
+    !checkout.pincode ||
+    !checkout.phone
+  ) {
+    return null
+  }
+
+  // Create Address
+  return payload.create({
+    collection: 'addresses',
+    data: {
+      name: checkout.name,
+      address: checkout.address,
+      city: checkout.city,
+      state: checkout.state,
+      pincode: checkout.pincode,
+      phone: checkout.phone,
+      customer: customer.id,
+    },
+    req,
+  })
 }

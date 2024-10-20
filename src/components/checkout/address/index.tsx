@@ -4,6 +4,7 @@ import Section from '@/components/section'
 import { FC, useState } from 'react'
 import CheckoutAddressForm from './add-edit-form'
 import { Address } from '@/payload-types'
+import CheckoutAddressPrefilled from './prefilled'
 
 interface CheckoutAddressProps {
   address?: Address
@@ -11,6 +12,7 @@ interface CheckoutAddressProps {
 
 enum Mode {
   SELECT,
+  EDIT,
   DEFAULT,
 }
 
@@ -47,24 +49,30 @@ const CheckoutAddress: FC<CheckoutAddressProps> = ({ address }) => {
   //   (mode === Mode.SELECT && selectMode === SelectMode.ADD) ||
   //   (mode === Mode.SELECT && selectMode === SelectMode.EDIT && editAddress)
   // ) {
-    return (
-      <Section title="Delivery Address">
-        <CheckoutAddressForm
-          address={defaultAddress}
-        />
-      </Section>
-    )
-  // }
-
   // return (
   //   <Section title="Delivery Address">
-  //     <CheckoutAddressPrefilled
-  //       address={address}
-  //       onEdit={() => setMode(Mode.EDIT)}
-  //       onSelect={() => setMode(Mode.SELECT)}
-  //     />
+  //     <CheckoutAddressForm address={defaultAddress} />
   //   </Section>
   // )
+  // }
+
+  if ((!defaultAddress && mode === Mode.DEFAULT) || (defaultAddress && mode === Mode.EDIT)) {
+    return (
+      <Section title="Delivery Address">
+        <CheckoutAddressForm address={defaultAddress} onEditCancel={() => setMode(Mode.DEFAULT)} />
+      </Section>
+    )
+  }
+
+  if (defaultAddress && mode === Mode.DEFAULT) {
+    return (
+      <Section title="Delivery Address">
+        <CheckoutAddressPrefilled address={defaultAddress} onEdit={() => setMode(Mode.EDIT)} />
+      </Section>
+    )
+  }
+
+  return null
 }
 
 export default CheckoutAddress

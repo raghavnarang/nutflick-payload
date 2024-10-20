@@ -1,44 +1,47 @@
-import type { MinimalAddress } from "@/shared/types/address";
-import type { FC } from "react";
-import SectionBody from "../../section/body";
-import SectionFooter from "@/components/section/footer";
-import Button from "@/components/button";
-import { checkoutLoadingAtom } from "@/features/checkout";
-import { useAtomValue } from "jotai";
+import type { FC } from 'react'
+import SectionBody from '../../section/body'
+import type { Address } from '@/payload-types'
+import Link from 'next/link'
 
 interface CheckoutAddressPrefilledProps {
-  address: MinimalAddress;
-  onEdit?: () => void;
-  onSelect?: () => void;
+  address: Address
+  onEdit?: () => void
+  onSelect?: () => void
 }
 
 const CheckoutAddressPrefilled: FC<CheckoutAddressPrefilledProps> = ({
-  address: { address, city, state, pincode, name, phone },
+  address: { address, city, state, pincode, name, phone, id },
   onEdit,
-  onSelect,
 }) => {
-  const isLoading = useAtomValue(checkoutLoadingAtom);
-
   return (
     <>
       <SectionBody>
-        <p className="text-lg mb-2">{name}</p>
-        <p>{address}</p>
+        <p>{name},</p>
         <p>
-          {city}, {state}, {pincode}
+          {address}, {city}, {state}, {pincode}
         </p>
         <p>Phone: {phone}</p>
+        <p className="text-sm text-gray-500 mt-5">
+          <Link
+            href="#"
+            className="text-red-600"
+            onClick={(e) => {
+              e.preventDefault()
+              onEdit?.()
+            }}
+          >
+            Enter another address
+          </Link>{' '}
+          or{' '}
+          <Link href="/login" className="text-red-600">
+            Login
+          </Link>{' '}
+          to use one of your saved addresses
+        </p>
+        <input type="hidden" name="address_id" value={id} />
       </SectionBody>
-      <SectionFooter className="flex gap-3 flex-col sm:flex-row">
-        <Button onClick={onEdit} disabled={isLoading}>
-          Edit address
-        </Button>
-        <Button onClick={onSelect} disabled={isLoading}>
-          Use another address
-        </Button>
-      </SectionFooter>
     </>
-  );
-};
+  )
+}
 
-export default CheckoutAddressPrefilled;
+export default CheckoutAddressPrefilled

@@ -1,4 +1,8 @@
-export function generateRandomPassword(length = 12) {
+'use server'
+
+import 'server-only'
+
+export async function generateRandomPassword(length = 12) {
   const characters =
     'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+~`|}{[]:;?><,./-='
   let password = ''

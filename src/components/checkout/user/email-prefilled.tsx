@@ -15,7 +15,7 @@ export default function CheckoutUserEmailPrefilled({ email, onEdit }: Props) {
       <SectionBody>
         <p>{email}</p>
         <p className="mt-3 text-sm text-gray-500">
-          Not you?{' '}
+          Not your email?{' '}
           <Link
             href="#"
             className="text-red-600"

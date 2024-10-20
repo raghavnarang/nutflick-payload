@@ -1,3 +1,6 @@
+'use server'
+
+import 'server-only'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import type { Payload } from 'payload'

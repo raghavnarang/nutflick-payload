@@ -24,7 +24,7 @@ const createCustomer = async (email: string, password?: string, req?: PayloadReq
     collection: 'customers',
     data: {
       email: parsedEmail,
-      password: parsedPass || generateRandomPassword(),
+      password: parsedPass || (await generateRandomPassword()),
     },
   })
 }
@@ -53,7 +53,7 @@ export const getOrCreateCustomer = async (
     collection: 'customers',
     data: {
       email: parsedEmail,
-      password: parsedPass || generateRandomPassword(),
+      password: parsedPass || (await generateRandomPassword()),
     },
   })
 }
