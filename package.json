@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@payloadcms/db-postgres": "3.0.0-beta.113",
+    "@payloadcms/email-nodemailer": "3.0.0-beta.113",
     "@payloadcms/next": "3.0.0-beta.113",
     "@payloadcms/plugin-cloud": "3.0.0-beta.113",
     "@payloadcms/richtext-lexical": "3.0.0-beta.113",

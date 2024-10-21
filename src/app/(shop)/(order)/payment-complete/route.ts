@@ -26,16 +26,11 @@ export async function POST(request: NextRequest) {
   }
 
   const payload = await getPayloadHMR({ config })
-  const user = await getMeUser(payload)
-  if (!user || user.collection !== 'customers') {
-    redirect(`/shop-error?message=Current user is not a customer`)
-  }
-
   const order = await payload.findByID({
     collection: 'orders',
     id: userData.order,
     overrideAccess: false,
-    user,
+    user: userData,
     depth: 0,
   })
   if (!order || !order.razorpay || !order.razorpay.orderId) {
@@ -63,7 +58,7 @@ export async function POST(request: NextRequest) {
     id: order.id,
   })
 
-  await createGuestCustomerCookie(user, payload)
+  await createGuestCustomerCookie(userData, payload)
 
   redirect(`/order-complete/${order.id}`)
 }

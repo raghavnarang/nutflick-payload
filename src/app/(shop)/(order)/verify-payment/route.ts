@@ -18,16 +18,11 @@ export async function GET() {
   }
 
   const payload = await getPayloadHMR({ config })
-  const user = await getMeUser(payload)
-  if (!user || user.collection === 'customers') {
-    redirect(`/shop-error?message=Not valid user found against current session`)
-  }
-
   const order = await payload.findByID({
     collection: 'orders',
     id: userData.order,
     overrideAccess: false,
-    user,
+    user: userData,
     depth: 0,
   })
   if (!order || !order.razorpay || !order.razorpay.orderId) {
@@ -46,7 +41,7 @@ export async function GET() {
     id: order.id,
   })
 
-  await createGuestCustomerCookie(user, payload)
+  await createGuestCustomerCookie(userData, payload)
 
   redirect(`/order-complete/${order.id}`)
 }

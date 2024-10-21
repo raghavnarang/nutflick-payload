@@ -15,6 +15,7 @@ import { Addresses } from './collections/Addresses'
 import ShippingOptions from './globals/shipping'
 import { Coupons } from './collections/Coupons'
 import { Orders } from './collections/Orders'
+import { nodemailerAdapter } from '@payloadcms/email-nodemailer'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -47,4 +48,5 @@ export default buildConfig({
   plugins: [
     // storage-adapter-placeholder
   ],
+  email: nodemailerAdapter(),
 })

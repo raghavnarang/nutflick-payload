@@ -1,3 +1,7 @@
+import {
+  getVerificationEmailHTML,
+  getVerificationEmailSubject,
+} from '@/features/server/auth/verification-email'
 import type { CollectionConfig } from 'payload'
 
 export const Customers: CollectionConfig = {
@@ -5,7 +9,14 @@ export const Customers: CollectionConfig = {
   admin: {
     useAsTitle: 'email',
   },
-  auth: true,
+  auth: {
+    verify: {
+      generateEmailHTML({ token, user }) {
+        return getVerificationEmailHTML(user.email, token)
+      },
+      generateEmailSubject: getVerificationEmailSubject,
+    },
+  },
   fields: [
     // Email added by default
     // Add more fields as needed

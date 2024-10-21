@@ -20,13 +20,11 @@ export default async function PlaceOrder() {
   }
 
   const payload = await getPayloadHMR({ config })
-  const user = await getMeUser(payload)
   const order = await payload.findByID({
     collection: 'orders',
     id: userData.order,
     overrideAccess: false,
-    user,
-    depth: 0,
+    user: { ...userData }
   })
   if (!order || !order.razorpay || !order.razorpay.orderId || !order.razorpay.total) {
     return errorComponent

@@ -15,6 +15,9 @@ importers:
       '@payloadcms/db-postgres':
         specifier: 3.0.0-beta.113
         version: 3.0.0-beta.113(payload@3.0.0-beta.113(graphql@16.9.0)(monaco-editor@0.38.0)(react-dom@19.0.0-rc-09111202-20241011(react@19.0.0-rc-09111202-20241011))(react@19.0.0-rc-09111202-20241011)(typescript@5.5.4))(react@19.0.0-rc-09111202-20241011)(types-react@19.0.0-rc.0)
+      '@payloadcms/email-nodemailer':
+        specifier: 3.0.0-beta.113
+        version: 3.0.0-beta.113(payload@3.0.0-beta.113(graphql@16.9.0)(monaco-editor@0.38.0)(react-dom@19.0.0-rc-09111202-20241011(react@19.0.0-rc-09111202-20241011))(react@19.0.0-rc-09111202-20241011)(typescript@5.5.4))
       '@payloadcms/next':
         specifier: 3.0.0-beta.113
         version: 3.0.0-beta.113(graphql@16.9.0)(monaco-editor@0.38.0)(next@15.0.0-canary.186(react-dom@19.0.0-rc-09111202-20241011(react@19.0.0-rc-09111202-20241011))(react@19.0.0-rc-09111202-20241011)(sass@1.77.4))(payload@3.0.0-beta.113(graphql@16.9.0)(monaco-editor@0.38.0)(react-dom@19.0.0-rc-09111202-20241011(react@19.0.0-rc-09111202-20241011))(react@19.0.0-rc-09111202-20241011)(typescript@5.5.4))(react-dom@19.0.0-rc-09111202-20241011(react@19.0.0-rc-09111202-20241011))(react@19.0.0-rc-09111202-20241011)(types-react@19.0.0-rc.0)(typescript@5.5.4)

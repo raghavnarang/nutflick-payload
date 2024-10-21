@@ -177,8 +177,6 @@ async function getOrCreateAddress(
     })
   }
 
-  console.log(address, 'address')
-
   if (address) {
     return address
   }
