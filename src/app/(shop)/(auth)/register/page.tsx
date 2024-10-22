@@ -1,16 +1,14 @@
 'use client'
 
-import { useState, type FC } from 'react'
-import { useFormState, useFormStatus } from 'react-dom'
+import { type FormEventHandler, useState, useTransition } from 'react'
+import { useFormStatus } from 'react-dom'
 import Button from '@/components/button'
 import Textbox from '@/components/form/textbox'
 import Link from 'next/link'
-
-interface LoginProps {
-  searchParams: {
-    ref?: string
-  }
-}
+import { register } from '@/features/server/auth/register'
+import { useToastStore } from '@/features/toast/store'
+import BigMessage from '@/components/big-message'
+import { Tick } from '@/components/Icons'
 
 const FormControls = () => {
   const { pending } = useFormStatus()
@@ -85,16 +83,36 @@ const FormControls = () => {
   )
 }
 
-const Login: FC<LoginProps> = ({ searchParams: { ref } }) => {
-  // const [result, action] = useFormState(register, null)
+const Login = () => {
+  const [, startTransition] = useTransition()
+  const addToast = useToastStore((state) => state.addToast)
+  const [sent, setSent] = useState(false)
+
+  const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
+    e.preventDefault()
+    startTransition(async () => {
+      const result = await register(new FormData(e.currentTarget))
+      if (result.status) {
+        if (result.status === 'success') {
+          setSent(true)
+        } else {
+          addToast(result.message || 'Something went wrong', result.status)
+        }
+      }
+    })
+  }
+
+  if (sent) {
+    return (
+      <BigMessage icon={Tick}>
+        A verification email has been sent to your inbox. Click link in email to verify your account
+      </BigMessage>
+    )
+  }
 
   return (
-    <form onSubmit={(e) => {
-      e.preventDefault();
-      
-    }}>
+    <form onSubmit={handleSubmit}>
       <h1 className="text-xl mb-5">Create Account</h1>
-      {ref && <input type="hidden" name="ref" value={ref} />}
       <FormControls />
     </form>
   )

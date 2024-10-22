@@ -48,5 +48,17 @@ export default buildConfig({
   plugins: [
     // storage-adapter-placeholder
   ],
-  email: nodemailerAdapter(),
+  email: nodemailerAdapter({
+    defaultFromAddress: 'noreply@nutflick.com',
+    defaultFromName: 'Nutflick',
+    // Nodemailer transportOptions
+    transportOptions: {
+      host: process.env.SMTP_HOST,
+      port: 587,
+      auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
+      },
+    },
+  }),
 })

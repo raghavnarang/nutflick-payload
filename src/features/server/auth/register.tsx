@@ -13,9 +13,9 @@ import { Customer } from '@/payload-types'
 export async function register(data: FormData) {
   const { email, password, confirm } = zfd
     .formData({
-      email: z.string(),
-      password: z.string(),
-      confirm: z.string(),
+      email: zfd.text(z.string().email()),
+      password: zfd.text(),
+      confirm: zfd.text(),
     })
     .parse(data)
 
@@ -30,6 +30,7 @@ export async function register(data: FormData) {
     collection: 'customers',
     where: { email: { equals: email } },
     pagination: false,
+    depth: 0,
   })
 
   const customer = docs.length > 0 ? docs[0] : null
@@ -74,6 +75,7 @@ async function registerExistingCustomer(
     data: { password: parsedPass },
     id: customer.id,
     req,
+    showHiddenFields: true,
   })
 
   // DB Operations Completed
