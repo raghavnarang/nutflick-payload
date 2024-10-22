@@ -1,4 +1,3 @@
-import { getMeUser } from '@/features/server/auth/me'
 import { getPayloadHMR } from '@payloadcms/next/utilities'
 import config from '@payload-config'
 import { getPaymentStatus } from '@/features/razorpay/api'

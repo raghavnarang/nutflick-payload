@@ -71,13 +71,24 @@ const verifyUserToken = async () => {
   return jwt.verify(token, payload.secret)
 }
 
+export async function getCustomerTokenData() {
+  const userData = (await verifyUserToken()) as {
+    type: TokenSessionType
+    id: number
+    email: string
+    collection: string
+  } | null
+
+  return userData?.collection === 'customers' ? userData : null
+}
+
 export const getGuestPendingOrderTokenData = async () => {
   const userData = (await verifyUserToken()) as {
     type: TokenSessionType
     order: number
     id: number
     email: string
-  }
+  } | null
   if (!userData || userData.type !== TokenSessionType.GUEST_PENDING_ORDER || !userData.order) {
     return null
   }
@@ -92,7 +103,7 @@ export const getGuestTokenData = async () => {
     type: TokenSessionType
     order: number
     email: string
-  }
+  } | null
 
   if (!userData || userData.type !== TokenSessionType.GUEST) {
     return null

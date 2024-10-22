@@ -6,7 +6,6 @@ import {
 import { getPayloadHMR } from '@payloadcms/next/utilities'
 import config from '@payload-config'
 import { redirect } from 'next/navigation'
-import { getMeUser } from '@/features/server/auth/me'
 import { getOrderPayments } from '@/features/razorpay/api'
 import { RazorpayPaymentStatus } from '@/features/razorpay/types/payment'
 

@@ -44,6 +44,11 @@ export async function register(data: FormData) {
     req,
   })
 
+  // DB Operations Completed
+  if (req?.transactionID) {
+    await payload.db.commitTransaction(req.transactionID)
+  }
+
   return ServerResponse('Please check your inbox for verification email', 'success')
 }
 
@@ -70,6 +75,11 @@ async function registerExistingCustomer(
     id: customer.id,
     req,
   })
+
+  // DB Operations Completed
+  if (req?.transactionID) {
+    await payload.db.commitTransaction(req.transactionID)
+  }
 
   // If no verification token found, please debug
   if (!_verificationToken) {

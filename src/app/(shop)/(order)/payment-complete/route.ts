@@ -9,7 +9,6 @@ import {
 import { getPayloadHMR } from '@payloadcms/next/utilities'
 import config from '@payload-config'
 import { redirect } from 'next/navigation'
-import { getMeUser } from '@/features/server/auth/me'
 
 export async function POST(request: NextRequest) {
   const rzpParams = zfd

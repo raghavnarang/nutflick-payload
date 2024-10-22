@@ -7,7 +7,11 @@ import { getPayloadHMR } from '@payloadcms/next/utilities'
 import config from '@payload-config'
 import states from '@/features/states.json'
 import type { BasePayload, PayloadRequest } from 'payload'
-import { createGuestpendingOrderCustomerCookie, getOrCreateCustomer } from '../auth/customer'
+import {
+  createGuestpendingOrderCustomerCookie,
+  getCustomerTokenData,
+  getOrCreateCustomer,
+} from '../auth/customer'
 import { ServerResponse } from '../utils'
 import { getOrderProductsFromCartItems } from '../product'
 import { getApplicableCoupon } from '../coupon'
@@ -66,6 +70,13 @@ export const placeOrder = async (data: FormData) => {
   const { data: checkout, success: parseSuccess } = placeOrderSchema.safeParse(data)
   if (!parseSuccess) {
     return ServerResponse('Invalid Data Provided', 'error')
+  }
+
+  // Try to get email from verified token data
+  let email = checkout.email
+  const tokenData = await getCustomerTokenData()
+  if (tokenData?.email) {
+    email = z.string().email().parse(tokenData.email)
   }
 
   // TODO: Currently implemented for Guest User, implement for Registered user as well.
