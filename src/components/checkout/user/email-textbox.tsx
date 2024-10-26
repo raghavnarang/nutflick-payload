@@ -43,19 +43,17 @@ export default function CheckoutUserEmailTextbox({ email, onEditCancel }: Props)
   )
 
   return (
-    <Section title="Email">
-      <SectionBody>
-        <Textbox
-          outerWrapperClassname="sm:col-span-3 col-span-1"
-          placeholder="Enter Email"
-          name="email"
-          type="email"
-          required
-          disabled={pending}
-          defaultValue={email}
-        />
-        {onEditCancel ? editCancelText : defaultText}
-      </SectionBody>
-    </Section>
+    <>
+      <Textbox
+        outerWrapperClassname="sm:col-span-3 col-span-1"
+        placeholder="Enter Email"
+        name="email"
+        type="email"
+        required
+        disabled={pending}
+        defaultValue={email}
+      />
+      {onEditCancel ? editCancelText : defaultText}
+    </>
   )
 }

@@ -1,5 +1,3 @@
-'use server'
-
 import 'server-only'
 import { getPayloadHMR } from '@payloadcms/next/utilities'
 import config from '@payload-config'

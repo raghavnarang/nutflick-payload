@@ -8,7 +8,6 @@ import type { NavProps } from '@/components/nav/types'
 import { CartProvider } from '@/features/cart/cart-store/provider'
 import VariantSelectorModal from '@/components/cart/variant-selector/modal'
 import CartNavItem from '@/components/nav/cart-nav-item'
-import ReactQueryProvider from '@/features/react-query'
 import ToastContainer from '@/features/toast/components/toast-container'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -38,21 +37,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className={inter.className}>
-        <ReactQueryProvider>
-          <CartProvider>
-            <div className="flex flex-col justify-between min-h-screen px-5">
-              <div>
-                <Suspense>
-                  <Header navItems={navItems} mobileSideNavItems={navItems} />
-                  <Body>{children}</Body>
-                </Suspense>
-              </div>
-              <Footer />
-              <VariantSelectorModal />
-              <ToastContainer />
+        <CartProvider>
+          <div className="flex flex-col justify-between min-h-screen px-5">
+            <div>
+              <Header navItems={navItems} mobileSideNavItems={navItems} />
+              <Body>{children}</Body>
             </div>
-          </CartProvider>
-        </ReactQueryProvider>
+            <Footer />
+            <VariantSelectorModal />
+            <ToastContainer />
+          </div>
+        </CartProvider>
       </body>
     </html>
   )

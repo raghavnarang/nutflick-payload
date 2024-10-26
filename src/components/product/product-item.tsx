@@ -49,9 +49,7 @@ const ProductItem: FC<ProductItemProps> = ({ product }) => {
         </div>
       )}
       <div className="mt-3">
-        <Suspense>
-          <AddToCart product={product} />
-        </Suspense>
+        <AddToCart product={product} />
       </div>
     </div>
   )

@@ -1,29 +1,22 @@
-import { useState } from 'react'
-import CheckoutUserEmailTextbox from './email-textbox'
-import CheckoutUserEmailPrefilled from './email-prefilled'
+import { getGuestTokenData } from '@/features/server/auth/customer'
+import CheckoutUserClient from './client'
+import Section from '@/components/section'
+import SectionBody from '@/components/section/body'
+import { getMeUser } from '@/features/server/auth/me'
 
-interface CheckoutUserProps {
-  email?: string
-}
-
-enum Mode {
-  DEFAULT,
-  EDIT,
-}
-
-export default function CheckoutUser({ email }: CheckoutUserProps) {
-  const [mode, setMode] = useState(Mode.DEFAULT)
-
-  if ((!email && mode === Mode.DEFAULT) || (email && mode === Mode.EDIT)) {
-    return (
-      <CheckoutUserEmailTextbox
-        email={email}
-        onEditCancel={mode === Mode.EDIT ? () => setMode(Mode.DEFAULT) : undefined}
-      />
-    )
+export default async function CheckoutUser() {
+  const customer = await getMeUser()
+  let email = customer?.email
+  if (!email) {
+    const guest = await getGuestTokenData()
+    email = guest?.email
   }
 
-  if (email && mode === Mode.DEFAULT) {
-    return <CheckoutUserEmailPrefilled email={email} onEdit={() => setMode(Mode.EDIT)} />
-  }
+  return (
+    <Section title="Email">
+      <SectionBody>
+        <CheckoutUserClient email={email} isLoggedIn={!!customer} />
+      </SectionBody>
+    </Section>
+  )
 }

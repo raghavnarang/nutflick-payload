@@ -2,7 +2,6 @@
 
 import Dropdown from '@/components/form/dropdown'
 import Textbox from '@/components/form/textbox'
-import SectionBody from '@/components/section/body'
 import states from '@/features/states.json'
 import { useFormStatus } from 'react-dom'
 import { Address } from '@/payload-types'
@@ -12,46 +11,59 @@ import Link from 'next/link'
 interface CheckoutAddressFormProps {
   address?: Address
   onEditCancel?: () => void
+  isLoggedIn?: boolean
 }
 
-const CheckoutAddressForm: FC<CheckoutAddressFormProps> = ({ address, onEditCancel }) => {
+const CheckoutAddressForm: FC<CheckoutAddressFormProps> = ({
+  address,
+  onEditCancel,
+  isLoggedIn,
+}) => {
   const { pending } = useFormStatus()
 
-  const editCancelText = (
-    <p className="text-sm text-gray-500 mt-5">
-      {address && (
-        <>
-          <Link
-            href="#"
-            className="text-red-600"
-            onClick={(e) => {
-              e.preventDefault()
-              onEditCancel?.()
-            }}
-          >
-            Cancel
-          </Link>{' '}
-          editing address or{' '}
-        </>
-      )}
-      <Link href="/login" className="text-red-600">
-        Login
-      </Link>{' '}
-      to use one of your saved addresses
-    </p>
-  )
+  const editCancelText =
+    address || !isLoggedIn ? (
+      <p className="text-sm text-gray-500 mt-5">
+        {address && (
+          <>
+            <Link
+              href="#"
+              className="text-red-600"
+              onClick={(e) => {
+                e.preventDefault()
+                onEditCancel?.()
+              }}
+            >
+              Cancel
+            </Link>{' '}
+            editing address
+          </>
+        )}
+        {address && !isLoggedIn ? ' or ' : ''}
+        {!isLoggedIn ? (
+          <>
+            <Link href="/login" className="text-red-600">
+              Login
+            </Link>{' '}
+            to use one of your saved addresses
+          </>
+        ) : (
+          ''
+        )}
+      </p>
+    ) : null
 
-  const defaultText = (
+  const defaultText = !isLoggedIn ? (
     <p className="text-sm text-gray-500 mt-5">
       <Link href="/login" className="text-red-600">
         Login
       </Link>{' '}
       to use one of your saved addresses
     </p>
-  )
+  ) : null
 
   return (
-    <SectionBody>
+    <>
       <div className="grid sm:grid-cols-3 grid-cols-1 gap-5">
         <div className="grid sm:grid-cols-2 grid-cols-1 gap-5 sm:col-span-3 col-span-1">
           <Textbox
@@ -113,7 +125,7 @@ const CheckoutAddressForm: FC<CheckoutAddressFormProps> = ({ address, onEditCanc
         {address?.id && <input type="hidden" name="id" value={address.id} />}
       </div>
       {onEditCancel ? editCancelText : defaultText}
-    </SectionBody>
+    </>
   )
 }
 

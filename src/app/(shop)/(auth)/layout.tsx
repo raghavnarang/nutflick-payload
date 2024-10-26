@@ -1,19 +1,17 @@
-import Body from '@/components/body'
-import logo from '@/public/logo.png'
-import Image from 'next/image'
-import Link from 'next/link'
+import { redirectIfAuthenticated } from '@/features/server/auth/me'
 import type { FC } from 'react'
 
 interface AuthLayoutProps {
   children: React.ReactNode
 }
 
-const AuthLayout: FC<AuthLayoutProps> = ({ children }) => (
-  <Body>
+const AuthLayout: FC<AuthLayoutProps> = async ({ children }) => {
+  await redirectIfAuthenticated()
+  return (
     <div className="w-full flex justify-center">
       <div className="w-full max-w-sm">{children}</div>
     </div>
-  </Body>
-)
+  )
+}
 
 export default AuthLayout

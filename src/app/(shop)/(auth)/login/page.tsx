@@ -1,15 +1,17 @@
 'use client'
 
-import { type FC } from 'react'
-import { useFormState, useFormStatus } from 'react-dom'
+import { type FC, type FormEventHandler, use, useTransition } from 'react'
+import { useFormStatus } from 'react-dom'
 import Button from '@/components/button'
 import Textbox from '@/components/form/textbox'
 import Link from 'next/link'
+import { useToastStore } from '@/features/toast/store'
+import login from '@/features/server/actions/login'
 
 interface LoginProps {
-  searchParams: {
+  searchParams: Promise<{
     ref?: string
-  }
+  }>
 }
 
 const FormControls = () => {
@@ -55,11 +57,22 @@ const FormControls = () => {
   )
 }
 
-const Login: FC<LoginProps> = ({ searchParams: { ref } }) => {
-  // const [result, action] = useFormState(login, null)
+const Login: FC<LoginProps> = ({ searchParams }) => {
+  const { ref } = use(searchParams)
+
+  const [, startTransition] = useTransition()
+  const addToast = useToastStore((state) => state.addToast)
+
+  const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
+    e.preventDefault()
+    startTransition(async () => {
+      const result = await login(new FormData(e.currentTarget))
+      if (result.message) addToast(result.message, result.status)
+    })
+  }
 
   return (
-    <form>
+    <form onSubmit={handleSubmit}>
       <h1 className="text-xl mb-5">Login to Nutflick</h1>
       {ref && <input type="hidden" name="ref" value={ref} />}
       <FormControls />

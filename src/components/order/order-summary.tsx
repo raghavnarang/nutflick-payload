@@ -11,7 +11,7 @@ const OrderSummary = ({ order }: { order: Order }) => {
   return (
     <Section title="Order Summary">
       {order.products.map((p) => (
-        <SectionProduct {...p} />
+        <SectionProduct {...p} key={p.id} />
       ))}
       {order.rate && (
         <SectionTitleValue title={`Shipping${order.mode ? ` (Mode: ${order.mode})` : ''}`}>

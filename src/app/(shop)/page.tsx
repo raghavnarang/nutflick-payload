@@ -1,6 +1,6 @@
-import { getPayloadHMR } from '@payloadcms/next/utilities'
-import config from '@payload-config'
 import ProductGrid from '@/components/product/product-grid'
+import SyncCart from '@/features/cart/cart-store/sync-cart'
+import { getProducts } from '@/features/server/product'
 
 export const metadata = {
   description:
@@ -11,9 +11,13 @@ export const metadata = {
 }
 
 const Home = async () => {
-  const payload = await getPayloadHMR({ config })
-  const data = await payload.find({ collection: 'products', limit: 12 })
-  return <ProductGrid products={data.docs} />
+  const products = await getProducts()
+  return (
+    <>
+      <ProductGrid products={products} />
+      <SyncCart products={products} />
+    </>
+  )
 }
 
 export default Home

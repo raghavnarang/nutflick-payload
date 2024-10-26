@@ -6,6 +6,7 @@ import BigMessage from '../big-message'
 import Warning from '../Icons/warning'
 import TransactionProgress from './transaction-progress'
 import { useCartStore } from '@/features/cart/cart-store/provider'
+import { useCheckoutStore } from '@/features/checkout/store'
 
 interface StartPaymentProps {
   rzpOrderId: string
@@ -15,8 +16,16 @@ interface StartPaymentProps {
 }
 
 const StartPayment: FC<StartPaymentProps> = ({ total, name, phone, rzpOrderId }) => {
-  const clear = useCartStore((state) => state.clear)
+  const clearCart = useCartStore((state) => state.clear)
+  const { setSelectedCoupon, setSelectedShipping } = useCheckoutStore((state) => state)
   const [isDismissed, setDismissed] = useState(false)
+
+  // CLear Cart & Checkout
+  const clear = () => {
+    clearCart()
+    setSelectedCoupon(undefined)
+    setSelectedShipping(undefined)
+  }
 
   const openCheckout = () => {
     const options = {
@@ -41,21 +50,21 @@ const StartPayment: FC<StartPaymentProps> = ({ total, name, phone, rzpOrderId })
     rzp.open()
   }
 
-  const isInitialCheckoutLoaded = useRef(false);
+  const isInitialCheckoutLoaded = useRef(false)
   useEffect(() => {
     if (isInitialCheckoutLoaded.current) {
-      return;
+      return
     }
 
-    if (typeof Razorpay === "function") {
-      clear();
-      openCheckout();
+    if (typeof Razorpay === 'function') {
+      clear()
+      openCheckout()
     }
 
     return () => {
-      isInitialCheckoutLoaded.current = true;
-    };
-  }, []);
+      isInitialCheckoutLoaded.current = true
+    }
+  }, [])
 
   return (
     <>
@@ -80,7 +89,7 @@ const StartPayment: FC<StartPaymentProps> = ({ total, name, phone, rzpOrderId })
         onLoad={() => {
           clear()
           openCheckout()
-          isInitialCheckoutLoaded.current = true;
+          isInitialCheckoutLoaded.current = true
         }}
       />
     </>

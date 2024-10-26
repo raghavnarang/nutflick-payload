@@ -5,10 +5,10 @@ import { useFormStatus } from 'react-dom'
 import Button from '@/components/button'
 import Textbox from '@/components/form/textbox'
 import Link from 'next/link'
-import { register } from '@/features/server/auth/register'
 import { useToastStore } from '@/features/toast/store'
 import BigMessage from '@/components/big-message'
 import { Tick } from '@/components/Icons'
+import { register } from '@/features/server/actions/register'
 
 const FormControls = () => {
   const { pending } = useFormStatus()

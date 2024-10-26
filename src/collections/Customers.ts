@@ -4,6 +4,9 @@ import {
 } from '@/features/server/auth/verification-email'
 import type { CollectionConfig } from 'payload'
 
+// Expire after 2 week
+const tokenExpiration = 2 * 7 * 24 * 60 * 60
+
 export const Customers: CollectionConfig = {
   slug: 'customers',
   admin: {
@@ -16,6 +19,7 @@ export const Customers: CollectionConfig = {
       },
       generateEmailSubject: getVerificationEmailSubject,
     },
+    tokenExpiration,
   },
   fields: [
     // Email added by default

@@ -1,25 +1,13 @@
-'use server'
-
 import 'server-only'
 import { z } from 'zod'
 import { getPayloadHMR } from '@payloadcms/next/utilities'
 import config from '@payload-config'
-import { generateCartItem } from '../cart/utils'
+import { unstable_cache } from 'next/cache'
 
 interface CartItem {
   productId: number
   variantId: string
   qty: number
-}
-
-interface OrderProduct {
-  variantId: string
-  productRef: number
-  qty: number
-  title: string
-  price: number
-  weight: number
-  includedShippingCost?: number
 }
 
 const CartItemSchema = z.object({
@@ -28,41 +16,11 @@ const CartItemSchema = z.object({
   qty: z.number(),
 })
 
-export const syncCartItems = async (items: CartItem[]) => {
-  const parsedItems = z.array(CartItemSchema).parse(items)
-  const payload = await getPayloadHMR({ config })
-  const products = await payload.find({
-    collection: 'products',
-    pagination: false,
-    where: { id: { in: parsedItems.map((i) => i.productId) } },
-  })
-
-  if (products.docs.length === 0) {
-    return []
-  }
-
-  return parsedItems
-    .map((item) => {
-      const product = products.docs.find((p) => p.id === item.productId)
-      if (!product) {
-        return undefined
-      }
-
-      return generateCartItem(product, item.variantId, item.qty)
-    })
-    .filter((item) => !!item)
-}
-
 export const getOrderProductsFromCartItems = async (items: CartItem[]) => {
   const parsedItems = z.array(CartItemSchema).parse(items)
-  const payload = await getPayloadHMR({ config })
-  const products = await payload.find({
-    collection: 'products',
-    pagination: false,
-    where: { id: { in: parsedItems.map((i) => i.productId) } },
-  })
+  const products = await getProductsByIds(parsedItems.map((i) => i.productId))
 
-  if (products.docs.length === 0) {
+  if (products.length === 0) {
     return []
   }
 
@@ -72,7 +30,7 @@ export const getOrderProductsFromCartItems = async (items: CartItem[]) => {
         return undefined
       }
 
-      const product = products.docs.find((p) => p.id === item.productId)
+      const product = products.find((p) => p.id === item.productId)
       if (!product) {
         return undefined
       }
@@ -94,3 +52,60 @@ export const getOrderProductsFromCartItems = async (items: CartItem[]) => {
     })
     .filter((item) => !!item)
 }
+
+export const getProducts = unstable_cache(
+  async () => {
+    const payload = await getPayloadHMR({ config })
+    const { docs } = await payload.find({ collection: 'products', pagination: false, depth: 1 })
+    return docs
+  },
+  ['products'],
+  { tags: ['products'] },
+)
+
+const getProductsByIds = async (ids: number[]) => {
+  if (ids.length === 0) {
+    return []
+  }
+  const products = await getProducts()
+  return ids.map((id) => products.find((p) => id === p.id)).filter((p) => !!p)
+}
+
+export const getProduct = unstable_cache(
+  async (id: number) => {
+    const payload = await getPayloadHMR({ config })
+    return payload.findByID({ collection: 'products', id, depth: 1 })
+  },
+  ['products'],
+  { tags: ['products'] },
+)
+
+export const getProductBySlug = unstable_cache(
+  async (slug: string) => {
+    const payload = await getPayloadHMR({ config })
+    const { docs } = await payload.find({
+      collection: 'products',
+      where: { slug: { equals: slug } },
+      depth: 1,
+      limit: 1,
+    })
+
+    return docs.length > 0 ? docs[0] : null
+  },
+  ['products'],
+  { tags: ['products'] },
+)
+
+export const getRecommendedProducts = unstable_cache(
+  async (categoryId: number, productId: number) => {
+    const payload = await getPayloadHMR({ config })
+    const { docs } = await payload.find({
+      collection: 'products',
+      limit: 8,
+      where: { 'category.value': { equals: categoryId }, id: { not_equals: productId } },
+    })
+    return docs
+  },
+  ['products'],
+  { tags: ['products'] },
+)

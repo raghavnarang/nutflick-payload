@@ -1,3 +1,5 @@
+'use client'
+
 import Price from '@/components/product/price'
 import SectionTitleValue from '@/components/section/title-value'
 import { useCheckoutStore } from '@/features/checkout/store'

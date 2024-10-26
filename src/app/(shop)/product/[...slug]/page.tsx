@@ -1,4 +1,4 @@
-import { Suspense, type FC } from 'react'
+import { type FC } from 'react'
 import Image from 'next/image'
 import cx from 'clsx'
 import Link from 'next/link'
@@ -7,34 +7,25 @@ import ProductRecommendations from '@/components/product/product-recommendations
 import BigMessage from '@/components/big-message'
 import Sad from '@/components/Icons/sad'
 import Photo from '@/components/Icons/photo'
-import { getPayloadHMR } from '@payloadcms/next/utilities'
-import config from '@payload-config'
+import { getProductBySlug, getProducts } from '@/features/server/product'
 
 interface ProductProps {
-  params: { slug: [productSlug: string, variantSlug?: string] }
+  params: Promise<{ slug: [productSlug: string, variantSlug?: string] }>
 }
 
-const Product: FC<ProductProps> = async ({
-  params: {
+const Product: FC<ProductProps> = async ({ params }) => {
+  const {
     slug: [productSlug, variantSlug],
-  },
-}) => {
-  const payload = await getPayloadHMR({ config })
-  const data = await payload.find({
-    collection: 'products',
-    where: { slug: { equals: productSlug } },
-    limit: 1,
-  })
+  } = await params
+  const product = await getProductBySlug(productSlug)
 
-  if (data.docs.length === 0 || !data.docs[0].variants || data.docs[0].variants?.length === 0) {
+  if (!product || product?.variants?.length === 0) {
     return (
       <BigMessage icon={Sad} button={{ text: <Link href="/">Go to Home</Link> }}>
         Error in fetching product or Product is not valid
       </BigMessage>
     )
   }
-
-  const product = data.docs[0]
 
   const variant =
     (variantSlug &&
@@ -100,16 +91,14 @@ const Product: FC<ProductProps> = async ({
         </div>
       </div>
       {product.category?.value && (
-        <Suspense>
-          <ProductRecommendations
-            categoryId={
-              typeof product.category.value == 'number'
-                ? product.category.value
-                : product.category.value.id
-            }
-            productId={product.id}
-          />
-        </Suspense>
+        <ProductRecommendations
+          categoryId={
+            typeof product.category.value == 'number'
+              ? product.category.value
+              : product.category.value.id
+          }
+          productId={product.id}
+        />
       )}
     </div>
   )
@@ -118,13 +107,9 @@ const Product: FC<ProductProps> = async ({
 export default Product
 
 export async function generateStaticParams() {
-  const payload = await getPayloadHMR({ config })
-  const data = await payload.find({
-    collection: 'products',
-    pagination: false,
-  })
+  const products = await getProducts()
 
-  return data.docs
+  return products
     .filter((p) => p.slug && p.variants && p.variants.every((v) => !!v.slug))
     .reduce<{ slug: string[] }[]>((slugs, p) => {
       const variantItems = p.variants && p.variants.map((v) => ({ slug: [p.slug!, v.slug!] }))
