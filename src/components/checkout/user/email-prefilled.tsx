@@ -1,30 +1,34 @@
 'use client'
 
+import Button from '@/components/button'
 import Link from 'next/link'
 
 interface Props {
   email: string
-  onEdit?: () => void
+  onNewEmail?: () => void
   isLoggedIn?: boolean
 }
 
-export default function CheckoutUserEmailPrefilled({ email, onEdit, isLoggedIn }: Props) {
+export default function CheckoutUserEmailPrefilled({ email, onNewEmail, isLoggedIn }: Props) {
   const nonLoggedInText = (
     <p className="mt-3 text-sm text-gray-500">
       Not your email?{' '}
-      <Link
-        href="#"
-        className="text-red-600"
-        onClick={(e) => {
-          e.preventDefault()
-          onEdit?.()
+      <Button
+        small
+        isSecondary
+        className="inline-flex"
+        type="button"
+        onClick={() => {
+          onNewEmail?.()
         }}
       >
-        Edit email
-      </Link>{' '}
+        Enter new email
+      </Button>{' '}
       or{' '}
-      <Link href="/login" className="text-red-600">
-        Login here
+      <Link href="/login?ref=/checkout">
+        <Button small className="inline-flex" type="button">
+          Login here
+        </Button>
       </Link>
     </p>
   )
@@ -32,8 +36,10 @@ export default function CheckoutUserEmailPrefilled({ email, onEdit, isLoggedIn }
   const loggedInText = (
     <p className="mt-3 text-sm text-gray-500">
       Not You?{' '}
-      <Link href="/logout?ref=/checkout" className="text-red-600">
-        Logout
+      <Link href="/logout">
+        <Button small isSecondary className="inline-flex" type="button">
+          Logout
+        </Button>
       </Link>
     </p>
   )

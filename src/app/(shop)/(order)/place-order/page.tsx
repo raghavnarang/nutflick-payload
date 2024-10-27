@@ -1,9 +1,7 @@
-import { getPayloadHMR } from '@payloadcms/next/utilities'
-import config from '@payload-config'
 import BigMessage from '@/components/big-message'
 import { Error } from '@/components/Icons'
 import StartPayment from '@/components/place-order/start-payment'
-import { getGuestPendingOrderTokenData } from '@/features/server/auth/customer'
+import { getCurrentGuestOrCustomer } from '@/features/server/auth/customer'
 import { getOrderStatus } from '@/features/razorpay/api'
 import { redirect } from 'next/navigation'
 import { RazorpayOrderStatus } from '@/features/razorpay/types/order'
@@ -13,19 +11,19 @@ export default async function PlaceOrder() {
     <BigMessage icon={Error}>Something went wrong. Please try again later.</BigMessage>
   )
 
-  const userData = await getGuestPendingOrderTokenData()
-  if (!userData) {
+  const { customer } = await getCurrentGuestOrCustomer()
+  if (!customer) {
     return errorComponent
   }
 
-  const payload = await getPayloadHMR({ config })
-  const order = await payload.findByID({
-    collection: 'orders',
-    id: userData.order,
-    overrideAccess: false,
-    user: { ...userData }
-  })
-  if (!order || !order.razorpay || !order.razorpay.orderId || !order.razorpay.total) {
+  const { pendingOrder: order } = customer
+  if (
+    typeof order === 'number' ||
+    !order ||
+    !order.razorpay ||
+    !order.razorpay.orderId ||
+    !order.razorpay.total
+  ) {
     return errorComponent
   }
 

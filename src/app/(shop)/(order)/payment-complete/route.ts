@@ -2,13 +2,11 @@ import 'server-only'
 import { sha256 } from 'js-sha256'
 import { NextRequest } from 'next/server'
 import { zfd } from 'zod-form-data'
-import {
-  createGuestCustomerCookie,
-  getGuestPendingOrderTokenData,
-} from '@/features/server/auth/customer'
+import { getCurrentGuestOrCustomer } from '@/features/server/auth/customer'
 import { getPayloadHMR } from '@payloadcms/next/utilities'
 import config from '@payload-config'
 import { redirect } from 'next/navigation'
+import type { PayloadRequest } from 'payload'
 
 export async function POST(request: NextRequest) {
   const rzpParams = zfd
@@ -19,19 +17,12 @@ export async function POST(request: NextRequest) {
     })
     .parse(await request.formData())
 
-  const userData = await getGuestPendingOrderTokenData()
-  if (!userData) {
+  const { customer } = await getCurrentGuestOrCustomer()
+  if (!customer || !customer.pendingOrder || typeof customer.pendingOrder === 'number') {
     redirect(`/shop-error?message=No pending order found for current user`)
   }
 
-  const payload = await getPayloadHMR({ config })
-  const order = await payload.findByID({
-    collection: 'orders',
-    id: userData.order,
-    overrideAccess: false,
-    user: userData,
-    depth: 0,
-  })
+  const order = customer.pendingOrder
   if (!order || !order.razorpay || !order.razorpay.orderId) {
     redirect(`/shop-error?message=No valid order found for current user`)
   }
@@ -46,6 +37,10 @@ export async function POST(request: NextRequest) {
     redirect(`/shop-error?message=Payment data is invalid`)
   }
 
+  const payload = await getPayloadHMR({ config })
+  const transactionID = await payload.db.beginTransaction()
+  const req = { transactionID: transactionID || undefined } as PayloadRequest
+
   await payload.update({
     collection: 'orders',
     data: {
@@ -55,9 +50,20 @@ export async function POST(request: NextRequest) {
       },
     },
     id: order.id,
+    req,
   })
 
-  await createGuestCustomerCookie(userData, payload)
+  await payload.update({
+    collection: 'customers',
+    data: { pendingOrder: null },
+    id: customer.id,
+    req,
+  })
+
+  // DB Operations Completed
+  if (req.transactionID) {
+    await payload.db.commitTransaction(req.transactionID)
+  }
 
   redirect(`/order-complete/${order.id}`)
 }

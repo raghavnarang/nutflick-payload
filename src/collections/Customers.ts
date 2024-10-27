@@ -1,3 +1,4 @@
+import { isAdminOrSelfCustomer } from '@/access/admin-or-self-customer'
 import {
   getVerificationEmailHTML,
   getVerificationEmailSubject,
@@ -11,6 +12,12 @@ export const Customers: CollectionConfig = {
   slug: 'customers',
   admin: {
     useAsTitle: 'email',
+  },
+  access: {
+    create: ({ req: { user } }) => user?.collection === 'users',
+    read: ({ req: { user } }) => user?.collection === 'customers' || user?.collection === 'users',
+    update: ({ req: { user } }) => user?.collection === 'users',
+    delete: ({ req: { user } }) => user?.collection === 'users',
   },
   auth: {
     verify: {
@@ -28,6 +35,21 @@ export const Customers: CollectionConfig = {
       type: 'relationship',
       name: 'preferredAddress',
       relationTo: 'addresses',
+      hasMany: false,
+      filterOptions: ({ id }) => {
+        // id is not available during creation
+        if (!id) {
+          return false
+        }
+        return {
+          customer: { equals: id },
+        }
+      },
+    },
+    {
+      type: 'relationship',
+      name: 'pendingOrder',
+      relationTo: 'orders',
       hasMany: false,
       filterOptions: ({ id }) => {
         // id is not available during creation

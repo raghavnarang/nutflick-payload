@@ -2,7 +2,8 @@
 
 import 'server-only'
 import { ServerResponse } from '../utils'
-import { placeGuestOrder, placeOrderSchema } from '../place-order'
+import { placeOrder as placeCustomerOrder, placeOrderSchema } from '../place-order'
+import { getCurrentGuestOrCustomer } from '../auth/customer'
 
 export const placeOrder = async (data: FormData) => {
   const { data: checkout, success: parseSuccess } = placeOrderSchema.safeParse(data)
@@ -10,11 +11,12 @@ export const placeOrder = async (data: FormData) => {
     return ServerResponse('Invalid Data Provided', 'error')
   }
 
-  // TODO: Currently implemented for Guest User, implement for Registered user as well.
-  if (!checkout.email) {
+  const { customer, isLoggedIn } = await getCurrentGuestOrCustomer()
+  const email = isLoggedIn ? customer?.email : checkout.email
+  if (!email) {
     return ServerResponse('Email is missing', 'error')
   }
 
-  // Place Guest Order
-  return await placeGuestOrder({ ...checkout, email: checkout.email })
+  // Place Order
+  return await placeCustomerOrder({ ...checkout, email, isLoggedIn })
 }

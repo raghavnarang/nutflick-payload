@@ -5,7 +5,7 @@ import { getPayloadHMR } from '@payloadcms/next/utilities'
 import config from '@payload-config'
 import states from '@/features/states.json'
 import type { BasePayload, PayloadRequest } from 'payload'
-import { createGuestPendingOrderCustomerCookie, getOrCreateCustomer } from './auth/customer'
+import { createGuestCustomerCookie, getOrCreateCustomer } from './auth/customer'
 import { ServerResponse } from './utils'
 import { getOrderProductsFromCartItems } from './product'
 import { Address, Coupon, Customer } from '@/payload-types'
@@ -58,10 +58,10 @@ export const placeOrderSchema = zfd
     },
   )
 
-type PlaceGuestOrderArgs = z.infer<typeof placeOrderSchema> & { email: string }
+type PlaceGuestOrderArgs = z.infer<typeof placeOrderSchema> & { email: string; isLoggedIn: boolean }
 
-// Place Guest order
-export const placeGuestOrder = async (checkout: PlaceGuestOrderArgs) => {
+// Place order
+export const placeOrder = async (checkout: PlaceGuestOrderArgs) => {
   const payload = await getPayloadHMR({ config })
   const transactionID = await payload.db.beginTransaction()
   const req = { transactionID: transactionID || undefined } as PayloadRequest
@@ -70,6 +70,7 @@ export const placeGuestOrder = async (checkout: PlaceGuestOrderArgs) => {
   let coupon: Coupon | null = null
   let couponDiscount = 0
   const customer = await getOrCreateCustomer(checkout.email, undefined, req)
+  console.log(customer)
   const products = await getOrderProductsFromCartItems(checkout.products)
   const subtotal = products.reduce((total, item) => total + item.qty * item.price, 0)
   const shipping = (await getShippingOptions()).find((item) => item.id === checkout.shipping)
@@ -86,14 +87,6 @@ export const placeGuestOrder = async (checkout: PlaceGuestOrderArgs) => {
   if (!address) {
     return ServerResponse('No address found', 'error')
   }
-
-  // Set Created address as preferred address
-  await payload.update({
-    collection: 'customers',
-    data: { preferredAddress: address.id },
-    where: { id: { equals: customer.id } },
-    req,
-  })
 
   // Create new order
   const order = await payload.create({
@@ -117,6 +110,14 @@ export const placeGuestOrder = async (checkout: PlaceGuestOrderArgs) => {
     req,
   })
 
+  // Set Created address as preferred address & pending order
+  await payload.update({
+    collection: 'customers',
+    data: { preferredAddress: address.id, pendingOrder: order.id },
+    where: { id: { equals: customer.id } },
+    req,
+  })
+
   // Add order to razorpay
   try {
     const total = subtotal + shippingRate - couponDiscount
@@ -136,8 +137,10 @@ export const placeGuestOrder = async (checkout: PlaceGuestOrderArgs) => {
     await payload.db.commitTransaction(req.transactionID)
   }
 
-  // Create GUEST_PENDING_ORDER token cookie
-  await createGuestPendingOrderCustomerCookie(customer, order.id, payload)
+  if (!checkout.isLoggedIn) {
+    // Create GUEST token cookie
+    await createGuestCustomerCookie(customer, payload)
+  }
 
   // Redirect to place-order page
   redirect('/place-order')

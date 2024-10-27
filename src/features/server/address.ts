@@ -12,7 +12,7 @@ export async function getPreferredOrFirstAddress(
     id: customer.id,
     overrideAccess: false,
     user: customer,
-    depth: 1
+    depth: 1,
   })
 
   let address = user.preferredAddress
@@ -22,7 +22,7 @@ export async function getPreferredOrFirstAddress(
       id: address,
       overrideAccess: false,
       user: customer,
-      depth: 0
+      depth: 0,
     })
   }
 
@@ -36,8 +36,19 @@ export async function getPreferredOrFirstAddress(
     limit: 1,
     overrideAccess: false,
     user: customer,
-    depth: 0
+    depth: 0,
   })
 
   return docs.length > 0 ? docs[0] : null
+}
+
+export async function getAddressesByCustomerId(customerId: number) {
+  const payload = await getPayloadHMR({ config })
+  const { docs: addresses } = await payload.find({
+    collection: 'addresses',
+    where: { customer: { equals: customerId } },
+    pagination: false,
+  })
+
+  return addresses
 }

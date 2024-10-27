@@ -7,7 +7,7 @@ import { z } from 'zod'
 import { zfd } from 'zod-form-data'
 import { createCustomerCookie } from '../auth/customer'
 import { ServerResponse } from '../utils'
-import { redirect } from 'next/navigation'
+import { redirect, RedirectType } from 'next/navigation'
 
 const UrlPathnameSchema = z
   .string()
@@ -40,5 +40,5 @@ export default async function login(data: FormData) {
   }
 
   await createCustomerCookie(token, payload)
-  redirect(ref || '/account')
+  redirect(ref || '/account', RedirectType.replace)
 }

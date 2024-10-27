@@ -21,8 +21,19 @@ const CheckoutApplyCoupon: FC<CheckoutApplyCouponProps> = ({ coupon, onSuccess, 
   const addToast = useToastStore((state) => state.addToast)
 
   const applyCustomCoupon = async () => {
+    if (!text) {
+      addToast('Empty coupon is not allowed', 'error')
+      return
+    }
+
     setLoading(true)
     const fetchedCoupon = await getApplicableCoupon(text)
+    if(!fetchedCoupon) {
+      setLoading(false)
+      addToast(`Invalid Coupon: ${text.toUpperCase()}`, 'error')
+      return
+    }
+
     const isApplicable = isCouponApplicable(fetchedCoupon, subtotal)
     if (!isApplicable) {
       addToast(

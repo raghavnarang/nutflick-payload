@@ -1,4 +1,3 @@
-import 'server-only'
 import type { BasePayload } from 'payload'
 import { z } from 'zod'
 

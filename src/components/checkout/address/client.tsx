@@ -4,10 +4,13 @@ import { FC, useState } from 'react'
 import CheckoutAddressForm from './add-edit-form'
 import { Address } from '@/payload-types'
 import CheckoutAddressPrefilled from './prefilled'
+import CheckoutSelectAddress from './select-from-list'
+import { GuestEmailMode, useCheckoutStore } from '@/features/checkout/store'
 
 interface CheckoutAddressClientProps {
   address?: Address
   isLoggedIn?: boolean
+  addresses: Address[]
 }
 
 enum Mode {
@@ -16,48 +19,42 @@ enum Mode {
   DEFAULT,
 }
 
-const CheckoutAddressClient: FC<CheckoutAddressClientProps> = ({ address, isLoggedIn }) => {
+const CheckoutAddressClient: FC<CheckoutAddressClientProps> = ({
+  address,
+  isLoggedIn,
+  addresses,
+}) => {
   const [mode, setMode] = useState(Mode.DEFAULT)
   const [defaultAddress, setDefaultAddress] = useState<Address | undefined>(address)
+  const guestEmailMode = useCheckoutStore((state) => state.guestEmailMode)
 
-  // if (mode === Mode.SELECT && selectMode === SelectMode.DEFAULT) {
-  //   return (
-  //     <Section title="Delivery Address">
-  //       <CheckoutSelectAddress
-  //         selectedAddressId={address?.id}
-  //         onAddNew={() => setSelectMode(SelectMode.ADD)}
-  //         onSuccess={() => {
-  //           setMode(Mode.DEFAULT)
-  //           setSelectMode(SelectMode.DEFAULT)
-  //         }}
-  //         onCancel={() => {
-  //           setMode(Mode.DEFAULT)
-  //           setSelectMode(SelectMode.DEFAULT)
-  //         }}
-  //         onEditAddress={(address) => {
-  //           setEditAddress(address)
-  //           setSelectMode(SelectMode.EDIT)
-  //         }}
-  //       />
-  //     </Section>
-  //   )
-  // }
+  if (guestEmailMode === GuestEmailMode.NEW) {
+    return <CheckoutAddressForm isLoggedIn={isLoggedIn} />
+  }
 
-  // if (
-  //   !address ||
-  //   mode === Mode.EDIT ||
-  //   (mode === Mode.SELECT && selectMode === SelectMode.ADD) ||
-  //   (mode === Mode.SELECT && selectMode === SelectMode.EDIT && editAddress)
-  // ) {
-  // return (
-  //   <Section title="Delivery Address">
-  //     <CheckoutAddressForm address={defaultAddress} />
-  //   </Section>
-  // )
-  // }
+  if (mode === Mode.SELECT && addresses.length > 0) {
+    return (
+      <CheckoutSelectAddress
+        addresses={addresses}
+        onSelect={(address) => {
+          setDefaultAddress(address)
+          setMode(Mode.DEFAULT)
+        }}
+        onCancel={() => setMode(Mode.DEFAULT)}
+        selectedAddressId={defaultAddress?.id}
+      />
+    )
+  }
 
   if (defaultAddress && mode === Mode.DEFAULT) {
-    return <CheckoutAddressPrefilled address={defaultAddress} onEdit={() => setMode(Mode.EDIT)} />
+    return (
+      <CheckoutAddressPrefilled
+        address={defaultAddress}
+        onEdit={() => setMode(Mode.EDIT)}
+        isLoggedIn={isLoggedIn}
+        onSelect={addresses.length > 0 ? () => setMode(Mode.SELECT) : undefined}
+      />
+    )
   }
 
   return (
@@ -65,6 +62,7 @@ const CheckoutAddressClient: FC<CheckoutAddressClientProps> = ({ address, isLogg
       address={defaultAddress}
       onEditCancel={() => setMode(Mode.DEFAULT)}
       isLoggedIn={isLoggedIn}
+      onSelect={addresses.length > 0 ? () => setMode(Mode.SELECT) : undefined}
     />
   )
 }

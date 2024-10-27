@@ -157,6 +157,7 @@ export interface Category {
 export interface Customer {
   id: number;
   preferredAddress?: (number | null) | Address;
+  pendingOrder?: (number | null) | Order;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -220,24 +221,6 @@ export interface Address {
     | 'UK'
     | 'WB';
   pincode: string;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "coupons".
- */
-export interface Coupon {
-  id: number;
-  is_active?: boolean | null;
-  coupon: string;
-  value: number;
-  type: 'fixed' | 'percent';
-  min_cart_value?: number | null;
-  max_discount?: number | null;
-  is_infinite: '1' | '0';
-  max_use?: number | null;
-  checkout_visible?: boolean | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -313,6 +296,24 @@ export interface Order {
     signature?: string | null;
     total?: number | null;
   };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "coupons".
+ */
+export interface Coupon {
+  id: number;
+  is_active?: boolean | null;
+  coupon: string;
+  value: number;
+  type: 'fixed' | 'percent';
+  min_cart_value?: number | null;
+  max_discount?: number | null;
+  is_infinite: '1' | '0';
+  max_use?: number | null;
+  checkout_visible?: boolean | null;
   updatedAt: string;
   createdAt: string;
 }

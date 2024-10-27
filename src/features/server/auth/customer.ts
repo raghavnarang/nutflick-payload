@@ -5,10 +5,9 @@ import config from '@payload-config'
 import { getPayloadHMR } from '@payloadcms/next/utilities'
 import { cookies } from 'next/headers'
 import jwt from 'jsonwebtoken'
-import { TokenSessionType } from '@/shared/types/token'
-import type { Customer } from '@/payload-types'
 import { generateRandomPassword } from './utils'
 import { cache } from 'react'
+import { getMeUser } from './me'
 
 const emailSchema = z.string().email()
 const passwordSchema = z.string().min(5)
@@ -54,34 +53,45 @@ const verifyUserToken = cache(async () => {
   return jwt.verify(token, payload.secret)
 })
 
-export const getGuestPendingOrderTokenData = async () => {
-  const userData = (await verifyUserToken()) as {
-    type: TokenSessionType
-    order: number
-    id: number
-    email: string
-  } | null
-  if (!userData || userData.type !== TokenSessionType.GUEST_PENDING_ORDER || !userData.order) {
-    return null
+export const getCurrentGuestOrCustomer = cache(async () => {
+  const guest = await getTokenData()
+  if (guest?.isGuest && guest.collection === 'customers') {
+    const payload = await getPayloadHMR({ config })
+    const customer = await payload.findByID({
+      collection: 'customers',
+      id: guest.id,
+      depth: 1,
+      overrideAccess: false,
+      user: guest,
+    })
+
+    return {
+      customer: { ...customer, collection: 'customers' },
+      isLoggedIn: false,
+    }
   }
 
-  return userData
-}
+  const customer = await getMeUser()
+  if (customer && customer.collection === 'customers') {
+    return {
+      customer,
+      isLoggedIn: true,
+    }
+  }
 
-export const getGuestTokenData = async () => {
-  const userData = (await verifyUserToken()) as {
+  return {
+    customer: null,
+    isLoggedIn: false,
+  }
+})
+
+const getTokenData = async () => {
+  return (await verifyUserToken()) as {
     id: number
     collection: 'customers'
-    type: TokenSessionType
-    order: number
+    isGuest: boolean
     email: string
   } | null
-
-  if (!userData || userData.type !== TokenSessionType.GUEST) {
-    return null
-  }
-
-  return userData
 }
 
 const signCustomerToken = (tokenData: any, payload: BasePayload, expiration: number) => {
@@ -115,6 +125,29 @@ export const createCustomerCookie = async (
   })
 }
 
+export const createExpiredCookie = async (payload: BasePayload) => {
+  const collectionConfig = payload.collections['customers'].config
+  const authConfig = collectionConfig.auth
+  const cookieStore = await cookies()
+
+  const sameSite =
+    typeof authConfig.cookies.sameSite === 'string'
+      ? authConfig.cookies.sameSite.toLowerCase()
+      : authConfig.cookies.sameSite
+        ? 'strict'
+        : undefined
+
+  const expires = new Date(Date.now() - 1000)
+
+  cookieStore.set(`${payload.config.cookiePrefix}-token`, '', {
+    expires,
+    httpOnly: true,
+    path: '/',
+    sameSite: sameSite as any,
+    secure: authConfig.cookies.secure,
+  })
+}
+
 // Create GUEST token cookie
 export async function createGuestCustomerCookie(
   user: { id: number; email: string },
@@ -124,35 +157,11 @@ export async function createGuestCustomerCookie(
     id: user.id,
     collection: 'customers',
     email: user.email,
-    type: TokenSessionType.GUEST,
+    isGuest: true,
   }
 
   // Expire after 1 week
   const expiration = 7 * 24 * 60 * 60
-
-  // Create signed token
-  const token = signCustomerToken(tokenData, payload, expiration)
-
-  // Set Cookie
-  await createCustomerCookie(token, payload, expiration)
-}
-
-// Create GUEST_PENDING_ORDER token cookie
-export async function createGuestPendingOrderCustomerCookie(
-  user: Customer,
-  orderId: number,
-  payload: BasePayload,
-) {
-  const tokenData = {
-    id: user.id,
-    collection: 'customers',
-    email: user.email,
-    type: TokenSessionType.GUEST_PENDING_ORDER,
-    order: orderId,
-  }
-
-  // Expire after 2 Hours
-  const expiration = 2 * 60 * 60
 
   // Create signed token
   const token = signCustomerToken(tokenData, payload, expiration)

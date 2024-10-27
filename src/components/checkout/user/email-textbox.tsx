@@ -1,34 +1,36 @@
 'use client'
 
+import Button from '@/components/button'
 import Textbox from '@/components/form/textbox'
-import Section from '@/components/section'
-import SectionBody from '@/components/section/body'
 import Link from 'next/link'
 import { useFormStatus } from 'react-dom'
 
 interface Props {
   email?: string
-  onEditCancel?: () => void
+  onCancel?: () => void
 }
 
-export default function CheckoutUserEmailTextbox({ email, onEditCancel }: Props) {
+export default function CheckoutUserEmailTextbox({ email, onCancel }: Props) {
   const { pending } = useFormStatus()
 
-  const editCancelText = (
+  const cancelText = (
     <p className="mt-3 text-sm text-gray-500">
-      <Link
-        href="#"
-        className="text-red-600"
-        onClick={(e) => {
-          e.preventDefault()
-          onEditCancel?.()
+      <Button
+        small
+        isSecondary
+        className="inline-flex"
+        type="button"
+        onClick={() => {
+          onCancel?.()
         }}
       >
-        Cancel
-      </Link>{' '}
-      editing email or{' '}
-      <Link href="/login" className="text-red-600">
-        Login here
+        Go Back
+      </Button>{' '}
+      or{' '}
+      <Link href="/login?ref=/checkout">
+        <Button small className="inline-flex" type="button">
+          Login here
+        </Button>
       </Link>
     </p>
   )
@@ -36,8 +38,10 @@ export default function CheckoutUserEmailTextbox({ email, onEditCancel }: Props)
   const defaultText = (
     <p className="mt-3 text-sm text-gray-500">
       Already have account?{' '}
-      <Link href="/login" className="text-red-600">
-        Login here
+      <Link href="/login?ref=/checkout">
+        <Button small className="inline-flex" type="button">
+          Login here
+        </Button>
       </Link>
     </p>
   )
@@ -53,7 +57,7 @@ export default function CheckoutUserEmailTextbox({ email, onEditCancel }: Props)
         disabled={pending}
         defaultValue={email}
       />
-      {onEditCancel ? editCancelText : defaultText}
+      {onCancel ? cancelText : defaultText}
     </>
   )
 }

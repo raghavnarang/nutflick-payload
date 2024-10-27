@@ -7,59 +7,79 @@ import { useFormStatus } from 'react-dom'
 import { Address } from '@/payload-types'
 import type { FC } from 'react'
 import Link from 'next/link'
+import Button from '@/components/button'
 
 interface CheckoutAddressFormProps {
   address?: Address
   onEditCancel?: () => void
   isLoggedIn?: boolean
+  // If this is passed from parent, it means there are more addresses available to choose from
+  onSelect?: () => void
 }
 
 const CheckoutAddressForm: FC<CheckoutAddressFormProps> = ({
   address,
   onEditCancel,
   isLoggedIn,
+  onSelect,
 }) => {
   const { pending } = useFormStatus()
 
+  const loginOrSelectAddressesMessage = !isLoggedIn ? (
+    <>
+      <Link href="/login?ref=/checkout">
+        <Button small className="inline-flex" type="button">
+          Login
+        </Button>
+      </Link>{' '}
+      to use one of your saved addresses
+    </>
+  ) : onSelect ? (
+    <>
+      <Button
+        small
+        className="inline-flex"
+        type="button"
+        onClick={(e) => {
+          e.preventDefault()
+          onSelect()
+        }}
+      >
+        Choose
+      </Button>{' '}
+      one of your saved addresses
+    </>
+  ) : (
+    ''
+  )
+
   const editCancelText =
-    address || !isLoggedIn ? (
+    address || loginOrSelectAddressesMessage ? (
       <p className="text-sm text-gray-500 mt-5">
         {address && (
           <>
-            <Link
-              href="#"
-              className="text-red-600"
+            <Button
+              small
+              isSecondary
+              type="button"
+              className="inline-flex"
               onClick={(e) => {
                 e.preventDefault()
                 onEditCancel?.()
               }}
             >
               Cancel
-            </Link>{' '}
+            </Button>{' '}
             editing address
           </>
         )}
-        {address && !isLoggedIn ? ' or ' : ''}
-        {!isLoggedIn ? (
-          <>
-            <Link href="/login" className="text-red-600">
-              Login
-            </Link>{' '}
-            to use one of your saved addresses
-          </>
-        ) : (
-          ''
-        )}
+        {address && loginOrSelectAddressesMessage ? ' or ' : ''}
+        {loginOrSelectAddressesMessage}
       </p>
     ) : null
 
-  const defaultText = !isLoggedIn ? (
-    <p className="text-sm text-gray-500 mt-5">
-      <Link href="/login" className="text-red-600">
-        Login
-      </Link>{' '}
-      to use one of your saved addresses
-    </p>
+  const defaultText = loginOrSelectAddressesMessage ? (
+    <p className="text-sm text-gray-500 mt-5">{loginOrSelectAddressesMessage}</p>
   ) : null
 
   return (
@@ -124,7 +144,7 @@ const CheckoutAddressForm: FC<CheckoutAddressFormProps> = ({
         />
         {address?.id && <input type="hidden" name="id" value={address.id} />}
       </div>
-      {onEditCancel ? editCancelText : defaultText}
+      {editCancelText ? editCancelText : defaultText}
     </>
   )
 }

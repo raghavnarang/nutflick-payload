@@ -1,29 +1,20 @@
 import 'server-only'
-import {
-  createGuestCustomerCookie,
-  getGuestPendingOrderTokenData,
-} from '@/features/server/auth/customer'
+import { getCurrentGuestOrCustomer } from '@/features/server/auth/customer'
 import { getPayloadHMR } from '@payloadcms/next/utilities'
 import config from '@payload-config'
 import { redirect } from 'next/navigation'
 import { getOrderPayments } from '@/features/razorpay/api'
 import { RazorpayPaymentStatus } from '@/features/razorpay/types/payment'
+import type { PayloadRequest } from 'payload'
 
 // Verify if current pending order's payment done
 export async function GET() {
-  const userData = await getGuestPendingOrderTokenData()
-  if (!userData) {
+  const { customer } = await getCurrentGuestOrCustomer()
+  if (!customer || !customer.pendingOrder || typeof customer.pendingOrder === 'number') {
     redirect(`/shop-error?message=No pending order found for current user`)
   }
 
-  const payload = await getPayloadHMR({ config })
-  const order = await payload.findByID({
-    collection: 'orders',
-    id: userData.order,
-    overrideAccess: false,
-    user: userData,
-    depth: 0,
-  })
+  const order = customer.pendingOrder
   if (!order || !order.razorpay || !order.razorpay.orderId) {
     redirect(`/shop-error?message=No valid order found for current user`)
   }
@@ -34,13 +25,27 @@ export async function GET() {
     redirect(`/shop-error?message=No payment found for current pending order`)
   }
 
+  const payload = await getPayloadHMR({ config })
+  const transactionID = await payload.db.beginTransaction()
+  const req = { transactionID: transactionID || undefined } as PayloadRequest
   await payload.update({
     collection: 'orders',
     data: { razorpay: { paymentId: capturedPayment.id } },
     id: order.id,
+    req,
   })
 
-  await createGuestCustomerCookie(userData, payload)
+  await payload.update({
+    collection: 'customers',
+    data: { pendingOrder: null },
+    id: customer.id,
+    req,
+  })
+
+  // DB Operations Completed
+  if (req.transactionID) {
+    await payload.db.commitTransaction(req.transactionID)
+  }
 
   redirect(`/order-complete/${order.id}`)
 }
