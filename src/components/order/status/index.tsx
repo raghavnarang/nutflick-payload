@@ -4,22 +4,25 @@ import OrderTransitStatus from './transit'
 import OrderConfirmedStatus from './confirmed'
 import OrderFailedStatus from './failed'
 import OrderRefundedStatus from './refunded'
+import OrderUnknownStatus from './unknown'
+import { getPaymentStatus } from '@/features/razorpay/api'
 
-export default function OrderStatus(props: {
-  order: Order
-  shipping?: ShippingOption['option'][0]
-  status: RazorpayPaymentStatus
-}) {
-  switch (props.status) {
+export default async function OrderStatus({ order }: { order: Order }) {
+  if (!order.razorpay?.orderId || !order.razorpay.paymentId) {
+    return <OrderUnknownStatus order={order} />
+  }
+
+  const status = await getPaymentStatus(order.razorpay.paymentId)
+  switch (status) {
     case RazorpayPaymentStatus.AUTHORIZED:
-      return <OrderTransitStatus {...props} />
+      return <OrderTransitStatus order={order} />
     case RazorpayPaymentStatus.CAPTURED:
-      return <OrderConfirmedStatus {...props} />
+      return <OrderConfirmedStatus order={order} />
     case RazorpayPaymentStatus.FAILED:
-      return <OrderFailedStatus {...props} />
+      return <OrderFailedStatus order={order} />
     case RazorpayPaymentStatus.REFUNDED:
-      return <OrderRefundedStatus {...props} />
+      return <OrderRefundedStatus order={order} />
     default:
-      return null
+      return <OrderUnknownStatus order={order} />
   }
 }

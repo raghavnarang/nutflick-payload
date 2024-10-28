@@ -14,10 +14,12 @@ export const getMeUser = cache(async () => {
 })
 
 export const redirectIfUnauthenticated = async (ref?: string) => {
-  const { isLoggedIn } = await getCurrentGuestOrCustomer()
+  const { customer, isLoggedIn } = await getCurrentGuestOrCustomer()
   if (!isLoggedIn) {
     redirect(`/login${ref ? `?ref=${ref}` : ''}`)
   }
+
+  return customer
 }
 
 export const redirectIfAuthenticated = async (ref?: string) => {

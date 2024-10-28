@@ -285,6 +285,10 @@ export interface Order {
     includedShippingCost?: number | null;
     id?: string | null;
   }[];
+  afterOrder?: {
+    trackLink?: string | null;
+    status?: ('processing' | 'shipped' | 'completed') | null;
+  };
   couponRef?: (number | null) | Coupon;
   coupon?: string | null;
   discount?: number | null;

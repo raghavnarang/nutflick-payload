@@ -5,7 +5,6 @@ import config from '@payload-config'
 import { redirect } from 'next/navigation'
 import { createExpiredCookie, getCurrentGuestOrCustomer } from '@/features/server/auth/customer'
 import { z } from 'zod'
-import { revalidatePath } from 'next/cache'
 
 const UrlPathnameSchema = z
   .string()
@@ -27,5 +26,5 @@ export async function GET(request: NextRequest) {
 
   const searchParams = request.nextUrl.searchParams
   const ref = UrlPathnameSchema.parse(searchParams.get('ref') || '')
-  redirect(ref || '/login')
+  redirect(`/login${ref ? `/ref=${ref}` : ''}`)
 }

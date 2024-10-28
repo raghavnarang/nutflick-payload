@@ -31,10 +31,16 @@ export const Orders: CollectionConfig = {
       hasMany: false,
       name: 'customer',
       required: true,
+      admin: {
+        readOnly: true,
+      },
     },
     {
       type: 'collapsible',
       label: 'Address',
+      admin: {
+        readOnly: true,
+      },
       fields: [
         {
           type: 'relationship',
@@ -90,6 +96,9 @@ export const Orders: CollectionConfig = {
       type: 'array',
       name: 'products',
       required: true,
+      admin: {
+        readOnly: true,
+      },
       fields: [
         {
           type: 'relationship',
@@ -135,9 +144,33 @@ export const Orders: CollectionConfig = {
       ],
     },
     {
+      type: 'group',
+      name: 'afterOrder',
+      admin: {
+        position: 'sidebar',
+        description: 'These fields need to be set by admin',
+      },
+      fields: [
+        {
+          type: 'text',
+          name: 'trackLink',
+        },
+        {
+          type: 'select',
+          name: 'status',
+          defaultValue: 'processing',
+          options: [
+            { label: 'Processing', value: 'processing' },
+            { label: 'Shipped', value: 'shipped' },
+            { label: 'Completed', value: 'completed' },
+          ],
+        },
+      ],
+    },
+    {
       type: 'collapsible',
       label: 'Coupon',
-      admin: { position: 'sidebar' },
+      admin: { position: 'sidebar', readOnly: true },
       fields: [
         {
           type: 'row',
@@ -163,7 +196,7 @@ export const Orders: CollectionConfig = {
     {
       type: 'collapsible',
       label: 'Shipping',
-      admin: { position: 'sidebar' },
+      admin: { position: 'sidebar', readOnly: true },
       fields: [
         {
           type: 'row',
