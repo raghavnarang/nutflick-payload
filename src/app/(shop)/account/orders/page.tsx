@@ -7,6 +7,7 @@ import { Cart } from '@/components/Icons'
 import Link from 'next/link'
 import ChevronRight from '@/components/Icons/chevron-right'
 import Price from '@/components/product/price'
+import OrderStatusPill from '@/components/order/status/pill'
 
 export default async function UserOrdersPage() {
   const customer = await redirectIfUnauthenticated('/account/orders')
@@ -35,15 +36,19 @@ export default async function UserOrdersPage() {
         <div>
           {orders.map((order) => (
             <Link
+              key={order.id}
               href={`/account/orders/${order.id}`}
               className="border-b py-5 flex justify-between items-center first:pt-0 last:pb-0 last:border-none"
             >
               <div>
-                <p>
-                  {order.products
-                    .map((p) => `${p.title}${p.qty > 1 ? ` (x${p.qty})` : ''}`)
-                    .join(', ')}
-                </p>
+                <div>
+                  <p className='inline-block mr-3'>
+                    {order.products
+                      .map((p) => `${p.title}${p.qty > 1 ? ` (x${p.qty})` : ''}`)
+                      .join(', ')}
+                  </p>
+                  <OrderStatusPill order={order} />
+                </div>
                 <p className="text-sm text-gray-500 mt-1">
                   {new Date(order.updatedAt).toLocaleDateString('en-US', {
                     weekday: 'long', // "Monday"
@@ -54,11 +59,6 @@ export default async function UserOrdersPage() {
                     minute: '2-digit', // "05"
                   })}
                 </p>
-                {order.razorpay?.total && (
-                  <p className="text-sm text-gray-500 mt-1">
-                    Total: <Price price={order.razorpay?.total} />
-                  </p>
-                )}
               </div>
               <ChevronRight />
             </Link>

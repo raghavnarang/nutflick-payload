@@ -1,5 +1,5 @@
 import { RazorpayPaymentStatus } from '@/features/razorpay/types/payment'
-import type { Order, ShippingOption } from '@/payload-types'
+import type { Order } from '@/payload-types'
 import OrderTransitStatus from './transit'
 import OrderConfirmedStatus from './confirmed'
 import OrderFailedStatus from './failed'

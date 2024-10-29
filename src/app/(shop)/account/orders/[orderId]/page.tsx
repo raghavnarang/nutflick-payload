@@ -2,16 +2,12 @@ import { redirectIfUnauthenticated } from '@/features/server/auth/me'
 import { getPayloadHMR } from '@payloadcms/next/utilities'
 import config from '@payload-config'
 import MyAccountHeader from '../../header'
-import BigMessage from '@/components/big-message'
-import { Cart } from '@/components/Icons'
-import Link from 'next/link'
-import ChevronRight from '@/components/Icons/chevron-right'
 import OrderStatus from '@/components/order/status'
 import OrderCustomerSummary from '@/components/order/customer-summary'
 import OrderSummary from '@/components/order/order-summary'
 import OrderFetchingStatus from '@/components/order/status/fetching'
-import OrderUnknownStatus from '@/components/order/status/unknown'
 import { Suspense } from 'react'
+import AfterOrderSummary from '@/components/order/after-order-summary'
 
 export default async function UserSingleOrderPage({
   params,
@@ -46,6 +42,7 @@ export default async function UserSingleOrderPage({
             <OrderStatus order={order} />
           </Suspense>
           <OrderCustomerSummary order={order} />
+          <AfterOrderSummary order={order} />
           <OrderSummary order={order} />
         </div>
       </div>
