@@ -3,7 +3,7 @@ import { headers } from 'next/headers'
 import { getPayloadHMR } from '@payloadcms/next/utilities'
 import config from '@payload-config'
 import { cache } from 'react'
-import { redirect } from 'next/navigation'
+import { redirect, RedirectType } from 'next/navigation'
 import { getCurrentGuestOrCustomer } from './customer'
 
 export const getMeUser = cache(async () => {
@@ -16,7 +16,7 @@ export const getMeUser = cache(async () => {
 export const redirectIfUnauthenticated = async (ref?: string) => {
   const { customer, isLoggedIn } = await getCurrentGuestOrCustomer()
   if (!isLoggedIn) {
-    redirect(`/login${ref ? `?ref=${ref}` : ''}`)
+    redirect(`/login${ref ? `?ref=${ref}` : ''}`, RedirectType.replace)
   }
 
   return customer
@@ -25,6 +25,6 @@ export const redirectIfUnauthenticated = async (ref?: string) => {
 export const redirectIfAuthenticated = async (ref?: string) => {
   const { isLoggedIn } = await getCurrentGuestOrCustomer()
   if (isLoggedIn) {
-    redirect(ref || '/account')
+    redirect(ref || '/account', RedirectType.replace)
   }
 }
