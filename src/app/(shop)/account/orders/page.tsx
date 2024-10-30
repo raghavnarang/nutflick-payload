@@ -6,7 +6,6 @@ import BigMessage from '@/components/big-message'
 import { Cart } from '@/components/Icons'
 import Link from 'next/link'
 import ChevronRight from '@/components/Icons/chevron-right'
-import Price from '@/components/product/price'
 import OrderStatusPill from '@/components/order/status/pill'
 
 export default async function UserOrdersPage() {
@@ -42,7 +41,8 @@ export default async function UserOrdersPage() {
             >
               <div>
                 <div>
-                  <p className='inline-block mr-3'>
+                  <p className="inline-block mr-3">
+                    <span className="text-gray-500">#{order.id} | </span>
                     {order.products
                       .map((p) => `${p.title}${p.qty > 1 ? ` (x${p.qty})` : ''}`)
                       .join(', ')}
