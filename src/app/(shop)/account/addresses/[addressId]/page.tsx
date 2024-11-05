@@ -3,6 +3,7 @@ import { getPayloadHMR } from '@payloadcms/next/utilities'
 import config from '@payload-config'
 import MyAccountHeader from '../../header'
 import MyAccountAddressForm from '../form'
+import DeleteAddress from './delete'
 
 export default async function UserEditAddressPage({
   params,
@@ -37,6 +38,7 @@ export default async function UserEditAddressPage({
           title={`My Account / Addresses / #${addressId}`}
           email={customer.email}
           backLink="/account/addresses"
+          titleButtonElement={<DeleteAddress id={+addressId} />}
         />
         <MyAccountAddressForm address={address} isPreferred={preferredAddressId === address.id} />
       </div>

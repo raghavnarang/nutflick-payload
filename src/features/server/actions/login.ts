@@ -8,6 +8,7 @@ import { zfd } from 'zod-form-data'
 import { createCustomerCookie } from '../auth/customer'
 import { ServerResponse } from '../utils'
 import { redirect, RedirectType } from 'next/navigation'
+import { getMeUser } from '../auth/me'
 
 const UrlPathnameSchema = z
   .string()
@@ -19,6 +20,11 @@ const UrlPathnameSchema = z
   .optional()
 
 export default async function login(data: FormData) {
+  const customer = await getMeUser()
+  if (customer) {
+    return ServerResponse('User is already logged in', 'error')
+  }
+
   const { email, password, ref } = zfd
     .formData({
       email: zfd.text(z.string().email()),

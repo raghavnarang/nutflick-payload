@@ -12,7 +12,7 @@ export default function MyAccountAddressForm({
   isPreferred?: boolean
 }) {
   return (
-    <MyAccountAddressFormElement>
+    <MyAccountAddressFormElement hasAddress={!!address}>
       <AddressForm address={address} />
       <Checkbox
         label="Prefer this address for future orders"

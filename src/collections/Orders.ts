@@ -47,7 +47,6 @@ export const Orders: CollectionConfig = {
           name: 'addressRef',
           relationTo: 'addresses',
           hasMany: false,
-          required: true,
         },
         {
           type: 'row',
@@ -104,7 +103,6 @@ export const Orders: CollectionConfig = {
           type: 'relationship',
           relationTo: 'products',
           name: 'productRef',
-          required: true,
           hasMany: false,
         },
         {

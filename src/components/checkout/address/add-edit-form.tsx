@@ -65,7 +65,7 @@ const CheckoutAddressForm: FC<CheckoutAddressFormProps> = ({
             >
               Cancel
             </Button>{' '}
-            editing address
+            adding new address
           </>
         )}
         {address && loginOrSelectAddressesMessage ? ' or ' : ''}
@@ -80,7 +80,6 @@ const CheckoutAddressForm: FC<CheckoutAddressFormProps> = ({
   return (
     <>
       <AddressForm address={address} />
-      {address?.id && <input type="hidden" name="id" value={address.id} />}
       {editCancelText ? editCancelText : defaultText}
     </>
   )

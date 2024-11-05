@@ -231,7 +231,7 @@ export interface Address {
 export interface Order {
   id: number;
   customer: number | Customer;
-  addressRef: number | Address;
+  addressRef?: (number | null) | Address;
   name: string;
   address: string;
   phone: string;
@@ -276,7 +276,7 @@ export interface Order {
     | 'WB';
   pincode: string;
   products: {
-    productRef: number | Product;
+    productRef?: (number | null) | Product;
     variantId: string;
     title: string;
     qty: number;

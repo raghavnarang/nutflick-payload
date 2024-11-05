@@ -1,6 +1,7 @@
 import Button from '@/components/button'
 import Back from '@/components/Icons/back'
 import Link from 'next/link'
+import { ReactNode } from 'react'
 
 interface MyAccountHeaderProps {
   title: string
@@ -10,6 +11,7 @@ interface MyAccountHeaderProps {
     link: string
     text: string
   }
+  titleButtonElement?: ReactNode
 }
 
 export default function MyAccountHeader({
@@ -17,6 +19,7 @@ export default function MyAccountHeader({
   backLink,
   email,
   titleButton,
+  titleButtonElement
 }: MyAccountHeaderProps) {
   return (
     <div className="flex justify-between md:items-center md:mb-10 mb-5 flex-col-reverse md:flex-row gap-3">
@@ -36,6 +39,7 @@ export default function MyAccountHeader({
             </Button>
           </Link>
         )}
+        {titleButtonElement}
       </div>
       <div className="flex gap-3 items-center md:flex-row flex-col">
         <p className="text-sm md:text-base">Welcome, {email} </p>

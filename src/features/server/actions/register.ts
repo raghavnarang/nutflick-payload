@@ -8,8 +8,14 @@ import { z } from 'zod'
 import { ServerResponse } from '../utils'
 import type { PayloadRequest } from 'payload'
 import { registerExistingCustomer } from '../auth/register'
+import { getMeUser } from '../auth/me'
 
 export async function register(data: FormData) {
+  const user = await getMeUser()
+  if (user) {
+    return ServerResponse('User is already logged in', 'error')
+  }
+
   const { email, password, confirm } = zfd
     .formData({
       email: zfd.text(z.string().email()),

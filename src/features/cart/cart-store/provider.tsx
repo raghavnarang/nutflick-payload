@@ -1,10 +1,9 @@
 'use client'
 
 import type { FC, ReactNode } from 'react'
-import { createContext, useContext, useEffect, useRef } from 'react'
+import { createContext, useContext, useRef } from 'react'
 import { CartStore, createCartStore } from './store'
 import { useStore } from 'zustand'
-// import { syncCartItems } from '@/features/server/product'
 
 export type CartStoreApi = ReturnType<typeof createCartStore>
 

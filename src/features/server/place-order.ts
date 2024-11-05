@@ -70,7 +70,6 @@ export const placeOrder = async (checkout: PlaceGuestOrderArgs) => {
   let coupon: Coupon | null = null
   let couponDiscount = 0
   const customer = await getOrCreateCustomer(checkout.email, undefined, req)
-  console.log(customer)
   const products = await getOrderProductsFromCartItems(checkout.products)
   const subtotal = products.reduce((total, item) => total + item.qty * item.price, 0)
   const shipping = (await getShippingOptions()).find((item) => item.id === checkout.shipping)

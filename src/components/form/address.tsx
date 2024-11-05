@@ -68,6 +68,7 @@ export default function AddressForm({ address }: { address?: Address }) {
         disabled={pending}
         defaultValue={address?.pincode}
       />
+      {address?.id && <input type="hidden" name="id" value={address.id} />}
     </div>
   )
 }
