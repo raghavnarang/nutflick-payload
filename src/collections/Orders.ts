@@ -31,6 +31,7 @@ export const Orders: CollectionConfig = {
       hasMany: false,
       name: 'customer',
       required: true,
+      index: true,
       admin: {
         readOnly: true,
       },
@@ -177,6 +178,7 @@ export const Orders: CollectionConfig = {
               type: 'relationship',
               name: 'couponRef',
               relationTo: 'coupons',
+              index: true,
               hasMany: false,
             },
             {

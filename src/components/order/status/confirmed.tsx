@@ -8,7 +8,7 @@ export default async function OrderConfirmedStatus({ order }: { order: Order }) 
 
   const payload = await getPayloadHMR({ config })
   let shipping: ShippingOption['option'][0] | undefined = undefined
-  if (order.rate && order.mode) {
+  if (order.mode) {
     const options = await payload.findGlobal({ slug: 'shipping-options' })
     shipping = options.option.find((o) => o.mode === order.mode)
   }

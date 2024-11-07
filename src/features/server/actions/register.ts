@@ -8,11 +8,11 @@ import { z } from 'zod'
 import { ServerResponse } from '../utils'
 import type { PayloadRequest } from 'payload'
 import { registerExistingCustomer } from '../auth/register'
-import { getMeUser } from '../auth/me'
+import { getCurrentGuestOrCustomer } from '../auth/customer'
 
 export async function register(data: FormData) {
-  const user = await getMeUser()
-  if (user) {
+  const { isLoggedIn } = await getCurrentGuestOrCustomer()
+  if (isLoggedIn) {
     return ServerResponse('User is already logged in', 'error')
   }
 

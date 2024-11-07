@@ -13,6 +13,9 @@ interface CheckoutStore {
   setSelectedShipping: (option?: ShippingOption['option'][0]) => void
   guestEmailMode: GuestEmailMode
   setGuestEmailMode: (mode: GuestEmailMode) => void
+  guestEmail: string
+  setGuestEmail: (email: string) => void
+  reset: () => void
 }
 
 export const useCheckoutStore = create<CheckoutStore>((set) => ({
@@ -21,6 +24,7 @@ export const useCheckoutStore = create<CheckoutStore>((set) => ({
     set((state) => ({
       ...state,
       guestEmailMode: mode,
+      guestEmail: '',
     }))
   },
   setSelectedShipping(option) {
@@ -34,4 +38,13 @@ export const useCheckoutStore = create<CheckoutStore>((set) => ({
       ...state,
       selectedCoupon: coupon,
     })),
+  guestEmail: '',
+  setGuestEmail: (email) => set((state) => ({ ...state, guestEmail: email })),
+  reset: () =>
+    set({
+      guestEmailMode: GuestEmailMode.DEFAULT,
+      selectedCoupon: undefined,
+      selectedShipping: undefined,
+      guestEmail: '',
+    }),
 }))

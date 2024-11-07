@@ -62,24 +62,29 @@ type PlaceGuestOrderArgs = z.infer<typeof placeOrderSchema> & { email: string; i
 
 // Place order
 export const placeOrder = async (checkout: PlaceGuestOrderArgs) => {
+  let coupon: Coupon | null = null
+  if (checkout.coupon) {
+    coupon = await getApplicableCoupon(checkout.coupon, checkout.email)
+    if (!coupon) {
+      return ServerResponse(
+        `Coupon is not usable right now: ${checkout.coupon.toUpperCase()}. Try to use another one`,
+        'error',
+      )
+    }
+  }
+
   const payload = await getPayloadHMR({ config })
   const transactionID = await payload.db.beginTransaction()
   const req = { transactionID: transactionID || undefined } as PayloadRequest
 
   // Fetch relevant data from DB
-  let coupon: Coupon | null = null
-  let couponDiscount = 0
   const customer = await getOrCreateCustomer(checkout.email, undefined, req)
   const products = await getOrderProductsFromCartItems(checkout.products)
   const subtotal = products.reduce((total, item) => total + item.qty * item.price, 0)
   const shipping = (await getShippingOptions()).find((item) => item.id === checkout.shipping)
   const shippingRate = shipping ? getAdjustedShippingRate(products, shipping.rate) : 0
-  if (checkout.coupon) {
-    coupon = await getApplicableCoupon(checkout.coupon)
-    if (coupon && isCouponApplicable(coupon, subtotal)) {
-      couponDiscount = getDiscountValue(coupon, subtotal)
-    }
-  }
+  const couponDiscount =
+    coupon && isCouponApplicable(coupon, subtotal) ? getDiscountValue(coupon, subtotal) : 0
 
   // Get Address from input, or create new address from provided address fields
   const address = await getOrCreateAddress(checkout, customer, payload, req)

@@ -2,7 +2,9 @@
 
 import Button from '@/components/button'
 import Textbox from '@/components/form/textbox'
+import { useCheckoutStore } from '@/features/checkout/store'
 import Link from 'next/link'
+import { useEffect } from 'react'
 import { useFormStatus } from 'react-dom'
 
 interface Props {
@@ -12,6 +14,13 @@ interface Props {
 
 export default function CheckoutUserEmailTextbox({ email, onCancel }: Props) {
   const { pending } = useFormStatus()
+  const { guestEmail, setGuestEmail } = useCheckoutStore((state) => state)
+
+  useEffect(() => {
+    if (email) {
+      setGuestEmail(email)
+    }
+  }, [email])
 
   const cancelText = (
     <p className="mt-3 text-sm text-gray-500">
@@ -55,7 +64,8 @@ export default function CheckoutUserEmailTextbox({ email, onCancel }: Props) {
         type="email"
         required
         disabled={pending}
-        defaultValue={email}
+        value={guestEmail}
+        onChange={(e) => setGuestEmail(e.target.value)}
       />
       {onCancel ? cancelText : defaultText}
     </>

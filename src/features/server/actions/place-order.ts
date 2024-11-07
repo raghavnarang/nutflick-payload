@@ -12,7 +12,7 @@ export const placeOrder = async (data: FormData) => {
   }
 
   const { customer, isLoggedIn } = await getCurrentGuestOrCustomer()
-  const email = isLoggedIn ? customer?.email : checkout.email
+  const email = isLoggedIn || !checkout.email ? customer?.email : checkout.email
   if (!email) {
     return ServerResponse('Email is missing', 'error')
   }

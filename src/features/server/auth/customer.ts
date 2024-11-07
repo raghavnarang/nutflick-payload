@@ -12,24 +12,30 @@ import { getMeUser } from './me'
 const emailSchema = z.string().email()
 const passwordSchema = z.string().min(5)
 
-export const getOrCreateCustomer = async (
-  email: string,
-  password?: string,
-  req?: PayloadRequest,
-) => {
+export async function getCustomerByEmail(email: string) {
   const parsedEmail = emailSchema.parse(email)
   const payload = await getPayloadHMR({ config })
   const { docs } = await payload.find({
     collection: 'customers',
     where: { email: { equals: parsedEmail } },
     pagination: false,
-    req,
   })
 
-  if (docs.length > 0) {
-    return docs[0]
+  return docs.length > 0 ? docs[0] : null
+}
+
+export const getOrCreateCustomer = async (
+  email: string,
+  password?: string,
+  req?: PayloadRequest,
+) => {
+  const customer = await getCustomerByEmail(email)
+  if (customer) {
+    return customer
   }
 
+  const payload = await getPayloadHMR({ config })
+  const parsedEmail = emailSchema.parse(email)
   const parsedPass = passwordSchema.optional().parse(password)
   return payload.create({
     req,

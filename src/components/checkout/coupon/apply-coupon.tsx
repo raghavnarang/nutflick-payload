@@ -3,11 +3,12 @@
 import Button from '@/components/button'
 import Textbox from '@/components/form/textbox'
 import Price from '@/components/product/price'
+import { GuestEmailMode, useCheckoutStore } from '@/features/checkout/store'
 import { isCouponApplicable } from '@/features/checkout/utils'
 import { getApplicableCoupon } from '@/features/server/actions/coupon'
 import { useToastStore } from '@/features/toast/store'
 import { Coupon } from '@/payload-types'
-import { useState, type FC } from 'react'
+import { useState, useTransition, type FC } from 'react'
 
 interface CheckoutApplyCouponProps {
   coupon?: Coupon
@@ -17,41 +18,53 @@ interface CheckoutApplyCouponProps {
 
 const CheckoutApplyCoupon: FC<CheckoutApplyCouponProps> = ({ coupon, onSuccess, subtotal = 0 }) => {
   const [text, setText] = useState('')
-  const [isLoading, setLoading] = useState(false)
+  const [pending, startTransition] = useTransition()
   const addToast = useToastStore((state) => state.addToast)
+  const { guestEmail, guestEmailMode } = useCheckoutStore((state) => state)
 
-  const applyCustomCoupon = async () => {
-    if (!text) {
+  const applyCustomCoupon = (shouldApplyProp = false) => {
+    const couponToApply = shouldApplyProp ? coupon?.coupon : text
+    if (!couponToApply) {
       addToast('Empty coupon is not allowed', 'error')
       return
     }
 
-    setLoading(true)
-    const fetchedCoupon = await getApplicableCoupon(text)
-    if(!fetchedCoupon) {
-      setLoading(false)
-      addToast(`Invalid Coupon: ${text.toUpperCase()}`, 'error')
-      return
-    }
+    startTransition(async () => {
+      console.log(guestEmail, couponToApply)
+      const fetchedCoupon = await getApplicableCoupon(couponToApply, guestEmail)
+      if (!fetchedCoupon) {
+        addToast(
+          `Coupon is not usable right now or is invalid: ${couponToApply.toUpperCase()}`,
+          'error',
+        )
+        return
+      }
 
-    const isApplicable = isCouponApplicable(fetchedCoupon, subtotal)
-    if (!isApplicable) {
-      addToast(
-        <span>
-          Add more items worth <Price price={(fetchedCoupon?.min_cart_value || 0) - subtotal} /> to
-          use this coupon
-        </span>,
-        'error',
-      )
-    } else if (fetchedCoupon) {
-      onSuccess?.(fetchedCoupon)
-    }
-    setLoading(false)
+      const isApplicable = isCouponApplicable(fetchedCoupon, subtotal)
+      if (!isApplicable) {
+        addToast(
+          <span>
+            Add more items worth <Price price={(fetchedCoupon?.min_cart_value || 0) - subtotal} />{' '}
+            to use this coupon
+          </span>,
+          'info',
+        )
+      } else if (fetchedCoupon) {
+        onSuccess?.(fetchedCoupon)
+      }
+    })
   }
 
   return coupon ? (
     <>
-      <Button small onClick={() => onSuccess?.(coupon)}>
+      <Button
+        small
+        disabled={pending}
+        onClick={(e) => {
+          e.preventDefault()
+          applyCustomCoupon(true)
+        }}
+      >
         Apply
       </Button>
     </>
@@ -63,15 +76,15 @@ const CheckoutApplyCoupon: FC<CheckoutApplyCouponProps> = ({ coupon, onSuccess, 
         outerWrapperClassname="flex-grow"
         required
         value={text}
-        disabled={isLoading}
+        disabled={pending}
         onChange={(e) => {
           e.preventDefault()
           setText(e.target.value)
         }}
       />
       <Button
-        disabled={isLoading}
-        onClick={async (e) => {
+        disabled={pending}
+        onClick={(e) => {
           e.preventDefault()
           applyCustomCoupon()
         }}

@@ -48,7 +48,6 @@ export default function CheckoutUserEmailPrefilled({ email, onNewEmail, isLogged
     <>
       <p>{email}</p>
       {isLoggedIn ? loggedInText : nonLoggedInText}
-      <input type="hidden" value={email} name="email" />
     </>
   )
 }
