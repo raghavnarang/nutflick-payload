@@ -1,5 +1,9 @@
 import { isAdminOrSelfCustomer } from '@/access/admin-or-self-customer'
 import {
+  getResetPasswordEmailHTML,
+  getResetPasswordEmailSubject,
+} from '@/features/server/auth/forgot-pass-email'
+import {
   getVerificationEmailHTML,
   getVerificationEmailSubject,
 } from '@/features/server/auth/verification-email'
@@ -25,6 +29,15 @@ export const Customers: CollectionConfig = {
         return getVerificationEmailHTML(user.email, token)
       },
       generateEmailSubject: getVerificationEmailSubject,
+    },
+    forgotPassword: {
+      generateEmailHTML({ token, user } = {}) {
+        if (!user || !token) {
+          throw new Error('Unable to send forgot password email')
+        }
+        return getResetPasswordEmailHTML(user.email, token)
+      },
+      generateEmailSubject: getResetPasswordEmailSubject,
     },
     tokenExpiration,
   },

@@ -8,7 +8,6 @@ import { zfd } from 'zod-form-data'
 import { createCustomerCookie, getCurrentGuestOrCustomer } from '../auth/customer'
 import { ServerResponse } from '../utils'
 import { redirect, RedirectType } from 'next/navigation'
-import { getMeUser } from '../auth/me'
 
 const UrlPathnameSchema = z
   .string()

@@ -37,7 +37,7 @@ const FormControls = () => {
           required
           disabled={pending}
         />
-        <Link href="/forgot-password" className="text-red-600 text-sm mt-2 block">
+        <Link href="/forgot" className="text-red-600 text-sm mt-2 block">
           Forgot Password?
         </Link>
       </div>
