@@ -48,6 +48,7 @@ export default buildConfig({
   plugins: [
     // storage-adapter-placeholder
   ],
+  graphQL: { disable: true },
   email: nodemailerAdapter({
     defaultFromAddress: 'noreply@nutflick.com',
     defaultFromName: 'Nutflick',

@@ -1,5 +1,3 @@
-'use client'
-
 import type { CartItem } from '@/shared/types/cart'
 import Link from 'next/link'
 import Image from 'next/image'
