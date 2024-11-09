@@ -50,7 +50,7 @@ const CheckoutAddressForm: FC<CheckoutAddressFormProps> = ({
 
   const editCancelText =
     address || loginOrSelectAddressesMessage ? (
-      <p className="text-sm text-gray-500 mt-5">
+      <p className="text-sm text-gray-500 mt-5 leading-8">
         {address && (
           <>
             <Button

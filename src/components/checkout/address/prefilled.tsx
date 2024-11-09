@@ -51,7 +51,7 @@ const CheckoutAddressPrefilled: FC<CheckoutAddressPrefilledProps> = ({
         {address}, {city}, {state}, {pincode}
       </p>
       <p>Phone: {phone}</p>
-      <p className="text-sm text-gray-500 mt-5">
+      <p className="text-sm text-gray-500 mt-5 leading-8">
         <Button
           small
           className="inline-flex"

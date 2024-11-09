@@ -41,7 +41,7 @@ const CheckoutSelectAddress: FC<CheckoutSelectAddressProps> = ({
         </div>
       ))}
       <input type="hidden" name="address_id" value={selectedAddressId} />
-      <p className="text-sm text-gray-500 mt-5">
+      <p className="text-sm text-gray-500 mt-5 leading-8">
         <Button
           small
           isSecondary

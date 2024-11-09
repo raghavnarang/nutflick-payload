@@ -6,6 +6,7 @@ import Minus from '../Icons/minus'
 import Button from '../button'
 import cx from 'clsx'
 import { useFormStatus } from 'react-dom'
+import Trash from '../Icons/trash'
 
 interface EditCartItemUIProps {
   className?: string
@@ -28,16 +29,16 @@ const EditCartItemUI: FC<EditCartItemUIProps> = ({
   return (
     <div
       className={cx(
-        'flex flex-col md:flex-row items-start',
+        'flex items-start',
         {
           'md:items-center justify-between': !bigButton,
-          'md:flex-col': bigButton,
+          'flex-col': bigButton,
         },
         className,
       )}
     >
       <div
-        className={cx('flex mr-5 md:mb-0 items-center', {
+        className={cx('flex md:mr-5 md:mb-0 items-center', {
           'mb-5': bigButton,
         })}
       >
@@ -67,11 +68,11 @@ const EditCartItemUI: FC<EditCartItemUIProps> = ({
         isSecondary
         small={!bigButton}
         large={bigButton}
-        className={cx('md:mb-0', { 'xl:w-1/2 mt-10 mb-5': bigButton })}
+        className={cx('md:mb-0', { 'xl:w-1/2 md:mt-10 mb-5': bigButton })}
         onClick={onRemoveClick}
         disabled={pending}
       >
-        Remove from Cart
+        Remove
       </Button>
     </div>
   )

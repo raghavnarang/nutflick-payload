@@ -16,7 +16,7 @@ const CheckoutDisplayCoupon: FC<CheckoutDisplayCouponProps> = (props) => {
   const isApplicable = isCouponApplicable(props, props.subtotal)
   return (
     <div className="border-t border-gray-200 md:px-8 px-4 py-5" key={props.id}>
-      <div className="flex flex-col sm:flex-row justify-between items-center sm:gap-5 gap-3 mb-3">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:gap-5 gap-3 mb-3">
         <span
           className={cx(
             'uppercase font-semibold tracking-widest border-4 border-dashed rounded-lg px-3 py-1',
@@ -28,7 +28,7 @@ const CheckoutDisplayCoupon: FC<CheckoutDisplayCouponProps> = (props) => {
         >
           {props.coupon}
         </span>
-        <div className="sm:text-right text-center">
+        <div className="sm:text-right text-center flex gap-2 items-center md:block">
           <p className="font-semibold">
             {props.type === 'fixed' ? <Price price={props.value} /> : `${props.value}%`} off
           </p>
@@ -40,7 +40,7 @@ const CheckoutDisplayCoupon: FC<CheckoutDisplayCouponProps> = (props) => {
         </div>
       </div>
       <div
-        className={cx('flex items-center flex-col-reverse sm:flex-row', {
+        className={cx('flex items-start flex-col-reverse sm:flex-row', {
           'justify-end': isApplicable,
           'justify-between gap-5': !isApplicable,
         })}

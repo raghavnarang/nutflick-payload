@@ -9,11 +9,11 @@ import EditCartItem from '@/components/cart/edit-cart-item'
 const CheckoutProduct: FC<CartItem & { name: string }> = ({ name, ...item }) => {
   const itemLink = `/product/${item.productSlug}/${item.variantSlug}`
   return (
-    <div className="flex justify-between items-center border-b border-solid border-gray-200 md:px-8 px-4 py-4">
+    <div className="flex flex-col md:flex-row md:justify-between md:items-center border-b border-solid border-gray-200 md:px-8 px-2 py-4">
       <div className="flex">
         <Link
           href={itemLink}
-          className="w-20 h-20 relative mr-5 flex-shrink-0 rounded-lg border border-gray-300"
+          className="w-20 h-20 relative mr-3 flex-shrink-0 rounded-lg border border-gray-300"
         >
           {item.image ? (
             <Image src={item.image} fill alt={item.title} className="object-cover rounded-md" />
@@ -23,7 +23,7 @@ const CheckoutProduct: FC<CartItem & { name: string }> = ({ name, ...item }) => 
             </div>
           )}
         </Link>
-        <div className="flex flex-col justify-between">
+        <div className="flex flex-col justify-between w-full">
           <div>
             {item.category && (
               <span className="block text-gray-500 text-sm mb-1">{item.category}</span>
@@ -35,12 +35,12 @@ const CheckoutProduct: FC<CartItem & { name: string }> = ({ name, ...item }) => 
               {item.title}
             </Link>
             <Price price={item.price} className="block text-gray-600 text-sm md:text-base" />
-            <div className="mt-2 flex gap-3">
-              <EditCartItem cartItem={item} className="!justify-start" />
+            <div className="mt-2">
+              <EditCartItem cartItem={item} className="md:!justify-start" />
             </div>
           </div>
 
-          <Price price={item.price * item.qty} className="text-base md:hidden block mt-4" />
+          <Price price={item.price * item.qty} className="text-right md:hidden block mt-4" />
         </div>
       </div>
 

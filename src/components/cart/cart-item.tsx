@@ -13,9 +13,9 @@ interface CartItemProps {
 const CartItem: FC<CartItemProps> = ({ item }) => {
   const itemLink = `/product/${item.productSlug}/${item.variantSlug}`
   return (
-    <div className="flex justify-between items-end border-b border-solid border-gray-200 pb-5 mb-5">
+    <div className="flex flex-col md:flex-row justify-between md:items-end border-b border-solid border-gray-200 pb-5 mb-5">
       <div className="flex">
-        <Link href={itemLink} className="w-32 h-32 relative mr-5 flex-shrink-0">
+        <Link href={itemLink} className="md:size-32 size-24 relative mr-5 flex-shrink-0">
           {item.image ? (
             <Image src={item.image} fill alt={item.title} className="object-cover rounded-md" />
           ) : (
@@ -24,7 +24,7 @@ const CartItem: FC<CartItemProps> = ({ item }) => {
             </div>
           )}
         </Link>
-        <div className="flex flex-col justify-between">
+        <div className="flex flex-col justify-between w-full">
           <div className="mb-3">
             {item.category && (
               <span className="block text-gray-500 text-sm mb-1">{item.category}</span>
@@ -37,12 +37,10 @@ const CartItem: FC<CartItemProps> = ({ item }) => {
             </Link>
             <Price price={item.price} className="block text-gray-600 text-sm md:text-base" />
           </div>
-          <EditCartItem cartItem={item} className="!justify-start" />
-          <Price price={item.price * item.qty} className="text-base md:hidden block" />
+          <EditCartItem cartItem={item} className="md:!justify-start mb-2" />
         </div>
       </div>
-
-      <Price price={item.price * item.qty} className="text-lg text-right hidden md:block" />
+      <Price price={item.price * item.qty} className="text-lg text-right" />
     </div>
   )
 }

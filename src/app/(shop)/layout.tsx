@@ -1,7 +1,6 @@
 import { Inter } from 'next/font/google'
 import './globals.css'
 import Footer from '@/components/footer'
-import { Suspense } from 'react'
 import Body from '@/components/body'
 import Header from '@/components/header'
 import type { NavProps } from '@/components/nav/types'
@@ -9,6 +8,7 @@ import { CartProvider } from '@/features/cart/cart-store/provider'
 import VariantSelectorModal from '@/components/cart/variant-selector/modal'
 import CartNavItem from '@/components/nav/cart-nav-item'
 import ToastContainer from '@/features/toast/components/toast-container'
+import MobileQuickActions from '@/components/quick-actions/mobile'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -37,7 +37,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body className={inter.className}>
         <CartProvider>
-          <div className="flex flex-col justify-between min-h-screen px-5">
+          <div className="flex flex-col justify-between min-h-screen px-5 pb-14 md:pb-0">
             <div>
               <Header navItems={navItems} mobileSideNavItems={navItems} />
               <Body>{children}</Body>
@@ -45,6 +45,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <Footer />
             <VariantSelectorModal />
             <ToastContainer />
+            <MobileQuickActions />
           </div>
         </CartProvider>
       </body>
