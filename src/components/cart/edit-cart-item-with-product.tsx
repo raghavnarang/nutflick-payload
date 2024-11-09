@@ -10,9 +10,10 @@ interface EditCartItemProps {
   product: Product
   className?: string
   bigButton?: boolean
+  disableRemove?: boolean
 }
 
-const EditCartItem: FC<EditCartItemProps> = ({ product, ...rest }) => {
+const EditCartItem: FC<EditCartItemProps> = ({ product, disableRemove, ...rest }) => {
   const { cart, increment, decrement, clear } = useCartStore((state) => state)
   const setVariantSelectorProduct = useCartVariantSelectorStore((state) => state.setProduct)
 
@@ -38,7 +39,7 @@ const EditCartItem: FC<EditCartItemProps> = ({ product, ...rest }) => {
           ? increment(product.variants[0].id, product)
           : setVariantSelectorProduct(product)
       }
-      onRemoveClick={() => clear(product)}
+      onRemoveClick={!disableRemove ? () => clear(product) : undefined}
     />
   )
 }

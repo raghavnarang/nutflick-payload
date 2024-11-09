@@ -64,16 +64,18 @@ const EditCartItemUI: FC<EditCartItemUIProps> = ({
           <Plus className="text-red-500" />
         </button>
       </div>
-      <Button
-        isSecondary
-        small={!bigButton}
-        large={bigButton}
-        className={cx('md:mb-0', { 'xl:w-1/2 md:mt-10 mb-5': bigButton })}
-        onClick={onRemoveClick}
-        disabled={pending}
-      >
-        Remove
-      </Button>
+      {onRemoveClick && (
+        <Button
+          isSecondary
+          small={!bigButton}
+          large={bigButton}
+          className={cx('md:mb-0', { 'xl:w-1/2 md:mt-10 mb-5': bigButton })}
+          onClick={onRemoveClick}
+          disabled={pending}
+        >
+          Remove
+        </Button>
+      )}
     </div>
   )
 }

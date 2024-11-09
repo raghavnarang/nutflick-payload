@@ -37,7 +37,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body className={inter.className}>
         <CartProvider>
-          <div className="flex flex-col justify-between min-h-screen px-5 pb-14 md:pb-0">
+          <div className="flex flex-col justify-between min-h-screen px-3 pb-14 md:pb-0">
             <div>
               <Header navItems={navItems} mobileSideNavItems={navItems} />
               <Body>{children}</Body>

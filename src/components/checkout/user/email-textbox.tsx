@@ -23,7 +23,7 @@ export default function CheckoutUserEmailTextbox({ email, onCancel }: Props) {
   }, [email])
 
   const cancelText = (
-    <p className="mt-3 text-sm text-gray-500">
+    <p className="mt-3 text-sm text-gray-500 leading-8">
       <Button
         small
         isSecondary
@@ -45,7 +45,7 @@ export default function CheckoutUserEmailTextbox({ email, onCancel }: Props) {
   )
 
   const defaultText = (
-    <p className="mt-3 text-sm text-gray-500">
+    <p className="mt-3 text-sm text-gray-500 leading-8">
       Already have account?{' '}
       <Link href="/login?ref=/checkout">
         <Button small className="inline-flex" type="button">

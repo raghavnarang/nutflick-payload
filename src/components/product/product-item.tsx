@@ -15,7 +15,7 @@ const ProductItem: FC<ProductItemProps> = ({ product }) => {
 
   return (
     <div className="w-full">
-      <Link href={link} className="w-full 2xl:h-72 xl:h-60 sm:h-52 h-72 relative mb-5 block">
+      <Link href={link} className="w-full 2xl:h-72 xl:h-60 sm:h-52 md:h-72 h-36 relative mb-5 block">
         {typeof product.image != 'number' && product.image && product.image.url ? (
           <Image
             src={product.image.url}
@@ -32,24 +32,24 @@ const ProductItem: FC<ProductItemProps> = ({ product }) => {
 
       <Link href={link}>
         {product.category && typeof product.category.value !== 'number' && (
-          <span className="block mb-1 text-gray-600 text-sm">{product.category.value.title}</span>
+          <span className="block mb-1 text-gray-600 md:text-sm text-xs">{product.category.value.title}</span>
         )}
         <span className="block">{product.title}</span>
       </Link>
 
       {product.variants && product.variants.length > 0 && (
-        <div className="mt-3">
-          <Price price={product.variants[0].price} className="text-xl mr-2" />
+        <div className="md:mt-3 mt-2">
+          <Price price={product.variants[0].price} className="md:text-xl text-base mr-2 font-bold" />
           {product.variants[0].comparePrice && (
             <Price
               price={product.variants[0].comparePrice}
-              className="line-through text-gray-500"
+              className="line-through md:text-base text-sm text-gray-500"
             />
           )}
         </div>
       )}
       <div className="mt-3">
-        <AddToCart product={product} />
+        <AddToCart product={product} disableRemove />
       </div>
     </div>
   )

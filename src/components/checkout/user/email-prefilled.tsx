@@ -11,7 +11,7 @@ interface Props {
 
 export default function CheckoutUserEmailPrefilled({ email, onNewEmail, isLoggedIn }: Props) {
   const nonLoggedInText = (
-    <p className="mt-3 text-sm text-gray-500">
+    <p className="mt-3 text-sm text-gray-500 leading-8">
       Not your email?{' '}
       <Button
         small
@@ -34,7 +34,7 @@ export default function CheckoutUserEmailPrefilled({ email, onNewEmail, isLogged
   )
 
   const loggedInText = (
-    <p className="mt-3 text-sm text-gray-500">
+    <p className="mt-3 text-sm text-gray-500 leading-8">
       Not You?{' '}
       <Link href="/logout">
         <Button small isSecondary className="inline-flex" type="button">
