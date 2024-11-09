@@ -6,6 +6,7 @@ import { redirect } from 'next/navigation'
 import { getOrderPayments } from '@/features/razorpay/api'
 import { RazorpayPaymentStatus } from '@/features/razorpay/types/payment'
 import type { PayloadRequest } from 'payload'
+import { sendOrderSummaryEmail } from '@/features/server/auth/order-summary-email'
 
 // Verify if current pending order's payment done
 export async function GET() {
@@ -28,7 +29,7 @@ export async function GET() {
   const payload = await getPayloadHMR({ config })
   const transactionID = await payload.db.beginTransaction()
   const req = { transactionID: transactionID || undefined } as PayloadRequest
-  await payload.update({
+  const updatedOrder = await payload.update({
     collection: 'orders',
     data: { razorpay: { paymentId: capturedPayment.id } },
     id: order.id,
@@ -41,6 +42,10 @@ export async function GET() {
     id: customer.id,
     req,
   })
+
+  // Send order summary email to customer and admin
+  await sendOrderSummaryEmail(customer.email, updatedOrder)
+  await sendOrderSummaryEmail(process.env.NEXT_ADMIN_EMAIL!, updatedOrder)
 
   // DB Operations Completed
   if (req.transactionID) {

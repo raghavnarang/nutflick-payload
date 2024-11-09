@@ -1,5 +1,5 @@
 import { CurrencyPosition } from '@/shared/types/currency'
-import { hasDecimal } from '@/utils/misc'
+import { getFormattedPrice, hasDecimal } from '@/utils/misc'
 import cx from 'clsx'
 import type { FC } from 'react'
 
@@ -19,9 +19,7 @@ const Price: FC<PriceProps> = ({
   negative = false,
 }) => (
   <span className={cx('whitespace-nowrap', className)}>
-    {`${negative ? '- ' : ''}${currencyPosition === CurrencyPosition.Left ? currency : ''}${
-      hasDecimal(price) ? price.toFixed(2) : price
-    }${currencyPosition === CurrencyPosition.Right ? currency : ''}`}
+    {getFormattedPrice(price, negative, currency, currencyPosition)}
   </span>
 )
 

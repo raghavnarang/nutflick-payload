@@ -7,6 +7,7 @@ import { getPayloadHMR } from '@payloadcms/next/utilities'
 import config from '@payload-config'
 import { redirect } from 'next/navigation'
 import type { PayloadRequest } from 'payload'
+import { sendOrderSummaryEmail } from '@/features/server/auth/order-summary-email'
 
 export async function POST(request: NextRequest) {
   const rzpParams = zfd
@@ -41,7 +42,7 @@ export async function POST(request: NextRequest) {
   const transactionID = await payload.db.beginTransaction()
   const req = { transactionID: transactionID || undefined } as PayloadRequest
 
-  await payload.update({
+  const updatedOrder = await payload.update({
     collection: 'orders',
     data: {
       razorpay: {
@@ -59,6 +60,10 @@ export async function POST(request: NextRequest) {
     id: customer.id,
     req,
   })
+
+  // Send order summary email to customer and admin
+  await sendOrderSummaryEmail(customer.email, updatedOrder)
+  await sendOrderSummaryEmail(process.env.NEXT_ADMIN_EMAIL!, updatedOrder)
 
   // DB Operations Completed
   if (req.transactionID) {

@@ -24,8 +24,7 @@ export const metadata = {
 }
 
 const navItems: NavProps['items'] = [
-  { text: 'About Us', link: '/about' },
-  { text: 'Contact Us', link: '/contact' },
+  { text: 'Home', link: '/' },
   {
     text: 'My Account',
     link: '/account',
