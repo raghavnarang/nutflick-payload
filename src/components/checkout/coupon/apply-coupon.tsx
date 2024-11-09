@@ -26,17 +26,18 @@ const CheckoutApplyCoupon: FC<CheckoutApplyCouponProps> = ({ coupon, onSuccess, 
     const couponToApply = shouldApplyProp ? coupon?.coupon : text
     if (!couponToApply) {
       addToast('Empty coupon is not allowed', 'error')
+      setText('')
       return
     }
 
     startTransition(async () => {
-      console.log(guestEmail, couponToApply)
       const fetchedCoupon = await getApplicableCoupon(couponToApply, guestEmail)
       if (!fetchedCoupon) {
         addToast(
           `Coupon is not usable right now or is invalid: ${couponToApply.toUpperCase()}`,
           'error',
         )
+        setText('')
         return
       }
 
@@ -49,6 +50,7 @@ const CheckoutApplyCoupon: FC<CheckoutApplyCouponProps> = ({ coupon, onSuccess, 
           </span>,
           'info',
         )
+        setText('')
       } else if (fetchedCoupon) {
         onSuccess?.(fetchedCoupon)
       }
