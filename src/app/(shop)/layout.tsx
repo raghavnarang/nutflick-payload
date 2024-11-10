@@ -34,6 +34,16 @@ const navItems: NavProps['items'] = [
   <CartNavItem />,
 ]
 
+const mobileNavItems = [
+  ...navItems,
+  { text: 'Privacy Policy', link: '/page/privacy-policy' },
+  { text: 'Terms & Conditions', link: '/page/tnc' },
+  {
+    text: 'Refund/Cancelation Policy',
+    link: '/page/refund-and-cancellation-policy',
+  },
+]
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
@@ -41,7 +51,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <CartProvider>
           <GlobalWrapper>
             <div>
-              <Header navItems={navItems} mobileSideNavItems={navItems} />
+              <Header navItems={navItems} mobileSideNavItems={mobileNavItems} />
               <Body>{children}</Body>
             </div>
             <Footer />

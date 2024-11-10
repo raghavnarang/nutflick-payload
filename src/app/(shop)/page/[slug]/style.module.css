@@ -1,0 +1,127 @@
+/* Body container */
+.body {
+  font-family: Arial, sans-serif;
+  color: #333;
+  line-height: 1.6;
+}
+
+/* Headings */
+.body h3, .body h4 {
+  font-weight: bold;
+}
+
+.body h3 {
+  font-size: 1.4em;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+.body h4 {
+  font-size: 1.2em;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+/* Paragraphs */
+.body p {
+  margin-bottom: 15px;
+}
+
+/* Bold Text */
+.body strong {
+  font-weight: bold;
+  color: #333;
+}
+
+/* Links */
+.body a {
+  color: #0056b3;
+  text-decoration: none;
+}
+
+.body a:hover {
+  text-decoration: underline;
+}
+
+/* Bullet List */
+.body ul.list-bullet {
+  list-style-type: disc;
+  padding-left: 20px;
+  margin-bottom: 20px;
+}
+
+.body ul.list-bullet li {
+  margin-bottom: 10px;
+}
+
+/* Special Links for Contact Information */
+.body a[href^="tel"], .body a[href^="mailto"] {
+  color: #0056b3;
+  font-weight: bold;
+}
+
+.body a[href^="tel"]:hover, .body a[href^="mailto"]:hover {
+  text-decoration: underline;
+}
+
+/* Unordered List */
+.body ul {
+    list-style-type: disc; /* Default bullet style for unordered lists */
+    padding-left: 20px; /* Indent for better readability */
+    margin-bottom: 20px; /* Space below the list */
+  }
+  
+  .body ul.list-bullet {
+    list-style-type: disc;
+    margin-bottom: 20px;
+  }
+  
+  .body ul.list-bullet li {
+    margin-bottom: 10px; /* Spacing between list items */
+  }
+  
+  /* Ordered List */
+  .body ol {
+    list-style-type: decimal; /* Default numbered style for ordered lists */
+    padding-left: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .body ol.list-numbered {
+    list-style-type: decimal;
+    margin-bottom: 20px;
+  }
+  
+  .body ol.list-numbered li {
+    margin-bottom: 10px; /* Space between list items */
+  }
+  
+  /* List Item Styling */
+  .body li {
+    color: #333; /* Primary text color */
+    line-height: 1.6; /* Better readability */
+    padding-left: 5px; /* Minor indent for text alignment */
+    margin-left: 10px; /* Align bullet/number closer to text */
+  }
+  
+  .body li strong {
+    font-weight: bold;
+    color: #333;
+  }
+  
+  /* Nested Lists */
+  .body ul ul,
+  .body ol ol,
+  .body ul ol,
+  .body ol ul {
+    margin-top: 10px; /* Space between nested lists */
+    margin-bottom: 10px;
+    padding-left: 15px; /* Extra indentation for nested lists */
+    list-style-type: circle; /* Change nested list style */
+  }
+  
+  .body ol li::marker {
+    font-weight: bold;
+    color: #0056b3; /* Different color for ordered list markers */
+  }
+  

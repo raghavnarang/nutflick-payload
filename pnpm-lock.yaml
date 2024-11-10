@@ -77,7 +77,7 @@ importers:
         version: 2.0.2(zod@3.23.8)
       zustand:
         specifier: ^4.5.5
-        version: 4.5.5(react@19.0.0-rc-65a56d0e-20241020)(types-react@19.0.0-rc.0)
+        version: 4.5.5(immer@9.0.21)(react@19.0.0-rc-65a56d0e-20241020)(types-react@19.0.0-rc.0)
     devDependencies:
       '@types/jsonwebtoken':
         specifier: ^9.0.7
@@ -2621,6 +2621,9 @@ packages:
     resolution: {integrity: sha512-541xKlUw6jr/6gGuk92F+mYM5zaFAc5ahphvkqvNe2bQ6gVBkd6bfrmVJ2t4KDAfikAYZyIqTnktX3i6/aQDrQ==}
     engines: {node: '>=16.x'}
     hasBin: true
+
+  immer@9.0.21:
+    resolution: {integrity: sha512-bc4NBHqOqSfRW7POMkHd51LvClaeMXpm8dx0e8oE2GORbq5aRK7Bxl4FyzVLdGtLmvLKL7BTDBG5ACQm4HWjTA==}
 
   immutable@4.3.7:
     resolution: {integrity: sha512-1hqclzwYwjRDFLjcFxOM5AYkkG0rpFPpr1RLPMEuGczoS7YA8gLhy8SWXYRAA/XwfEHpfo3cw5JGioS32fnMRw==}
@@ -7412,6 +7415,9 @@ snapshots:
     dependencies:
       queue: 6.0.2
 
+  immer@9.0.21:
+    optional: true
+
   immutable@4.3.7: {}
 
   import-fresh@3.3.0:
@@ -8998,9 +9004,10 @@ snapshots:
 
   zod@3.23.8: {}
 
-  zustand@4.5.5(react@19.0.0-rc-65a56d0e-20241020)(types-react@19.0.0-rc.0):
+  zustand@4.5.5(immer@9.0.21)(react@19.0.0-rc-65a56d0e-20241020)(types-react@19.0.0-rc.0):
     dependencies:
       use-sync-external-store: 1.2.2(react@19.0.0-rc-65a56d0e-20241020)
     optionalDependencies:
       '@types/react': types-react@19.0.0-rc.0
+      immer: 9.0.21
       react: 19.0.0-rc-65a56d0e-20241020

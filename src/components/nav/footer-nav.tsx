@@ -2,11 +2,11 @@ import Nav from "./nav";
 
 const FooterNav = async () => {
   const navItems = [
-    { text: "Privacy Policy", link: "/privacy-policy" },
-    { text: "Terms & Conditions", link: "/tnc" },
+    { text: "Privacy Policy", link: "/page/privacy-policy" },
+    { text: "Terms & Conditions", link: "/page/tnc" },
     {
       text: "Refund/Cancelation Policy",
-      link: "/refund-cancel-policy",
+      link: "/page/refund-and-cancellation-policy",
     },
   ];
 

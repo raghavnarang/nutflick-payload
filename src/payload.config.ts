@@ -16,6 +16,7 @@ import ShippingOptions from './globals/shipping'
 import { Coupons } from './collections/Coupons'
 import { Orders } from './collections/Orders'
 import { nodemailerAdapter } from '@payloadcms/email-nodemailer'
+import { Pages } from './collections/Pages'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -32,7 +33,7 @@ export default buildConfig({
       prefillOnly: true,
     },
   },
-  collections: [Users, Media, Products, Categories, Customers, Addresses, Coupons, Orders],
+  collections: [Users, Media, Products, Categories, Customers, Addresses, Coupons, Orders, Pages],
   globals: [ShippingOptions],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
