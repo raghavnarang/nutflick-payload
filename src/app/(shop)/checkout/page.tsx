@@ -13,7 +13,7 @@ const CheckoutPage = async () => {
   return (
     <div className="flex justify-center">
       <div className="max-w-7xl w-full">
-        <h1 className="text-2xl mb-10">Checkout</h1>
+        <h1 className="text-2xl md:mb-10 mb-5">Checkout</h1>
         <CheckoutForm>
           <div className="flex justify-center items-start lg:flex-row flex-col lg:gap-10">
             <div className="lg:w-1/2 w-full">

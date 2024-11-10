@@ -8,7 +8,9 @@ import { CartProvider } from '@/features/cart/cart-store/provider'
 import VariantSelectorModal from '@/components/cart/variant-selector/modal'
 import CartNavItem from '@/components/nav/cart-nav-item'
 import ToastContainer from '@/features/toast/components/toast-container'
-import MobileQuickActions from '@/components/quick-actions/mobile'
+import clsx from 'clsx'
+import FooterQuickActions from '@/components/quick-actions/footer'
+import GlobalWrapper from '@/components/global-wrapper'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -35,9 +37,9 @@ const navItems: NavProps['items'] = [
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={clsx(inter.className, 'text-gray-700')}>
         <CartProvider>
-          <div className="flex flex-col justify-between min-h-screen px-3 pb-14 md:pb-0">
+          <GlobalWrapper>
             <div>
               <Header navItems={navItems} mobileSideNavItems={navItems} />
               <Body>{children}</Body>
@@ -45,8 +47,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <Footer />
             <VariantSelectorModal />
             <ToastContainer />
-            <MobileQuickActions />
-          </div>
+            <FooterQuickActions />
+          </GlobalWrapper>
         </CartProvider>
       </body>
     </html>

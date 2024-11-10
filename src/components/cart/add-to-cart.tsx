@@ -13,10 +13,17 @@ export interface AddToCartProps {
   product: Product
   showIcon?: boolean
   bigButton?: boolean
+  normalButton?: boolean
   disableRemove?: boolean
 }
 
-const AddToCart: FC<AddToCartProps> = ({ product, bigButton, showIcon, disableRemove }) => {
+const AddToCart: FC<AddToCartProps> = ({
+  product,
+  bigButton,
+  normalButton,
+  showIcon,
+  disableRemove,
+}) => {
   const { cart, increment } = useCartStore((state) => state)
   const setVariantSelectorProduct = useCartVariantSelectorStore((state) => state.setProduct)
 
@@ -60,7 +67,7 @@ const AddToCart: FC<AddToCartProps> = ({ product, bigButton, showIcon, disableRe
         className={cx({ 'xl:w-1/2': bigButton })}
         icon={showIcon ? Cart : undefined}
         large={bigButton}
-        small={!bigButton}
+        small={!bigButton && !normalButton}
         onClick={addToCartClickHandler}
       >
         Add to Cart

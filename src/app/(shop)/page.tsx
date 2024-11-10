@@ -24,10 +24,10 @@ const Home = async () => {
       <h1
         className={clsx(
           headingFont.className,
-          'text-4xl leading-normal md:max-w-full max-w-xs mb-8',
+          'text-4xl leading-normal md:max-w-full mb-10 md:mt-0 mt-5',
         )}
       >
-        Taste the Nutty Goodness with <b>Nutflick</b> 😋
+        Taste the <span className='block md:inline'>Nutty Goodness ✨</span>
       </h1>
       <ProductGrid products={products} />
       <SyncCart products={products} />

@@ -26,14 +26,8 @@ export const Products: CollectionConfig = {
               name: 'slug',
               type: 'text',
               index: true,
-              admin: {
-                readOnly: true,
-                position: 'sidebar',
-              },
+              required: true,
               unique: true,
-              hooks: {
-                beforeValidate: [formatSlug('title')],
-              },
             },
             {
               name: 'title',
@@ -43,6 +37,12 @@ export const Products: CollectionConfig = {
             { name: 'description', type: 'textarea', required: true },
             { name: 'category', type: 'relationship', relationTo: ['categories'] },
             { name: 'image', type: 'upload', relationTo: 'media', admin: { position: 'sidebar' } },
+            {
+              name: 'bigImage',
+              type: 'upload',
+              relationTo: 'media',
+              admin: { position: 'sidebar' },
+            },
           ],
         },
         {
@@ -87,6 +87,7 @@ export const Products: CollectionConfig = {
                   type: 'upload',
                   relationTo: 'media',
                 },
+                { name: 'bigImage', type: 'upload', relationTo: 'media' },
               ],
               labels: {
                 singular: 'Variant',

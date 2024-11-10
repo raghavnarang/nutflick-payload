@@ -44,8 +44,8 @@ export async function GET() {
   })
 
   // Send order summary email to customer and admin
-  await sendOrderSummaryEmail(customer.email, updatedOrder)
-  await sendOrderSummaryEmail(process.env.NEXT_ADMIN_EMAIL!, updatedOrder)
+  sendOrderSummaryEmail(customer.email, updatedOrder)
+  sendOrderSummaryEmail(process.env.NEXT_ADMIN_EMAIL!, updatedOrder)
 
   // DB Operations Completed
   if (req.transactionID) {

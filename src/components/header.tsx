@@ -17,8 +17,8 @@ const Header: FC<HeaderProps> = ({
   mobileSideNavItems,
   navItems,
 }) => (
-  <header className="flex justify-center mb-10">
-    <div className="container py-5 flex justify-between border-b border-solid border-gray-300">
+  <header className="flex justify-center md:mb-10">
+    <div className="container py-5 flex justify-between md:border-b border-solid border-gray-300">
       <div className="flex items-center">
         {mobileSideNavItems && <MobileNav items={mobileSideNavItems} />}
         <Link href="/">

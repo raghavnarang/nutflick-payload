@@ -117,7 +117,7 @@ export interface Media {
  */
 export interface Product {
   id: number;
-  slug?: string | null;
+  slug: string;
   title: string;
   description: string;
   category?: {
@@ -125,6 +125,7 @@ export interface Product {
     value: number | Category;
   } | null;
   image?: (number | null) | Media;
+  bigImage?: (number | null) | Media;
   variants?:
     | {
         title: string;
@@ -134,6 +135,7 @@ export interface Product {
         includedShippingCost?: number | null;
         slug?: string | null;
         image?: (number | null) | Media;
+        bigImage?: (number | null) | Media;
         id?: string | null;
       }[]
     | null;

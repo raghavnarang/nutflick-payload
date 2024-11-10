@@ -1,9 +1,9 @@
 import CartNavItem from '../nav/cart-nav-item'
 
-export default function CartQuickAction({ onlyIcon }: { onlyIcon?: boolean }) {
+export default function CartQuickAction(props: { hideIcon?: boolean; hideText?: boolean }) {
   return (
-    <div className="h-14 flex items-center justify-center px-4">
-      <CartNavItem onlyIcon={onlyIcon} />
+    <div className="h-14 flex items-center justify-center">
+      <CartNavItem {...props} />
     </div>
   )
 }

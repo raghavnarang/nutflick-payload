@@ -7,9 +7,10 @@ interface VariantModalProps {
   close?: () => void
   title: string
   children?: ReactNode
+  footer?: ReactNode
 }
 
-export function Modal({ close, children, title }: VariantModalProps) {
+export function Modal({ close, children, title, footer }: VariantModalProps) {
   const modalRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -36,7 +37,10 @@ export function Modal({ close, children, title }: VariantModalProps) {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-end md:items-center justify-center z-50">
-      <div ref={modalRef} className="bg-white w-full md:w-auto md:min-w-[500px] md:max-w-xl md:rounded-lg shadow-xl max-h-[90vh] overflow-hidden">
+      <div
+        ref={modalRef}
+        className="bg-white w-full md:w-auto md:min-w-[500px] md:max-w-xl md:rounded-lg shadow-xl max-h-[90vh] overflow-hidden"
+      >
         <div className="p-4 border-b border-gray-200 flex items-center justify-between">
           <h2 className="text-lg font-medium text-gray-900">{title}</h2>
           <button onClick={() => close?.()} className="text-gray-400 hover:text-gray-600">
@@ -53,6 +57,7 @@ export function Modal({ close, children, title }: VariantModalProps) {
         <div className="py-2 md:py-4 px-4 md:px-6 max-h-[calc(90vh-80px)] overflow-y-auto">
           {children}
         </div>
+        {footer}
       </div>
     </div>
   )

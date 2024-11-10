@@ -8,6 +8,8 @@ import BigMessage from '@/components/big-message'
 import Sad from '@/components/Icons/sad'
 import Photo from '@/components/Icons/photo'
 import { getProductBySlug, getProducts } from '@/features/server/product'
+import Price from '@/components/product/price'
+import GoToCart from '@/components/product/go-to-cart'
 
 interface ProductProps {
   params: Promise<{ slug: [productSlug: string, variantSlug?: string] }>
@@ -34,33 +36,28 @@ const Product: FC<ProductProps> = async ({ params }) => {
       )) ||
     product.variants![0]
 
-  const image = variant.image || product.image
+  const image = variant.bigImage || product.bigImage || variant.image || product.image
 
   return (
     <div>
-      <div className="w-full flex gap-10 flex-col md:flex-row">
-        <div className="w-full md:w-1/2 flex justify-center md:justify-end">
-          <div className="md:size-96 sm:h-96 w-full h-64 max-w-full relative">
-            {typeof image != 'number' && image && image.url ? (
-              <Image
-                src={image.url}
-                fill
-                alt={image.alt || `${product.title} - ${variant.title}`}
-                className="object-cover rounded-lg z-0 max-w-screen-sm"
-              />
-            ) : (
-              <div className="w-full bg-gray-200 rounded-lg h-full flex justify-center items-center">
-                <Photo className="!size-10 text-gray-400" />
-              </div>
-            )}
-          </div>
+      <div className="w-full flex md:gap-10 gap-4 flex-col md:flex-row items-center">
+        <div className="w-full md:w-1/2 md:h-[80vh] h-[50vh] flex justify-center bg-gray-100 relative">
+          {typeof image != 'number' && image && image.url ? (
+            <Image
+              src={image.url}
+              fill
+              alt={image.alt || `${product.title} - ${variant.title}`}
+              className="object-contain rounded-lg z-0 p-10"
+            />
+          ) : (
+            <div className="w-full bg-gray-200 rounded-lg h-full flex justify-center items-center">
+              <Photo className="!size-10 text-gray-400" />
+            </div>
+          )}
         </div>
-        <div className="w-full md:w-1/2 lg:w-1/3">
-          <h1 className="text-3xl mb-5">{product.title}</h1>
-          <p className="text-gray-700 mb-5">{product.description}</p>
-
-          <div>
-            <p className="text-lg mb-3">Size</p>
+        <div className="w-full md:w-1/2">
+          <h1 className="md:text-3xl text-xl mb-5 !leading-relaxed">{product.title}</h1>
+          <div className="mb-5">
             {product.variants?.map((v) => {
               const isSelected = v.slug?.toLowerCase() === variant.slug?.toLowerCase()
 
@@ -85,8 +82,17 @@ const Product: FC<ProductProps> = async ({ params }) => {
               )
             })}
           </div>
-          <div className="mt-10">
-            <AddToCart bigButton product={{ ...product, variants: [variant] }} />
+
+          <p className="text-gray-700 mb-5 leading-loose">{product.description}</p>
+          <div className="flex md:flex-col md:justify-normal justify-between items-center md:items-start z-10 md:gap-5 md:relative fixed md:bottom-auto md:left-auto md:right-auto bottom-14 left-0 right-0 px-5 md:px-0 h-14 md:h-auto border-gray-300 border-t md:border-none bg-white md:bg-transparent">
+            <div className="flex items-center gap-2">
+              <Price price={variant.price} className="font-bold text-xl" />
+              {variant.comparePrice && (
+                <Price price={variant.comparePrice} className="line-through" />
+              )}
+            </div>
+            <AddToCart product={{ ...product, variants: [variant] }} normalButton disableRemove />
+            <GoToCart variantId={variant.id || undefined} className="md:block hidden" />
           </div>
         </div>
       </div>

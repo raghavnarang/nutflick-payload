@@ -1,10 +1,11 @@
 import Image from 'next/image'
-import { Suspense, type FC } from 'react'
+import { type FC } from 'react'
 import Price from './price'
 import Link from 'next/link'
 import Photo from '../Icons/photo'
 import AddToCart from '../cart/add-to-cart'
 import type { Product } from '@/payload-types'
+import GoToCart from './go-to-cart'
 
 interface ProductItemProps {
   product: Product
@@ -15,13 +16,16 @@ const ProductItem: FC<ProductItemProps> = ({ product }) => {
 
   return (
     <div className="w-full">
-      <Link href={link} className="w-full 2xl:h-72 xl:h-60 sm:h-52 md:h-72 h-36 relative mb-5 block">
+      <Link
+        href={link}
+        className="w-full 2xl:h-64 xl:h-60 sm:h-52 md:h-72 h-36 relative mb-5 block"
+      >
         {typeof product.image != 'number' && product.image && product.image.url ? (
           <Image
             src={product.image.url}
             alt={product.image.alt || product.title}
             fill
-            className="object-cover rounded-lg z-0"
+            className="object-contain rounded-lg z-0"
           />
         ) : (
           <div className="w-full bg-gray-200 rounded-lg h-full flex justify-center items-center">
@@ -32,14 +36,19 @@ const ProductItem: FC<ProductItemProps> = ({ product }) => {
 
       <Link href={link}>
         {product.category && typeof product.category.value !== 'number' && (
-          <span className="block mb-1 text-gray-600 md:text-sm text-xs">{product.category.value.title}</span>
+          <span className="block mb-1 text-gray-600 md:text-sm text-xs">
+            {product.category.value.title}
+          </span>
         )}
         <span className="block">{product.title}</span>
       </Link>
 
       {product.variants && product.variants.length > 0 && (
         <div className="md:mt-3 mt-2">
-          <Price price={product.variants[0].price} className="md:text-xl text-base mr-2 font-bold" />
+          <Price
+            price={product.variants[0].price}
+            className="md:text-xl text-base mr-2 font-bold"
+          />
           {product.variants[0].comparePrice && (
             <Price
               price={product.variants[0].comparePrice}
@@ -48,8 +57,9 @@ const ProductItem: FC<ProductItemProps> = ({ product }) => {
           )}
         </div>
       )}
-      <div className="mt-3">
+      <div className="mt-3 flex justify-between items-start">
         <AddToCart product={product} disableRemove />
+        <GoToCart product={product} className="hidden md:block" />
       </div>
     </div>
   )

@@ -11,7 +11,7 @@ export default function QuickActionsContainer({ className, columns, children }: 
   return (
     <div
       className={clsx(
-        `border-t h-14 border-solid border-gray-100 bg-white grid`,
+        `border-t h-14 border-solid border-gray-300 bg-white grid`,
         {
           'grid-cols-2': columns === 2,
           'grid-cols-3': !columns || columns === 3,

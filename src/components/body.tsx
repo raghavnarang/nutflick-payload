@@ -8,7 +8,7 @@ interface BodyProps {
 
 const Body: FC<BodyProps> = ({ children, className }) => (
   <div className={cx('flex justify-center', className)}>
-    <div className="container">{children}</div>
+    <div className="container relative">{children}</div>
   </div>
 )
 
