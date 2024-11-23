@@ -1,13 +1,13 @@
 import 'server-only'
 import { headers } from 'next/headers'
-import { getPayloadHMR } from '@payloadcms/next/utilities'
+import { getPayload } from 'payload'
 import config from '@payload-config'
 import { cache } from 'react'
 import { redirect, RedirectType } from 'next/navigation'
 import { getCurrentGuestOrCustomer } from './customer'
 
 export const getMeUser = cache(async () => {
-  const payload = await getPayloadHMR({ config })
+  const payload = await getPayload({ config })
   const { user } = await payload.auth({ headers: await headers() })
 
   return user

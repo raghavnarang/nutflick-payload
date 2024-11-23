@@ -1,6 +1,6 @@
 import 'server-only'
 import { NextRequest } from 'next/server'
-import { getPayloadHMR } from '@payloadcms/next/utilities'
+import { getPayload } from 'payload'
 import config from '@payload-config'
 import { redirect } from 'next/navigation'
 import { createExpiredCookie, getCurrentGuestOrCustomer } from '@/features/server/auth/customer'
@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
     redirect(`/shop-error?message=No logged in user found`)
   }
 
-  const payload = await getPayloadHMR({ config })
+  const payload = await getPayload({ config })
   await createExpiredCookie(payload)
 
   const searchParams = request.nextUrl.searchParams

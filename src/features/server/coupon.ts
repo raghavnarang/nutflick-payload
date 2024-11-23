@@ -1,5 +1,5 @@
 import 'server-only'
-import { getPayloadHMR } from '@payloadcms/next/utilities'
+import { getPayload } from 'payload'
 import config from '@payload-config'
 import { z } from 'zod'
 import { getCurrentGuestOrCustomer, getCustomerByEmail } from './auth/customer'
@@ -36,7 +36,7 @@ export async function getCouponsForCustomer({
     }
   }
 
-  const payload = await getPayloadHMR({ config })
+  const payload = await getPayload({ config })
   const couponsDb = payload.db.tables['coupons']
   const ordersDb = payload.db.tables['orders']
   const db = payload.db.drizzle

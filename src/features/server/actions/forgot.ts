@@ -1,7 +1,7 @@
 'use server'
 
 import 'server-only'
-import { getPayloadHMR } from '@payloadcms/next/utilities'
+import { getPayload } from 'payload'
 import config from '@payload-config'
 import { zfd } from 'zod-form-data'
 import { z } from 'zod'
@@ -16,7 +16,7 @@ export async function forgotPassword(data: FormData) {
 
   const { email } = zfd.formData({ email: zfd.text(z.string().email()) }).parse(data)
 
-  const payload = await getPayloadHMR({ config })
+  const payload = await getPayload({ config })
   await payload.forgotPassword({ collection: 'customers', data: { email } })
 
   return ServerResponse('Please check your inbox for reset password email', 'success')
@@ -36,7 +36,7 @@ export async function resetPassword(data: FormData) {
     return ServerResponse('Passwords are not same', 'error')
   }
 
-  const payload = await getPayloadHMR({ config })
+  const payload = await getPayload({ config })
   try {
     await payload.resetPassword({
       collection: 'customers',

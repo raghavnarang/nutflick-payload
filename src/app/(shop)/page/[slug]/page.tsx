@@ -1,4 +1,4 @@
-import { getPayloadHMR } from '@payloadcms/next/utilities'
+import { getPayload } from 'payload'
 import config from '@payload-config'
 import { notFound } from 'next/navigation'
 import styles from './style.module.css'
@@ -9,7 +9,7 @@ interface PageProps {
 
 export default async function Page({ params }: PageProps) {
   const { slug } = await params
-  const payload = await getPayloadHMR({ config })
+  const payload = await getPayload({ config })
   const { docs } = await payload.find({ collection: 'pages', where: { slug: { equals: slug } } })
   if (docs.length === 0 || !docs[0].content_html) {
     notFound()

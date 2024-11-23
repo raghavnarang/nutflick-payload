@@ -1,5 +1,5 @@
 import { redirectIfUnauthenticated } from '@/features/server/auth/me'
-import { getPayloadHMR } from '@payloadcms/next/utilities'
+import { getPayload } from 'payload'
 import config from '@payload-config'
 import MyAccountHeader from '../header'
 import BigMessage from '@/components/big-message'
@@ -14,7 +14,7 @@ export default async function UserOrdersPage() {
     throw new Error('Customer data not available')
   }
 
-  const payload = await getPayloadHMR({ config })
+  const payload = await getPayload({ config })
   const { docs: orders } = await payload.find({
     collection: 'orders',
     pagination: false,

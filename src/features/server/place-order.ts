@@ -1,7 +1,7 @@
 import 'server-only'
 import { z } from 'zod'
 import { zfd } from 'zod-form-data'
-import { getPayloadHMR } from '@payloadcms/next/utilities'
+import { getPayload } from 'payload'
 import config from '@payload-config'
 import states from '@/features/states.json'
 import type { BasePayload, PayloadRequest } from 'payload'
@@ -73,7 +73,7 @@ export const placeOrder = async (checkout: PlaceGuestOrderArgs) => {
     }
   }
 
-  const payload = await getPayloadHMR({ config })
+  const payload = await getPayload({ config })
   const transactionID = await payload.db.beginTransaction()
   const req = { transactionID: transactionID || undefined } as PayloadRequest
 

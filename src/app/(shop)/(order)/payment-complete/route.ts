@@ -3,7 +3,7 @@ import { sha256 } from 'js-sha256'
 import { NextRequest } from 'next/server'
 import { zfd } from 'zod-form-data'
 import { getCurrentGuestOrCustomer } from '@/features/server/auth/customer'
-import { getPayloadHMR } from '@payloadcms/next/utilities'
+import { getPayload } from 'payload'
 import config from '@payload-config'
 import { redirect } from 'next/navigation'
 import type { PayloadRequest } from 'payload'
@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
     redirect(`/shop-error?message=Payment data is invalid`)
   }
 
-  const payload = await getPayloadHMR({ config })
+  const payload = await getPayload({ config })
   const transactionID = await payload.db.beginTransaction()
   const req = { transactionID: transactionID || undefined } as PayloadRequest
 

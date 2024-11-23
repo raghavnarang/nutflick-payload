@@ -1,4 +1,4 @@
-import { getPayloadHMR } from '@payloadcms/next/utilities'
+import { getPayload } from 'payload'
 import config from '@payload-config'
 import { getPaymentStatus } from '@/features/razorpay/api'
 import BigMessage from '@/components/big-message'
@@ -22,7 +22,7 @@ const ErrorComponent = ({ message }: { message?: string }) => (
 
 export default async function OrderComplete({ params: paramsPromise }: OrderCompleteArgs) {
   const { order: orderId } = await paramsPromise
-  const payload = await getPayloadHMR({ config })
+  const payload = await getPayload({ config })
   const { customer } = await getCurrentGuestOrCustomer()
   const order = await payload.findByID({
     collection: 'orders',

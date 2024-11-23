@@ -1,6 +1,6 @@
 import 'server-only'
 import { z } from 'zod'
-import { getPayloadHMR } from '@payloadcms/next/utilities'
+import { getPayload } from 'payload'
 import config from '@payload-config'
 import { unstable_cache } from 'next/cache'
 
@@ -55,7 +55,7 @@ export const getOrderProductsFromCartItems = async (items: CartItem[]) => {
 
 export const getProducts = unstable_cache(
   async () => {
-    const payload = await getPayloadHMR({ config })
+    const payload = await getPayload({ config })
     const { docs } = await payload.find({ collection: 'products', pagination: false, depth: 1 })
     return docs
   },
@@ -73,7 +73,7 @@ const getProductsByIds = async (ids: number[]) => {
 
 export const getProduct = unstable_cache(
   async (id: number) => {
-    const payload = await getPayloadHMR({ config })
+    const payload = await getPayload({ config })
     return payload.findByID({ collection: 'products', id, depth: 1 })
   },
   ['products'],
@@ -82,7 +82,7 @@ export const getProduct = unstable_cache(
 
 export const getProductBySlug = unstable_cache(
   async (slug: string) => {
-    const payload = await getPayloadHMR({ config })
+    const payload = await getPayload({ config })
     const { docs } = await payload.find({
       collection: 'products',
       where: { slug: { equals: slug } },
@@ -98,7 +98,7 @@ export const getProductBySlug = unstable_cache(
 
 export const getRecommendedProducts = unstable_cache(
   async (categoryId: number, productId: number) => {
-    const payload = await getPayloadHMR({ config })
+    const payload = await getPayload({ config })
     const { docs } = await payload.find({
       collection: 'products',
       limit: 8,

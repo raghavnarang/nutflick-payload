@@ -1,5 +1,5 @@
 import { redirectIfUnauthenticated } from '@/features/server/auth/me'
-import { getPayloadHMR } from '@payloadcms/next/utilities'
+import { getPayload } from 'payload'
 import config from '@payload-config'
 import MyAccountHeader from '../../header'
 import MyAccountAddressForm from '../form'
@@ -16,7 +16,7 @@ export default async function UserEditAddressPage({
     throw new Error('Customer data not available')
   }
 
-  const payload = await getPayloadHMR({ config })
+  const payload = await getPayload({ config })
   const address = await payload.findByID({
     collection: 'addresses',
     id: addressId,

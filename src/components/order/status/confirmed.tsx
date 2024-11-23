@@ -1,12 +1,12 @@
 import { Tick } from '@/components/Icons'
 import type { Order, ShippingOption } from '@/payload-types'
-import { getPayloadHMR } from '@payloadcms/next/utilities'
+import { getPayload } from 'payload'
 import config from '@payload-config'
 
 export default async function OrderConfirmedStatus({ order }: { order: Order }) {
   const paymentIdText = order.razorpay?.paymentId ? `| Payment: ${order.razorpay.paymentId}` : ''
 
-  const payload = await getPayloadHMR({ config })
+  const payload = await getPayload({ config })
   let shipping: ShippingOption['option'][0] | undefined = undefined
   if (order.mode) {
     const options = await payload.findGlobal({ slug: 'shipping-options' })

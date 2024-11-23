@@ -2,7 +2,7 @@ import 'server-only'
 import { z } from 'zod'
 import { getCookieExpiration, type BasePayload, type PayloadRequest } from 'payload'
 import config from '@payload-config'
-import { getPayloadHMR } from '@payloadcms/next/utilities'
+import { getPayload } from 'payload'
 import { cookies } from 'next/headers'
 import jwt from 'jsonwebtoken'
 import { generateRandomPassword } from './utils'
@@ -14,7 +14,7 @@ const passwordSchema = z.string().min(5)
 
 export async function getCustomerByEmail(email: string) {
   const parsedEmail = emailSchema.parse(email)
-  const payload = await getPayloadHMR({ config })
+  const payload = await getPayload({ config })
   const { docs } = await payload.find({
     collection: 'customers',
     where: { email: { equals: parsedEmail } },
@@ -34,7 +34,7 @@ export const getOrCreateCustomer = async (
     return customer
   }
 
-  const payload = await getPayloadHMR({ config })
+  const payload = await getPayload({ config })
   const parsedEmail = emailSchema.parse(email)
   const parsedPass = passwordSchema.optional().parse(password)
   return payload.create({
@@ -49,7 +49,7 @@ export const getOrCreateCustomer = async (
 }
 
 const verifyUserToken = cache(async () => {
-  const payload = await getPayloadHMR({ config })
+  const payload = await getPayload({ config })
   const cookieStore = await cookies()
   const token = cookieStore.get(`${payload.config.cookiePrefix}-token`)?.value
   if (!token) {
@@ -62,7 +62,7 @@ const verifyUserToken = cache(async () => {
 export const getCurrentGuestOrCustomer = cache(async () => {
   const guest = await getTokenData()
   if (guest?.isGuest && guest.collection === 'customers') {
-    const payload = await getPayloadHMR({ config })
+    const payload = await getPayload({ config })
     const customer = await payload.findByID({
       collection: 'customers',
       id: guest.id,

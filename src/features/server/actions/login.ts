@@ -1,7 +1,7 @@
 'use server'
 
 import 'server-only'
-import { getPayloadHMR } from '@payloadcms/next/utilities'
+import { getPayload } from 'payload'
 import config from '@payload-config'
 import { z } from 'zod'
 import { zfd } from 'zod-form-data'
@@ -32,7 +32,7 @@ export default async function login(data: FormData) {
     })
     .parse(data)
 
-  const payload = await getPayloadHMR({ config })
+  const payload = await getPayload({ config })
 
   let token: string | undefined = undefined
   try {

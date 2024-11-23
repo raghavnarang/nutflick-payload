@@ -1,7 +1,7 @@
 'use server'
 
 import 'server-only'
-import { getPayloadHMR } from '@payloadcms/next/utilities'
+import { getPayload } from 'payload'
 import config from '@payload-config'
 import { zfd } from 'zod-form-data'
 import { z } from 'zod'
@@ -28,7 +28,7 @@ export async function register(data: FormData) {
     return ServerResponse('Passwords are not same', 'error')
   }
 
-  const payload = await getPayloadHMR({ config })
+  const payload = await getPayload({ config })
   const req = { transactionID: await payload.db.beginTransaction() } as PayloadRequest
 
   const { docs } = await payload.find({

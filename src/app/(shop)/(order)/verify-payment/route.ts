@@ -1,6 +1,6 @@
 import 'server-only'
 import { getCurrentGuestOrCustomer } from '@/features/server/auth/customer'
-import { getPayloadHMR } from '@payloadcms/next/utilities'
+import { getPayload } from 'payload'
 import config from '@payload-config'
 import { redirect } from 'next/navigation'
 import { getOrderPayments } from '@/features/razorpay/api'
@@ -26,7 +26,7 @@ export async function GET() {
     redirect(`/shop-error?message=No payment found for current pending order`)
   }
 
-  const payload = await getPayloadHMR({ config })
+  const payload = await getPayload({ config })
   const transactionID = await payload.db.beginTransaction()
   const req = { transactionID: transactionID || undefined } as PayloadRequest
   const updatedOrder = await payload.update({

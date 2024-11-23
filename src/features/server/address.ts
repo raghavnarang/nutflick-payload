@@ -1,12 +1,12 @@
 import 'server-only'
-import { getPayloadHMR } from '@payloadcms/next/utilities'
+import { getPayload } from 'payload'
 import config from '@payload-config'
 import type { Customer } from '@/payload-types'
 
 export async function getPreferredOrFirstAddress(
   customer: Omit<Customer, 'updatedAt' | 'createdAt'>,
 ) {
-  const payload = await getPayloadHMR({ config })
+  const payload = await getPayload({ config })
   const user = await payload.findByID({
     collection: 'customers',
     id: customer.id,
@@ -43,7 +43,7 @@ export async function getPreferredOrFirstAddress(
 }
 
 export async function getAddressesByCustomerId(customerId: number) {
-  const payload = await getPayloadHMR({ config })
+  const payload = await getPayload({ config })
   const { docs: addresses } = await payload.find({
     collection: 'addresses',
     where: { customer: { equals: customerId } },

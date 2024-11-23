@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { getPayloadHMR } from '@payloadcms/next/utilities'
+import { getPayload } from 'payload'
 import config from '@payload-config'
 import { Order } from '@/payload-types'
 import { getFormattedPrice } from '@/utils/misc'
@@ -7,7 +7,7 @@ import { getFormattedPrice } from '@/utils/misc'
 export async function sendOrderSummaryEmail(email: string, order: Order) {
   const parsedEmail = z.string().email().parse(email)
   const message = orderSummaryTemplate(order)
-  const payload = await getPayloadHMR({ config })
+  const payload = await getPayload({ config })
   await payload.sendEmail({
     from: `"${payload.email.defaultFromName}" <${payload.email.defaultFromAddress}>`,
     html: message,

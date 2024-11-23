@@ -4,7 +4,7 @@ import 'server-only'
 import { z } from 'zod'
 import { zfd } from 'zod-form-data'
 import states from '@/features/states.json'
-import { getPayloadHMR } from '@payloadcms/next/utilities'
+import { getPayload } from 'payload'
 import config from '@payload-config'
 import type { PayloadRequest } from 'payload'
 import { getMeUser } from '../auth/me'
@@ -36,7 +36,7 @@ export async function addAddress(formData: FormData) {
 
   const { is_preferred: isPreferred, ...address } = addressFormSchema.parse(formData)
 
-  const payload = await getPayloadHMR({ config })
+  const payload = await getPayload({ config })
   const transactionID = await payload.db.beginTransaction()
   const req = { transactionID: transactionID || undefined } as PayloadRequest
 
@@ -76,7 +76,7 @@ export async function editAddress(formData: FormData) {
     return ServerResponse('Unable to find address to be edited', 'error')
   }
 
-  const payload = await getPayloadHMR({ config })
+  const payload = await getPayload({ config })
   const transactionID = await payload.db.beginTransaction()
   const req = { transactionID: transactionID || undefined } as PayloadRequest
 
@@ -120,7 +120,7 @@ export async function deleteAddress(id: number) {
 
   const parsedId = z.number().parse(id)
 
-  const payload = await getPayloadHMR({ config })
+  const payload = await getPayload({ config })
   await payload.delete({
     collection: 'addresses',
     id: parsedId,

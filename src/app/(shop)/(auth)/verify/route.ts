@@ -1,6 +1,6 @@
 import 'server-only'
 import { NextRequest } from 'next/server'
-import { getPayloadHMR } from '@payloadcms/next/utilities'
+import { getPayload } from 'payload'
 import config from '@payload-config'
 import { redirect } from 'next/navigation'
 import { z } from 'zod'
@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
     redirect(`/shop-error?message=Invalid verification link`)
   }
 
-  const payload = await getPayloadHMR({ config })
+  const payload = await getPayload({ config })
   if (!(await payload.verifyEmail({ token, collection: 'customers' }))) {
     redirect(`/shop-error?message=Unable to verify`)
   }
