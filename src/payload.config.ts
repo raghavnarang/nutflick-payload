@@ -17,6 +17,8 @@ import { Coupons } from './collections/Coupons'
 import { Orders } from './collections/Orders'
 import { nodemailerAdapter } from '@payloadcms/email-nodemailer'
 import { Pages } from './collections/Pages'
+import { seoPlugin } from '@payloadcms/plugin-seo'
+import HomePageOptions from './globals/home'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -34,7 +36,7 @@ export default buildConfig({
     },
   },
   collections: [Users, Media, Products, Categories, Customers, Addresses, Coupons, Orders, Pages],
-  globals: [ShippingOptions],
+  globals: [ShippingOptions, HomePageOptions],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
@@ -47,7 +49,20 @@ export default buildConfig({
   }),
   sharp,
   plugins: [
-    // storage-adapter-placeholder
+    seoPlugin({
+      collections: ['pages', 'products'],
+      globals: ['home-page-options'],
+      uploadsCollection: 'media',
+      generateTitle: ({ doc, collectionSlug }) => {
+        console.log(doc)
+        if (collectionSlug === 'products') {
+          return `Buy ${doc.title} Online | Nutflick - Premium Quality`
+        }
+        return `${doc.title} | Nutflick`
+      },
+      generateDescription: ({ doc }) => doc.excerpt,
+      tabbedUI: true,
+    }),
   ],
   graphQL: { disable: true },
   email: nodemailerAdapter({

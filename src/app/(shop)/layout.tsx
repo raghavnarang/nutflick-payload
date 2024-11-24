@@ -15,10 +15,6 @@ import GlobalWrapper from '@/components/global-wrapper'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
-  title: {
-    default: 'Nutflick',
-    template: `%s | Nutflick`,
-  },
   robots: {
     follow: true,
     index: true,

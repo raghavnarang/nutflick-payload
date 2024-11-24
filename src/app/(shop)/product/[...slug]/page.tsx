@@ -11,7 +11,7 @@ import { getProductBySlug, getProducts } from '@/features/server/product'
 import Price from '@/components/product/price'
 import GoToCart from '@/components/product/go-to-cart'
 import getSchema from './schema'
-import type { Metadata, ResolvingMetadata } from 'next'
+import type { Metadata } from 'next'
 
 interface ProductProps {
   params: Promise<{ slug: [productSlug: string, variantSlug?: string] }>
@@ -37,17 +37,17 @@ async function getProductDataFromParams({ params }: ProductProps) {
   return { product, variant }
 }
 
-export async function generateMetadata(
-  { params }: ProductProps,
-  parent: ResolvingMetadata,
-): Promise<Metadata> {
+export async function generateMetadata({ params }: ProductProps): Promise<Metadata> {
   const data = await getProductDataFromParams({ params })
   if (!data) {
     return {}
   }
 
   const baseUrl = process.env.NEXT_PUBLIC_VERCEL_URL!
+  const fallbackTitle = `Buy ${data.product.title} Online | Nutflick - Premium Quality`
   return {
+    title: data.product.meta?.title || fallbackTitle,
+    description: data.product.meta?.description,
     alternates: {
       canonical: `${baseUrl}/product/${data.product.slug}`,
     },

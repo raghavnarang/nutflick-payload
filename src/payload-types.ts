@@ -45,9 +45,11 @@ export interface Config {
   };
   globals: {
     'shipping-options': ShippingOption;
+    'home-page-options': HomePageOption;
   };
   globalsSelect: {
     'shipping-options': ShippingOptionsSelect<false> | ShippingOptionsSelect<true>;
+    'home-page-options': HomePageOptionsSelect<false> | HomePageOptionsSelect<true>;
   };
   locale: null;
   user:
@@ -162,6 +164,11 @@ export interface Product {
         id?: string | null;
       }[]
     | null;
+  meta?: {
+    title?: string | null;
+    description?: string | null;
+    image?: (number | null) | Media;
+  };
   updatedAt: string;
   createdAt: string;
 }
@@ -370,6 +377,11 @@ export interface Page {
     [k: string]: unknown;
   } | null;
   content_html?: string | null;
+  meta?: {
+    title?: string | null;
+    description?: string | null;
+    image?: (number | null) | Media;
+  };
   updatedAt: string;
   createdAt: string;
 }
@@ -525,6 +537,15 @@ export interface ProductsSelect<T extends boolean = true> {
         bigImage?: T;
         id?: T;
       };
+  meta?:
+    | T
+    | {
+        overview?: T;
+        title?: T;
+        description?: T;
+        image?: T;
+        preview?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
 }
@@ -644,6 +665,15 @@ export interface PagesSelect<T extends boolean = true> {
   slug?: T;
   content?: T;
   content_html?: T;
+  meta?:
+    | T
+    | {
+        overview?: T;
+        title?: T;
+        description?: T;
+        image?: T;
+        preview?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
 }
@@ -696,6 +726,21 @@ export interface ShippingOption {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "home-page-options".
+ */
+export interface HomePageOption {
+  id: number;
+  headline: string;
+  meta?: {
+    title?: string | null;
+    description?: string | null;
+    image?: (number | null) | Media;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "shipping-options_select".
  */
 export interface ShippingOptionsSelect<T extends boolean = true> {
@@ -706,6 +751,25 @@ export interface ShippingOptionsSelect<T extends boolean = true> {
         rate?: T;
         days?: T;
         id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "home-page-options_select".
+ */
+export interface HomePageOptionsSelect<T extends boolean = true> {
+  headline?: T;
+  meta?:
+    | T
+    | {
+        overview?: T;
+        title?: T;
+        description?: T;
+        image?: T;
+        preview?: T;
       };
   updatedAt?: T;
   createdAt?: T;

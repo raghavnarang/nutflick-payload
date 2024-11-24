@@ -2,7 +2,7 @@ import { getPayload } from 'payload'
 import config from '@payload-config'
 import { notFound } from 'next/navigation'
 import styles from './style.module.css'
-import type { Metadata, ResolvingMetadata } from 'next'
+import type { Metadata } from 'next'
 
 interface PageProps {
   params: Promise<{ slug: string }>
@@ -19,17 +19,17 @@ async function getPageData({ params }: PageProps) {
   return docs[0]
 }
 
-export async function generateMetadata(
-  { params }: PageProps,
-  parent: ResolvingMetadata,
-): Promise<Metadata> {
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const data = await getPageData({ params })
   if (!data) {
     return {}
   }
 
   const baseUrl = process.env.NEXT_PUBLIC_VERCEL_URL!
+  const fallbackTitle = `${data.title} | Nutflick`
   return {
+    title: data.meta?.title || fallbackTitle,
+    description: data.meta?.description,
     alternates: {
       canonical: `${baseUrl}/page/${data.slug}`,
     },
