@@ -5,12 +5,17 @@ import clsx from 'clsx'
 import { Dancing_Script } from 'next/font/google'
 import type { OnlineStore, WithContext } from 'schema-dts'
 import logo from '@/public/logo.png'
+import { Metadata } from 'next'
 
-export const metadata = {
-  description:
-    "Elevate your snacking with Nutflick - India's top destination for premium dry fruits and nuts. Shop now for a taste of excellence!",
-  openGraph: {
-    type: 'website',
+const baseUrl = process.env.NEXT_PUBLIC_VERCEL_URL!
+export const metadata: Metadata = {
+  // description:
+  //   "Elevate your snacking with Nutflick - India's top destination for premium dry fruits and nuts. Shop now for a taste of excellence!",
+  // openGraph: {
+  //   type: 'website',
+  // },
+  alternates: {
+    canonical: baseUrl,
   },
 }
 
@@ -19,7 +24,6 @@ const headingFont = Dancing_Script({
   subsets: ['latin'],
 })
 
-const baseUrl = process.env.NEXT_PUBLIC_VERCEL_URL!
 const schema: WithContext<OnlineStore> = {
   '@context': 'https://schema.org',
   '@type': 'OnlineStore',

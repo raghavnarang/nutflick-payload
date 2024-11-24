@@ -11,23 +11,20 @@ import { getProductBySlug, getProducts } from '@/features/server/product'
 import Price from '@/components/product/price'
 import GoToCart from '@/components/product/go-to-cart'
 import getSchema from './schema'
+import type { Metadata, ResolvingMetadata } from 'next'
 
 interface ProductProps {
   params: Promise<{ slug: [productSlug: string, variantSlug?: string] }>
 }
 
-const Product: FC<ProductProps> = async ({ params }) => {
+async function getProductDataFromParams({ params }: ProductProps) {
   const {
     slug: [productSlug, variantSlug],
   } = await params
   const product = await getProductBySlug(productSlug)
 
   if (!product || product?.variants?.length === 0) {
-    return (
-      <BigMessage icon={Sad} button={{ text: <Link href="/">Go to Home</Link> }}>
-        Error in fetching product or Product is not valid
-      </BigMessage>
-    )
+    return false
   }
 
   const variant =
@@ -37,6 +34,37 @@ const Product: FC<ProductProps> = async ({ params }) => {
       )) ||
     product.variants![0]
 
+  return { product, variant }
+}
+
+export async function generateMetadata(
+  { params }: ProductProps,
+  parent: ResolvingMetadata,
+): Promise<Metadata> {
+  const data = await getProductDataFromParams({ params })
+  if (!data) {
+    return {}
+  }
+
+  const baseUrl = process.env.NEXT_PUBLIC_VERCEL_URL!
+  return {
+    alternates: {
+      canonical: `${baseUrl}/product/${data.product.slug}`,
+    },
+  }
+}
+
+const Product: FC<ProductProps> = async ({ params }) => {
+  const data = await getProductDataFromParams({ params })
+  if (!data) {
+    return (
+      <BigMessage icon={Sad} button={{ text: <Link href="/">Go to Home</Link> }}>
+        Error in fetching product or Product is not valid
+      </BigMessage>
+    )
+  }
+
+  const { product, variant } = data
   const image = variant.bigImage || product.bigImage || variant.image || product.image
 
   return (
