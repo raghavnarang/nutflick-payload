@@ -147,7 +147,7 @@ export interface Product {
     relationTo: 'categories';
     value: number | Category;
   } | null;
-  image?: (number | null) | Media;
+  image: number | Media;
   bigImage?: (number | null) | Media;
   variants?:
     | {
@@ -156,7 +156,7 @@ export interface Product {
         price: number;
         comparePrice?: number | null;
         includedShippingCost?: number | null;
-        slug?: string | null;
+        slug: string;
         image?: (number | null) | Media;
         bigImage?: (number | null) | Media;
         id?: string | null;

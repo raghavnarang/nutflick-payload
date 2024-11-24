@@ -1,5 +1,6 @@
 import type { Product } from '@/payload-types'
 import type { CartItem } from '@/shared/types/cart'
+import { getProductVariantTitle } from '@/utils/product'
 
 export const generateCartItem = (
   product: Product,
@@ -17,7 +18,7 @@ export const generateCartItem = (
   return {
     productId: product.id,
     variantId: variantId,
-    title: `${product.title} - ${variant.title}`,
+    title: getProductVariantTitle(product, variant),
     image: variantImage || productImage || undefined,
     qty: qty || 1,
     price: variant.price,

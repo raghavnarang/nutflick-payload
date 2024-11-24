@@ -36,7 +36,13 @@ export const Products: CollectionConfig = {
             },
             { name: 'description', type: 'textarea', required: true },
             { name: 'category', type: 'relationship', relationTo: ['categories'] },
-            { name: 'image', type: 'upload', relationTo: 'media', admin: { position: 'sidebar' } },
+            {
+              name: 'image',
+              type: 'upload',
+              relationTo: 'media',
+              admin: { position: 'sidebar' },
+              required: true,
+            },
             {
               name: 'bigImage',
               type: 'upload',
@@ -78,6 +84,7 @@ export const Products: CollectionConfig = {
                   admin: {
                     readOnly: true,
                   },
+                  required: true,
                   hooks: {
                     beforeValidate: [formatSlug('title')],
                   },

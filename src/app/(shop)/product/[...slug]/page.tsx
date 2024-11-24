@@ -10,6 +10,7 @@ import Photo from '@/components/Icons/photo'
 import { getProductBySlug, getProducts } from '@/features/server/product'
 import Price from '@/components/product/price'
 import GoToCart from '@/components/product/go-to-cart'
+import getSchema from './schema'
 
 interface ProductProps {
   params: Promise<{ slug: [productSlug: string, variantSlug?: string] }>
@@ -95,6 +96,10 @@ const Product: FC<ProductProps> = async ({ params }) => {
             <GoToCart variantId={variant.id || undefined} className="md:block hidden" />
           </div>
         </div>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(getSchema(product)) }}
+        />
       </div>
       {product.category?.value && (
         <ProductRecommendations
