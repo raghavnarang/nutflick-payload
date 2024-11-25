@@ -730,7 +730,6 @@ export interface ShippingOption {
  */
 export interface HomePageOption {
   id: number;
-  headline: string;
   meta?: {
     title?: string | null;
     description?: string | null;
@@ -761,7 +760,6 @@ export interface ShippingOptionsSelect<T extends boolean = true> {
  * via the `definition` "home-page-options_select".
  */
 export interface HomePageOptionsSelect<T extends boolean = true> {
-  headline?: T;
   meta?:
     | T
     | {

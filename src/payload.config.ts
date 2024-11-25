@@ -61,7 +61,6 @@ export default buildConfig({
         return `${doc.title} | Nutflick`
       },
       generateDescription: ({ doc }) => doc.excerpt,
-      tabbedUI: true,
     }),
   ],
   graphQL: { disable: true },

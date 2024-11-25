@@ -13,14 +13,12 @@ import GoToCart from '@/components/product/go-to-cart'
 import getSchema from './schema'
 import type { Metadata } from 'next'
 
-interface ProductProps {
-  params: Promise<{ slug: [productSlug: string, variantSlug?: string] }>
+export interface ProductProps {
+  params: Promise<{ productSlug: string; variantSlug?: string }>
 }
 
-async function getProductDataFromParams({ params }: ProductProps) {
-  const {
-    slug: [productSlug, variantSlug],
-  } = await params
+export async function getProductDataFromParams({ params }: ProductProps) {
+  const { productSlug, variantSlug } = await params
   const product = await getProductBySlug(productSlug)
 
   if (!product || product?.variants?.length === 0) {
@@ -48,6 +46,9 @@ export async function generateMetadata({ params }: ProductProps): Promise<Metada
   return {
     title: data.product.meta?.title || fallbackTitle,
     description: data.product.meta?.description,
+    openGraph: {
+      url: `${baseUrl}/product/${data.product.slug}`,
+    },
     alternates: {
       canonical: `${baseUrl}/product/${data.product.slug}`,
     },
@@ -150,8 +151,5 @@ export async function generateStaticParams() {
 
   return products
     .filter((p) => p.slug && p.variants && p.variants.every((v) => !!v.slug))
-    .reduce<{ slug: string[] }[]>((slugs, p) => {
-      const variantItems = p.variants && p.variants.map((v) => ({ slug: [p.slug!, v.slug!] }))
-      return [...slugs, ...(variantItems || []), { slug: [p.slug!] }]
-    }, [])
+    .map((p) => ({ productSlug: p.slug! }))
 }

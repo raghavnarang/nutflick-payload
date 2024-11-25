@@ -6,18 +6,20 @@ import { Dancing_Script } from 'next/font/google'
 import type { OnlineStore, WithContext } from 'schema-dts'
 import logo from '@/public/logo.png'
 import type { Metadata } from 'next'
-import { getPayload } from 'payload'
-import config from '@payload-config'
+import { getHomePageOptions } from '@/features/server/home'
 
 const baseUrl = process.env.NEXT_PUBLIC_VERCEL_URL!
 
 export async function generateMetadata(): Promise<Metadata> {
-  const payload = await getPayload({ config })
-  const options = await payload.findGlobal({ slug: 'home-page-options' })
+  const options = await getHomePageOptions()
 
   return {
     title: options.meta?.title || 'Nutflick',
     description: options.meta?.description,
+    openGraph: {
+      url: baseUrl,
+      siteName: 'Nutflick',
+    },
     alternates: {
       canonical: baseUrl,
     },

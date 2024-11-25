@@ -81,13 +81,7 @@ export const Products: CollectionConfig = {
                   name: 'slug',
                   type: 'text',
                   index: true,
-                  admin: {
-                    readOnly: true,
-                  },
                   required: true,
-                  hooks: {
-                    beforeValidate: [formatSlug('title')],
-                  },
                 },
                 {
                   name: 'image',

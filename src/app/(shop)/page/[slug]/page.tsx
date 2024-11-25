@@ -4,11 +4,11 @@ import { notFound } from 'next/navigation'
 import styles from './style.module.css'
 import type { Metadata } from 'next'
 
-interface PageProps {
+export interface PageProps {
   params: Promise<{ slug: string }>
 }
 
-async function getPageData({ params }: PageProps) {
+export async function getPageData({ params }: PageProps) {
   const { slug } = await params
   const payload = await getPayload({ config })
   const { docs } = await payload.find({ collection: 'pages', where: { slug: { equals: slug } } })
@@ -30,6 +30,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title: data.meta?.title || fallbackTitle,
     description: data.meta?.description,
+    openGraph: {
+      url: `${baseUrl}/page/${data.slug}`,
+    },
     alternates: {
       canonical: `${baseUrl}/page/${data.slug}`,
     },

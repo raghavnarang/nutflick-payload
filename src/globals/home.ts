@@ -5,7 +5,7 @@ const HomePageOptions: GlobalConfig = {
     read: ({ req: { user } }) => user?.collection === 'users',
     update: ({ req: { user } }) => user?.collection === 'users',
   },
-  fields: [{ type: 'text', name: 'headline', required: true }],
+  fields: [],
   slug: 'home-page-options',
 }
 
