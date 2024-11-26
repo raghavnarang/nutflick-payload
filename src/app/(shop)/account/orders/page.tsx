@@ -8,6 +8,10 @@ import Link from 'next/link'
 import ChevronRight from '@/components/Icons/chevron-right'
 import OrderStatusPill from '@/components/order/status/pill'
 
+export const metadata = {
+  title: 'My Orders | Nutflick',
+}
+
 export default async function UserOrdersPage() {
   const customer = await redirectIfUnauthenticated('/account/orders')
   if (!customer) {

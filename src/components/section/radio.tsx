@@ -1,6 +1,6 @@
 import type { FC, ReactNode } from "react";
 import Radio, { type RadioProps } from "../form/radio";
-import cx from "classnames";
+import cx from "clsx";
 
 interface SectionRadioProps extends RadioProps {
   children?: ReactNode;

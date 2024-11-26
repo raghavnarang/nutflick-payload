@@ -1,11 +1,6 @@
 import { getPayload } from 'payload'
 import config from '@payload-config'
-import { getPaymentStatus } from '@/features/razorpay/api'
-import BigMessage from '@/components/big-message'
-import { Error } from '@/components/Icons'
-import { RazorpayPaymentStatus } from '@/features/razorpay/types/payment'
 import OrderSummary from '@/components/order/order-summary'
-import { ShippingOption } from '@/payload-types'
 import OrderStatus from '@/components/order/status'
 import OrderCustomerSummary from '@/components/order/customer-summary'
 import { getCurrentGuestOrCustomer } from '@/features/server/auth/customer'
@@ -16,9 +11,9 @@ interface OrderCompleteArgs {
   params: Promise<{ order: number }>
 }
 
-const ErrorComponent = ({ message }: { message?: string }) => (
-  <BigMessage icon={Error}>{message || 'Something went wrong. Please try again later.'}</BigMessage>
-)
+export const metadata = {
+  title: 'Order Confirmation | Nutflick',
+}
 
 export default async function OrderComplete({ params: paramsPromise }: OrderCompleteArgs) {
   const { order: orderId } = await paramsPromise

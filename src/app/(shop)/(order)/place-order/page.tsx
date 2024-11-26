@@ -6,6 +6,10 @@ import { getOrderStatus } from '@/features/razorpay/api'
 import { redirect } from 'next/navigation'
 import { RazorpayOrderStatus } from '@/features/razorpay/types/order'
 
+export const metadata = {
+  title: 'Transaction in Progress | Nutflick',
+}
+
 export default async function PlaceOrder() {
   const errorComponent = (
     <BigMessage icon={Error}>Something went wrong. Please try again later.</BigMessage>

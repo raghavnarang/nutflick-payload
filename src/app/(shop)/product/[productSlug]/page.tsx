@@ -7,33 +7,12 @@ import ProductRecommendations from '@/components/product/product-recommendations
 import BigMessage from '@/components/big-message'
 import Sad from '@/components/Icons/sad'
 import Photo from '@/components/Icons/photo'
-import { getProductBySlug, getProducts } from '@/features/server/product'
+import { getProducts } from '@/features/server/product'
 import Price from '@/components/product/price'
 import GoToCart from '@/components/product/go-to-cart'
 import getSchema from './schema'
 import type { Metadata } from 'next'
-
-export interface ProductProps {
-  params: Promise<{ productSlug: string; variantSlug?: string }>
-}
-
-export async function getProductDataFromParams({ params }: ProductProps) {
-  const { productSlug, variantSlug } = await params
-  const product = await getProductBySlug(productSlug)
-
-  if (!product || product?.variants?.length === 0) {
-    return false
-  }
-
-  const variant =
-    (variantSlug &&
-      product.variants?.find(
-        (variant) => variant.slug?.toLowerCase() === variantSlug.toLowerCase(),
-      )) ||
-    product.variants![0]
-
-  return { product, variant }
-}
+import { getProductDataFromParams, type ProductProps } from './helper'
 
 export async function generateMetadata({ params }: ProductProps): Promise<Metadata> {
   const data = await getProductDataFromParams({ params })

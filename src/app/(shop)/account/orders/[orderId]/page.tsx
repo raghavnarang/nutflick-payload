@@ -9,6 +9,10 @@ import OrderFetchingStatus from '@/components/order/status/fetching'
 import { Suspense } from 'react'
 import AfterOrderSummary from '@/components/order/after-order-summary'
 
+export const metadata = {
+  title: 'Your Order | Nutflick',
+}
+
 export default async function UserSingleOrderPage({
   params,
 }: {

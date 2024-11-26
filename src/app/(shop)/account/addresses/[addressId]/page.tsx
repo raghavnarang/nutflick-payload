@@ -5,6 +5,10 @@ import MyAccountHeader from '../../header'
 import MyAccountAddressForm from '../form'
 import DeleteAddress from './delete'
 
+export const metadata = {
+  title: 'Edit Address | Nutflick',
+}
+
 export default async function UserEditAddressPage({
   params,
 }: {

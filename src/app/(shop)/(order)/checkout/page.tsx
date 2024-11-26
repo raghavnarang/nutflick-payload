@@ -9,6 +9,10 @@ import CheckoutCouponSummary from '@/components/checkout/coupon/summary'
 import CheckoutTotal from '@/components/checkout/total'
 import CheckoutPaymentButton from '@/components/checkout/payment-button'
 
+export const metadata = {
+  title: 'Checkout | Nutflick',
+}
+
 const CheckoutPage = async () => {
   return (
     <div className="flex justify-center">

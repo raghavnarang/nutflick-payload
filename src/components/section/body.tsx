@@ -1,5 +1,5 @@
 import type { FC, ReactNode } from "react";
-import cx from "classnames";
+import cx from "clsx";
 
 interface SectionBodyProps {
   children?: ReactNode;

@@ -1,7 +1,7 @@
 import { ImageResponse } from 'next/og'
 import { readFile } from 'node:fs/promises'
 import { join } from 'node:path'
-import { getProductDataFromParams, type ProductProps } from './page'
+import { getProductDataFromParams, type ProductProps } from './helper'
 
 // Image metadata
 export const alt = 'Buy Premium Quality Dry Fruits on Nutflick.com'

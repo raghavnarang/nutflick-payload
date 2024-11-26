@@ -3,6 +3,10 @@ import LinkCardContainer from '@/components/link-card/container'
 import { redirectIfUnauthenticated } from '@/features/server/auth/me'
 import MyAccountHeader from './header'
 
+export const metadata = {
+  title: 'My Account | Nutflick',
+}
+
 export default async function MyAccountPage() {
   const customer = await redirectIfUnauthenticated('/account')
   if (!customer) {

@@ -24,7 +24,7 @@ const CheckoutCouponSelected: FC<CheckoutCouponSelectedProps> = ({
         <Tick className="text-green-600 inline-block !size-8 flex-shrink-0" />
         <p>
           You saved <Price price={discount} className="text-green-600 font-semibold" /> with{' '}
-          <span className="font-semibold">'{coupon.coupon.toUpperCase()}'</span>
+          <span className="font-semibold">&apos;{coupon.coupon.toUpperCase()}&apos;</span>
         </p>
       </div>
       <Button

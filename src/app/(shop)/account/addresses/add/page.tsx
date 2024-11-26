@@ -2,6 +2,10 @@ import MyAccountHeader from '../../header'
 import { redirectIfUnauthenticated } from '@/features/server/auth/me'
 import MyAccountAddressForm from '../form'
 
+export const metadata = {
+  title: 'Add New Address | Nutflick',
+}
+
 export default async function UserAddAddressPage() {
   const customer = await redirectIfUnauthenticated('/account/orders')
   if (!customer) {

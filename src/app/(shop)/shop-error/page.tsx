@@ -1,9 +1,18 @@
 import Link from 'next/link'
 import BigMessage from '@/components/big-message'
 import { Error } from '@/components/Icons'
+import type { Metadata } from 'next'
 
 interface ShopErrorProps {
   searchParams: Promise<{ message?: string }>
+}
+
+export const metadata: Metadata = {
+  robots: {
+    follow: false,
+    index: false,
+  },
+  title: 'Something went wrong | Nutflick'
 }
 
 const ShopError = async ({ searchParams }: ShopErrorProps) => {

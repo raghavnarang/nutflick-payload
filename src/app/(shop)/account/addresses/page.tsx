@@ -8,6 +8,10 @@ import ChevronRight from '@/components/Icons/chevron-right'
 import StatusPill, { StatusPillType } from '@/components/pill-status'
 import MapPin from '@/components/Icons/map-pin'
 
+export const metadata = {
+  title: 'My Addresses | Nutflick',
+}
+
 export default async function UserAddressesPage() {
   const customer = await redirectIfUnauthenticated('/account/addresses')
   if (!customer) {

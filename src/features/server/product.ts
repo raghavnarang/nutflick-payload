@@ -85,7 +85,7 @@ export const getProductBySlug = unstable_cache(
     const payload = await getPayload({ config })
     const { docs } = await payload.find({
       collection: 'products',
-      where: { slug: { equals: slug } },
+      where: { slug: { equals: z.string().parse(slug) } },
       depth: 1,
       limit: 1,
     })

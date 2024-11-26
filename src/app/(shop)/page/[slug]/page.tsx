@@ -1,23 +1,8 @@
-import { getPayload } from 'payload'
-import config from '@payload-config'
 import { notFound } from 'next/navigation'
 import styles from './style.module.css'
 import type { Metadata } from 'next'
-
-export interface PageProps {
-  params: Promise<{ slug: string }>
-}
-
-export async function getPageData({ params }: PageProps) {
-  const { slug } = await params
-  const payload = await getPayload({ config })
-  const { docs } = await payload.find({ collection: 'pages', where: { slug: { equals: slug } } })
-  if (docs.length === 0 || !docs[0].content_html) {
-    return undefined
-  }
-
-  return docs[0]
-}
+import { getPageData, type PageProps } from './helper'
+import { getPages } from '@/features/server/page'
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const data = await getPageData({ params })
@@ -56,4 +41,11 @@ export default async function Page({ params }: PageProps) {
       </div>
     </div>
   )
+}
+
+export async function generateStaticParams() {
+  const pages = (await getPages()).filter((p) => !!p.content_html)
+  return pages.map((p) => ({
+    slug: p.slug!,
+  }))
 }

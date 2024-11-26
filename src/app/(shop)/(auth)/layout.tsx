@@ -1,8 +1,16 @@
 import { redirectIfAuthenticated } from '@/features/server/auth/me'
+import type { Metadata } from 'next'
 import type { FC } from 'react'
 
 interface AuthLayoutProps {
   children: React.ReactNode
+}
+
+export const metadata: Metadata = {
+  robots: {
+    follow: false,
+    index: false,
+  },
 }
 
 const AuthLayout: FC<AuthLayoutProps> = async ({ children }) => {

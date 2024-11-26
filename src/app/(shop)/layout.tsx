@@ -11,14 +11,22 @@ import ToastContainer from '@/features/toast/components/toast-container'
 import clsx from 'clsx'
 import FooterQuickActions from '@/components/quick-actions/footer'
 import GlobalWrapper from '@/components/global-wrapper'
+import type { Metadata } from 'next'
+import favicon from '@/public/favicon.png'
 
 const inter = Inter({ subsets: ['latin'] })
 
-export const metadata = {
+const baseUrl = process.env.NEXT_PUBLIC_VERCEL_URL!
+export const metadata: Metadata = {
   robots: {
     follow: true,
     index: true,
   },
+  icons: {
+    icon: favicon.src,
+  },
+  metadataBase: new URL(baseUrl),
+  title: 'Nutflick',
 }
 
 const navItems: NavProps['items'] = [
@@ -27,7 +35,7 @@ const navItems: NavProps['items'] = [
     text: 'My Account',
     link: '/account',
   },
-  <CartNavItem />,
+  <CartNavItem key="cart" />,
 ]
 
 const mobileNavItems = [
