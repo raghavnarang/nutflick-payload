@@ -25,6 +25,7 @@ const ProductItem: FC<ProductItemProps> = ({ product }) => {
             src={product.image.url}
             alt={product.image.alt || product.title}
             fill
+            priority
             className="object-contain rounded-lg z-0"
             sizes="(max-width: 639px) 50vw,(max-width: 1023px) 33vw,(max-width: 1279px) 25vw, 20vw"
           />
