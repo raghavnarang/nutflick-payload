@@ -26,6 +26,7 @@ const ProductItem: FC<ProductItemProps> = ({ product }) => {
             alt={product.image.alt || product.title}
             fill
             className="object-contain rounded-lg z-0"
+            sizes="(max-width: 639px) 50vw,(max-width: 1023px) 33vw,(max-width: 1279px) 25vw, 20vw"
           />
         ) : (
           <div className="w-full bg-gray-200 rounded-lg h-full flex justify-center items-center">

@@ -17,7 +17,13 @@ const CartItem: FC<CartItemProps> = ({ item }) => {
       <div className="flex">
         <Link href={itemLink} className="md:size-32 size-24 relative mr-5 flex-shrink-0">
           {item.image ? (
-            <Image src={item.image} fill alt={item.title} className="object-cover rounded-md" />
+            <Image
+              src={item.image}
+              height={128}
+              width={128}
+              alt={item.title}
+              className="object-cover rounded-md"
+            />
           ) : (
             <div className="w-full bg-gray-200 rounded-lg h-full flex justify-center items-center">
               <Photo className="!size-10 text-gray-400" />

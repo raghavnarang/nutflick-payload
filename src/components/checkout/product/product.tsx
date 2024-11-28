@@ -16,7 +16,13 @@ const CheckoutProduct: FC<CartItem & { name: string }> = ({ name, ...item }) => 
           className="w-20 h-20 relative mr-3 flex-shrink-0 rounded-lg border border-gray-300"
         >
           {item.image ? (
-            <Image src={item.image} fill alt={item.title} className="object-cover rounded-md" />
+            <Image
+              src={item.image}
+              width={80}
+              height={80}
+              alt={item.title}
+              className="object-cover"
+            />
           ) : (
             <div className="w-full bg-gray-200 rounded-lg h-full flex justify-center items-center">
               <Photo className="!size-10 text-gray-400" />

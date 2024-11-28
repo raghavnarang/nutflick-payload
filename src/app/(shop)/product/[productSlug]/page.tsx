@@ -57,6 +57,7 @@ const Product: FC<ProductProps> = async ({ params }) => {
               fill
               alt={image.alt || `${product.title} - ${variant.title}`}
               className="object-contain rounded-lg z-0 p-10"
+              sizes="(max-width: 767px) 80vw, 40vw"
             />
           ) : (
             <div className="w-full bg-gray-200 rounded-lg h-full flex justify-center items-center">

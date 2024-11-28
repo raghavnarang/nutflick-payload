@@ -18,7 +18,7 @@ const Header: FC<HeaderProps> = ({ mobileNavItems, mobileSideNavItems, navItems 
       <div className="flex items-center">
         <Suspense>{mobileSideNavItems && <MobileNav items={mobileSideNavItems} />}</Suspense>
         <Link href="/">
-          <Image src={logo} alt="Nutflick Logo" className=" w-32 md:w-44" />
+          <Image src={logo} alt="Nutflick Logo" className="w-32 md:w-44" width={176} />
         </Link>
       </div>
       {navItems && (
