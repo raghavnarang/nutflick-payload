@@ -12,6 +12,7 @@ import { Address, Coupon, Customer } from '@/payload-types'
 import { getShippingOptions } from './shipping'
 import {
   getAdjustedShippingRate,
+  getApplicableShippingRate,
   getDiscountValue,
   isCouponApplicable,
 } from '@/features/checkout/utils'
@@ -82,7 +83,8 @@ export const placeOrder = async (checkout: PlaceGuestOrderArgs) => {
   const products = await getOrderProductsFromCartItems(checkout.products)
   const subtotal = products.reduce((total, item) => total + item.qty * item.price, 0)
   const shipping = (await getShippingOptions()).find((item) => item.id === checkout.shipping)
-  const shippingRate = shipping ? getAdjustedShippingRate(products, shipping.rate) : 0
+  const shippingRate = shipping ? getApplicableShippingRate(products, shipping) : 0
+  const adjustedShippingRate = getAdjustedShippingRate(products, shippingRate)
   const couponDiscount =
     coupon && isCouponApplicable(coupon, subtotal) ? getDiscountValue(coupon, subtotal) : 0
 
@@ -99,7 +101,7 @@ export const placeOrder = async (checkout: PlaceGuestOrderArgs) => {
       products,
       customer: customer.id,
       mode: shipping?.mode,
-      rate: shippingRate || null,
+      rate: adjustedShippingRate,
       couponRef: coupon?.id,
       coupon: coupon?.coupon,
       discount: couponDiscount || null,
@@ -124,7 +126,7 @@ export const placeOrder = async (checkout: PlaceGuestOrderArgs) => {
 
   // Add order to razorpay
   try {
-    const total = subtotal + shippingRate - couponDiscount
+    const total = subtotal + adjustedShippingRate - couponDiscount
     const rzpOrderId = await createRzpOrder(total)
     await payload.update({
       collection: 'orders',

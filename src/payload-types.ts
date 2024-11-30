@@ -144,7 +144,22 @@ export interface Product {
   id: number;
   slug: string;
   title: string;
-  description: string;
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  description_html?: string | null;
   category?: {
     relationTo: 'categories';
     value: number | Category;
@@ -521,6 +536,7 @@ export interface ProductsSelect<T extends boolean = true> {
   slug?: T;
   title?: T;
   description?: T;
+  description_html?: T;
   category?: T;
   image?: T;
   bigImage?: T;
@@ -717,8 +733,12 @@ export interface ShippingOption {
   id: number;
   option: {
     mode: string;
-    rate: number;
     days?: number | null;
+    rates: {
+      rate: number;
+      weight: number;
+      id?: string | null;
+    }[];
     id?: string | null;
   }[];
   updatedAt?: string | null;
@@ -747,8 +767,14 @@ export interface ShippingOptionsSelect<T extends boolean = true> {
     | T
     | {
         mode?: T;
-        rate?: T;
         days?: T;
+        rates?:
+          | T
+          | {
+              rate?: T;
+              weight?: T;
+              id?: T;
+            };
         id?: T;
       };
   updatedAt?: T;

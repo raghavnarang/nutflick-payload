@@ -2,7 +2,8 @@ import { z } from 'zod'
 import { getPayload } from 'payload'
 import config from '@payload-config'
 import { Order } from '@/payload-types'
-import { getFormattedPrice, getLogoURL } from '@/utils/misc'
+import { getFormattedPrice } from '@/utils/misc'
+import { getLogoURL } from '@/utils/logo'
 
 export async function sendOrderSummaryEmail(email: string, order: Order) {
   const parsedEmail = z.string().email().parse(email)

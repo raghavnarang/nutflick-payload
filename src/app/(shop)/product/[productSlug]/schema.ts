@@ -16,7 +16,7 @@ export default function getSchema(product: Product): WithContext<ProductGroup> {
     '@type': 'ProductGroup',
     name: product.title,
     image: finalProductImage && `${baseUrl}${finalProductImage}`,
-    description: product.description,
+    description: product.meta?.description || '',
     brand: {
       '@type': 'Brand',
       name: 'Nutflick',

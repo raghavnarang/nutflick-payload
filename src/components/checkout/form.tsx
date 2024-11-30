@@ -2,7 +2,7 @@
 
 import EmptyCart from '@/components/cart/empty-cart'
 import { useCartStore } from '@/features/cart/cart-store/provider'
-import { useCheckoutStore } from '@/features/checkout/store'
+import { useCheckoutStore } from '@/features/checkout/provider-client'
 import { placeOrder } from '@/features/server/actions/place-order'
 import { useToastStore } from '@/features/toast/store'
 import { useEffect, useTransition } from 'react'

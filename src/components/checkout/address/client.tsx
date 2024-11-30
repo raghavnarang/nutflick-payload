@@ -5,7 +5,8 @@ import CheckoutAddressForm from './add-edit-form'
 import { Address } from '@/payload-types'
 import CheckoutAddressPrefilled from './prefilled'
 import CheckoutSelectAddress from './select-from-list'
-import { GuestEmailMode, useCheckoutStore } from '@/features/checkout/store'
+import { GuestEmailMode } from '@/features/checkout/store'
+import { useCheckoutStore } from '@/features/checkout/provider-client'
 
 interface CheckoutAddressClientProps {
   address?: Address

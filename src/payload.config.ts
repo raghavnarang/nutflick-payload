@@ -54,7 +54,6 @@ export default buildConfig({
       globals: ['home-page-options'],
       uploadsCollection: 'media',
       generateTitle: ({ doc, collectionSlug }) => {
-        console.log(doc)
         if (collectionSlug === 'products') {
           return `Buy ${doc.title} Online | Nutflick - Premium Quality`
         }

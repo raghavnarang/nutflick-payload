@@ -3,7 +3,8 @@
 import { useState } from 'react'
 import CheckoutUserEmailTextbox from './email-textbox'
 import CheckoutUserEmailPrefilled from './email-prefilled'
-import { GuestEmailMode, useCheckoutStore } from '@/features/checkout/store'
+import { GuestEmailMode } from '@/features/checkout/store'
+import { useCheckoutStore } from '@/features/checkout/provider-client'
 
 interface CheckoutUserProps {
   email?: string

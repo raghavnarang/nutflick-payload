@@ -1,8 +1,8 @@
 import { notFound } from 'next/navigation'
-import styles from './style.module.css'
 import type { Metadata } from 'next'
 import { getPageData, type PageProps } from './helper'
 import { getPages } from '@/features/server/page'
+import LexicalView from '@/components/lexical-view'
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const data = await getPageData({ params })
@@ -34,10 +34,7 @@ export default async function Page({ params }: PageProps) {
     <div className="flex justify-center">
       <div className="max-w-7xl w-full">
         <h1 className="text-2xl mb-5">{pageData.title}</h1>
-        <div
-          className={styles.body}
-          dangerouslySetInnerHTML={{ __html: pageData.content_html || '' }}
-        />
+        <LexicalView htmlString={pageData.content_html || ''} />
       </div>
     </div>
   )

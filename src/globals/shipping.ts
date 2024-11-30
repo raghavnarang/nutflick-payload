@@ -1,3 +1,4 @@
+import { revalidateTag } from 'next/cache'
 import { GlobalConfig } from 'payload'
 
 const ShippingOptions: GlobalConfig = {
@@ -5,6 +6,13 @@ const ShippingOptions: GlobalConfig = {
     read: () => true,
     // Is Admin
     update: ({ req: { user } }) => user?.collection === 'users',
+  },
+  hooks: {
+    afterChange: [
+      () => {
+        revalidateTag('shipping-options')
+      },
+    ],
   },
   fields: [
     {
@@ -19,14 +27,27 @@ const ShippingOptions: GlobalConfig = {
           required: true,
         },
         {
-          name: 'rate',
-          type: 'number',
-          required: true,
-        },
-        {
           name: 'days',
           label: 'Estimated Days',
           type: 'number',
+        },
+        {
+          name: 'rates',
+          type: 'array',
+          required: true,
+          fields: [
+            {
+              type: 'number',
+              required: true,
+              name: 'rate',
+            },
+            {
+              type: 'number',
+              required: true,
+              name: 'weight',
+              label: 'Upto Weight (in Kgs.)',
+            },
+          ],
         },
       ],
     },

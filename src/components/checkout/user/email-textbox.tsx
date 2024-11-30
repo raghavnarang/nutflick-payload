@@ -2,7 +2,7 @@
 
 import Button from '@/components/button'
 import Textbox from '@/components/form/textbox'
-import { useCheckoutStore } from '@/features/checkout/store'
+import { useCheckoutStore } from '@/features/checkout/provider-client'
 import Link from 'next/link'
 import { useEffect } from 'react'
 import { useFormStatus } from 'react-dom'

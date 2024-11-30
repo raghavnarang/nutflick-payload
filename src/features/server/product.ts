@@ -56,7 +56,12 @@ export const getOrderProductsFromCartItems = async (items: CartItem[]) => {
 export const getProducts = unstable_cache(
   async () => {
     const payload = await getPayload({ config })
-    const { docs } = await payload.find({ collection: 'products', pagination: false, depth: 1 })
+    const { docs } = await payload.find({
+      collection: 'products',
+      select: { bigImage: false, description: false, description_html: false },
+      pagination: false,
+      depth: 1,
+    })
     return docs
   },
   ['products'],

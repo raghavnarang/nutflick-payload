@@ -54,7 +54,7 @@ export function Modal({ close, children, title, footer }: VariantModalProps) {
             </svg>
           </button>
         </div>
-        <div className="py-2 md:py-4 px-4 md:px-6 max-h-[calc(90vh-80px)] overflow-y-auto">
+        <div className="py-2 md:py-4 px-4 md:px-6 max-h-[calc(90vh-120px)] overflow-y-auto">
           {children}
         </div>
         {footer}

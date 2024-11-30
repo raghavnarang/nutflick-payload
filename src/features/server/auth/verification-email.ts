@@ -1,4 +1,4 @@
-import { getLogoURL } from '@/utils/misc'
+import { getLogoURL } from '@/utils/logo'
 import type { BasePayload } from 'payload'
 import { z } from 'zod'
 

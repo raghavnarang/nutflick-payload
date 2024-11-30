@@ -1,4 +1,4 @@
-import { getLogoURL } from '@/utils/misc'
+import { getLogoURL } from '@/utils/logo'
 
 export function getResetPasswordEmailSubject() {
   return 'Reset Password'

@@ -2,7 +2,7 @@
 
 import Price from '@/components/product/price'
 import SectionTitleValue from '@/components/section/title-value'
-import { useCheckoutStore } from '@/features/checkout/store'
+import { useCheckoutStore } from '@/features/checkout/provider-client'
 import { getDiscountValue, useCartSubtotal } from '@/features/checkout/utils'
 
 const CheckoutCouponSummary = () => {

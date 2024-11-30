@@ -17,7 +17,6 @@ export async function getCouponsForCustomer({
       coupon?: string
     }
   | undefined = {}) {
-  // console.log(email, forCheckout, coupon)
   let customerId = 0
   const { data: parsedEmail } = z.string().email().safeParse(email)
 

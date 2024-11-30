@@ -13,6 +13,7 @@ import GoToCart from '@/components/product/go-to-cart'
 import getSchema from './schema'
 import type { Metadata } from 'next'
 import { getProductDataFromParams, type ProductProps } from './helper'
+import LexicalView from '@/components/lexical-view'
 
 export async function generateMetadata({ params }: ProductProps): Promise<Metadata> {
   const data = await getProductDataFromParams({ params })
@@ -49,7 +50,7 @@ const Product: FC<ProductProps> = async ({ params }) => {
 
   return (
     <div>
-      <div className="w-full flex md:gap-10 gap-4 flex-col md:flex-row items-center">
+      <div className="w-full flex md:gap-10 gap-4 flex-col md:flex-row items-start">
         <div className="w-full md:w-1/2 md:h-[80vh] h-[50vh] flex justify-center bg-gray-100 relative">
           {typeof image != 'number' && image && image.url ? (
             <Image
@@ -94,7 +95,10 @@ const Product: FC<ProductProps> = async ({ params }) => {
             })}
           </div>
 
-          <p className="text-gray-700 mb-5 leading-loose">{product.description}</p>
+          <LexicalView
+            className="text-gray-700 mb-5 leading-loose"
+            htmlString={product.description_html || ''}
+          />
           <div className="flex md:flex-col md:justify-normal justify-between items-center md:items-start z-10 md:gap-5 md:relative fixed md:bottom-auto md:left-auto md:right-auto bottom-14 left-0 right-0 px-5 md:px-0 h-14 md:h-auto border-gray-300 border-t md:border-none bg-white md:bg-transparent">
             <div className="flex items-center gap-2">
               <Price price={variant.price} className="font-bold text-xl" />

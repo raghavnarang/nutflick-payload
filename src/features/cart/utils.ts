@@ -26,6 +26,7 @@ export const generateCartItem = (
     variantSlug: variant.slug || '',
     category:
       typeof product.category?.value !== 'number' ? product.category?.value.title : undefined,
-    shippingCovered: variant.includedShippingCost,
+    includedShippingCost: variant.includedShippingCost,
+    weight: variant.weight,
   }
 }

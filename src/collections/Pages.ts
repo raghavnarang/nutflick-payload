@@ -1,5 +1,6 @@
 import { isAdmin } from '@/access/is-admin'
 import { HTMLConverterFeature, lexicalEditor, lexicalHTML } from '@payloadcms/richtext-lexical'
+import { revalidateTag } from 'next/cache'
 import type { CollectionConfig } from 'payload'
 
 export const Pages: CollectionConfig = {
@@ -14,6 +15,13 @@ export const Pages: CollectionConfig = {
     readVersions: isAdmin,
     update: isAdmin,
     delete: isAdmin,
+  },
+  hooks: {
+    afterChange: [
+      () => {
+        revalidateTag('products')
+      },
+    ],
   },
   fields: [
     { type: 'text', name: 'title', required: true },

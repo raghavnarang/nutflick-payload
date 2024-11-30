@@ -6,7 +6,6 @@ import BigMessage from '../big-message'
 import Warning from '../Icons/warning'
 import TransactionProgress from './transaction-progress'
 import { useCartStore } from '@/features/cart/cart-store/provider'
-import { useCheckoutStore } from '@/features/checkout/store'
 
 interface StartPaymentProps {
   rzpOrderId: string
@@ -17,14 +16,11 @@ interface StartPaymentProps {
 
 const StartPayment: FC<StartPaymentProps> = ({ total, name, phone, rzpOrderId }) => {
   const clearCart = useCartStore((state) => state.clear)
-  const { setSelectedCoupon, setSelectedShipping } = useCheckoutStore((state) => state)
   const [isDismissed, setDismissed] = useState(false)
 
   // CLear Cart & Checkout
   const clear = () => {
     clearCart()
-    setSelectedCoupon(undefined)
-    setSelectedShipping(undefined)
   }
 
   const openCheckout = () => {

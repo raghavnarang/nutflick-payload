@@ -3,7 +3,7 @@
 import Button from '@/components/button'
 import Textbox from '@/components/form/textbox'
 import Price from '@/components/product/price'
-import { useCheckoutStore } from '@/features/checkout/store'
+import { useCheckoutStore } from '@/features/checkout/provider-client'
 import { isCouponApplicable } from '@/features/checkout/utils'
 import { getApplicableCoupon } from '@/features/server/actions/coupon'
 import { useToastStore } from '@/features/toast/store'

@@ -1,5 +1,7 @@
 import { isAdmin } from '@/access/is-admin'
 import formatSlug from '@/utils/format-slug'
+import { HTMLConverterFeature, lexicalEditor, lexicalHTML } from '@payloadcms/richtext-lexical'
+import { revalidateTag } from 'next/cache'
 import type { CollectionConfig } from 'payload'
 
 export const Products: CollectionConfig = {
@@ -14,6 +16,13 @@ export const Products: CollectionConfig = {
     readVersions: isAdmin,
     update: isAdmin,
     delete: isAdmin,
+  },
+  hooks: {
+    afterChange: [
+      () => {
+        revalidateTag('products')
+      },
+    ],
   },
   fields: [
     {
@@ -34,7 +43,19 @@ export const Products: CollectionConfig = {
               type: 'text',
               required: true,
             },
-            { name: 'description', type: 'textarea', required: true },
+            {
+              name: 'description',
+              type: 'richText',
+              editor: lexicalEditor({
+                features: ({ defaultFeatures }) => [
+                  ...defaultFeatures,
+                  // The HTMLConverter Feature is the feature which manages the HTML serializers.
+                  // If you do not pass any arguments to it, it will use the default serializers.
+                  HTMLConverterFeature({}),
+                ],
+              }),
+            },
+            lexicalHTML('description', { name: 'description_html' }),
             { name: 'category', type: 'relationship', relationTo: ['categories'] },
             {
               name: 'image',

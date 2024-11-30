@@ -3,30 +3,24 @@
 import SectionRadio from '@/components/section/radio'
 import { useFormStatus } from 'react-dom'
 import Price from '@/components/product/price'
-import { useCheckoutStore } from '@/features/checkout/store'
-import { useEffect } from 'react'
-import { useGetShippingCovered } from '@/features/checkout/utils'
+import { useCheckoutStore } from '@/features/checkout/provider-client'
+import { getAdjustedShippingRate, getApplicableShippingRate } from '@/features/checkout/utils'
 import type { ShippingOption } from '@/payload-types'
+import { useCartStore } from '@/features/cart/cart-store/provider'
 
 const CheckoutShippingClient = ({ options }: { options: ShippingOption['option'] }) => {
   const setStoreShipping = useCheckoutStore((state) => state.setSelectedShipping)
-  const shippingAlreadyCovered = useGetShippingCovered()
+  const cart = useCartStore((state) => state.cart)
 
   const { pending } = useFormStatus()
-
-  useEffect(() => {
-    if (options && options.length > 0) {
-      setStoreShipping(options[0])
-    }
-  }, [options])
 
   return (
     <>
       {options
         ?.filter((i) => !!i.id)
         .map((i, index) => {
-          let cost = i.rate - shippingAlreadyCovered
-          cost = cost <= 0 ? 0 : cost
+          const rate = getApplicableShippingRate(cart.items, i)
+          const cost = getAdjustedShippingRate(cart.items, rate)
           return (
             <SectionRadio
               name="shipping"
