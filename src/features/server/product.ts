@@ -61,6 +61,7 @@ export const getProducts = unstable_cache(
       select: { bigImage: false, description: false, description_html: false },
       pagination: false,
       depth: 1,
+      sort: 'createdAt', 
     })
     return docs
   },
