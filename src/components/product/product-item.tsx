@@ -27,7 +27,7 @@ const ProductItem: FC<ProductItemProps> = ({ product }) => {
             fill
             priority
             className="object-contain rounded-lg z-0"
-            sizes="(max-width: 639px) 50vw,(max-width: 1023px) 33vw,(max-width: 1279px) 25vw, 20vw"
+            sizes="(max-width: 639px) 40vw,(max-width: 1023px) 30vw,(max-width: 1279px) 20vw, 15vw"
           />
         ) : (
           <div className="w-full bg-gray-200 rounded-lg h-full flex justify-center items-center">
