@@ -16,7 +16,7 @@ const CartNavItemUI: FC<CartNavItemUIProps> = ({
   <Link href="/cart" className="mr-8 last:mr-0 relative flex">
     {!hideIcon && <Cart className="mr-2" />}
     {!hideText && <span className="mr-2">Cart</span>}
-    <span className="text-xs size-6 bg-red-500 rounded-full text-white flex items-center justify-center">
+    <span className="text-xs size-6 bg-red-700 rounded-full text-white flex items-center justify-center">
       {quantity}
     </span>
   </Link>

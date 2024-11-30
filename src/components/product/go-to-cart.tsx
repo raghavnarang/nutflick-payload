@@ -17,7 +17,7 @@ export default function GoToCart({ product, variantId, className }: GoToCartProp
 
   const ret = (
     <Link className={clsx(className)} href="/cart">
-      <Button small isInfo>
+      <Button small isPrimaryLight>
         Go to Cart
       </Button>
     </Link>

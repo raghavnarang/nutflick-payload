@@ -80,8 +80,8 @@ const Product: FC<ProductProps> = async ({ params }) => {
                     className={cx(
                       'rounded px-4 py-2 mr-3 last:mr-0 mb-3 transition-colors inline-block text-sm md:text-base',
                       {
-                        'text-gray-500 bg-gray-100 hover:bg-gray-200': !isSelected,
-                        'text-red-500 bg-red-100 border-red-500': isSelected,
+                        'text-gray-700 bg-gray-100 hover:bg-gray-200': !isSelected,
+                        'text-red-800 bg-red-100 border-red-500': isSelected,
                       },
                     )}
                     href={`/product/${product.slug}/${v.slug}`}

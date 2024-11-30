@@ -6,7 +6,6 @@ import Photo from '../Icons/photo'
 import AddToCart from '../cart/add-to-cart'
 import type { Product } from '@/payload-types'
 import GoToCart from './go-to-cart'
-import InfoStatusPill from '../pill-status/info'
 
 interface ProductItemProps {
   product: Product
@@ -60,7 +59,7 @@ const ProductItem: FC<ProductItemProps> = ({ product }) => {
               />
             )}
           </p>
-          <InfoStatusPill text={product.variants[0].title} />
+          <p className='text-red-700 font-bold text-sm'>{product.variants[0].title}</p>
         </div>
       )}
       <div className="mt-3 flex justify-between items-start">

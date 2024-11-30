@@ -49,8 +49,9 @@ const EditCartItemUI: FC<EditCartItemUIProps> = ({
             onMinusClick?.()
           }}
           disabled={pending}
+          aria-label='Deacrese Quantity'
         >
-          <Minus className="text-red-500" />
+          <Minus className="text-red-700" />
         </button>
         <span className="px-3">{qty}</span>
         <button
@@ -60,8 +61,9 @@ const EditCartItemUI: FC<EditCartItemUIProps> = ({
             onPlusClick?.()
           }}
           disabled={pending}
+          aria-label='Increase Quantity'
         >
-          <Plus className="text-red-500" />
+          <Plus className="text-red-700" />
         </button>
       </div>
       {onRemoveClick && (
