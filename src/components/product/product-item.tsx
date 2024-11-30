@@ -6,6 +6,7 @@ import Photo from '../Icons/photo'
 import AddToCart from '../cart/add-to-cart'
 import type { Product } from '@/payload-types'
 import GoToCart from './go-to-cart'
+import InfoStatusPill from '../pill-status/info'
 
 interface ProductItemProps {
   product: Product
@@ -46,17 +47,20 @@ const ProductItem: FC<ProductItemProps> = ({ product }) => {
       </Link>
 
       {product.variants && product.variants.length > 0 && (
-        <div className="md:mt-3 mt-2">
-          <Price
-            price={product.variants[0].price}
-            className="md:text-xl text-base mr-2 font-bold"
-          />
-          {product.variants[0].comparePrice && (
+        <div className="md:mt-3 mt-2 flex items-center justify-between">
+          <p>
             <Price
-              price={product.variants[0].comparePrice}
-              className="line-through md:text-base text-sm text-gray-500"
+              price={product.variants[0].price}
+              className="md:text-xl text-base mr-2 font-bold"
             />
-          )}
+            {product.variants[0].comparePrice && (
+              <Price
+                price={product.variants[0].comparePrice}
+                className="line-through md:text-base text-sm text-gray-500"
+              />
+            )}
+          </p>
+          <InfoStatusPill text={product.variants[0].title} />
         </div>
       )}
       <div className="mt-3 flex justify-between items-start">

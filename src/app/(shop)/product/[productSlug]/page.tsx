@@ -69,7 +69,7 @@ const Product: FC<ProductProps> = async ({ params }) => {
         </div>
         <div className="w-full md:w-1/2">
           <h1 className="md:text-3xl text-xl mb-5 !leading-relaxed">{product.title}</h1>
-          <div className="mb-5">
+          <div className="mb-2">
             {product.variants?.map((v) => {
               const isSelected = v.slug?.toLowerCase() === variant.slug?.toLowerCase()
 
@@ -78,7 +78,7 @@ const Product: FC<ProductProps> = async ({ params }) => {
                   <Link
                     key={v.id}
                     className={cx(
-                      'rounded px-4 py-2 mr-3 last:mr-0 transition-colors inline-block',
+                      'rounded px-4 py-2 mr-3 last:mr-0 mb-3 transition-colors inline-block text-sm md:text-base',
                       {
                         'text-gray-500 bg-gray-100 hover:bg-gray-200': !isSelected,
                         'text-red-500 bg-red-100 border-red-500': isSelected,

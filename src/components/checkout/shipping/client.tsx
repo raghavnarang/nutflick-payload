@@ -8,6 +8,14 @@ import { getAdjustedShippingRate, getApplicableShippingRate } from '@/features/c
 import type { ShippingOption } from '@/payload-types'
 import { useCartStore } from '@/features/cart/cart-store/provider'
 
+const ShippingDiscount = () => (
+  <div className='flex justify-end'>
+    <span className="bg-green-100 text-xs py-2 px-4 md:px-8 text-right text-green-800">
+      Special Shipping Discount is auto-applied for you 🎉
+    </span>
+  </div>
+)
+
 const CheckoutShippingClient = ({ options }: { options: ShippingOption['option'] }) => {
   const setStoreShipping = useCheckoutStore((state) => state.setSelectedShipping)
   const cart = useCartStore((state) => state.cart)
@@ -32,6 +40,7 @@ const CheckoutShippingClient = ({ options }: { options: ShippingOption['option']
               onChange={() => {
                 setStoreShipping(options[index])
               }}
+              footer={rate > cost ? <ShippingDiscount /> : undefined}
               label={
                 <p className="flex flex-col">
                   <span>
@@ -43,13 +52,16 @@ const CheckoutShippingClient = ({ options }: { options: ShippingOption['option']
                 </p>
               }
             >
-              {!Math.trunc(cost) ? (
-                <span className="bg-green-100 text-green-800 border border-green-300 text-sm px-3 py-1 rounded">
-                  Free
-                </span>
-              ) : (
-                <Price price={cost} />
-              )}
+              <div className="flex flex-col items-end gap-1">
+                <Price price={rate} className="line-through text-sm text-gray-500" />
+                {!Math.trunc(cost) ? (
+                  <span className="bg-green-100 text-green-800 border border-green-300 text-sm px-3 py-1 rounded">
+                    Free
+                  </span>
+                ) : (
+                  <Price price={cost} />
+                )}
+              </div>
             </SectionRadio>
           )
         })}
