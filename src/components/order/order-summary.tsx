@@ -13,16 +13,16 @@ const OrderSummary = ({ order }: { order: Order }) => {
       {order.products.map((p) => (
         <SectionProduct {...p} key={p.id} />
       ))}
-      {order.rate && (
+      {order.rate ? (
         <SectionTitleValue title={`Shipping${order.mode ? ` (Mode: ${order.mode})` : ''}`}>
           <Price price={order.rate} />
         </SectionTitleValue>
-      )}
-      {order.discount && (
+      ) : null}
+      {order.discount ? (
         <SectionTitleValue title={`Discount${order.coupon ? ` (${order.coupon})` : ''}`}>
           <Price price={order.discount} negative className="text-green-600 font-semibold" />
         </SectionTitleValue>
-      )}
+      ) : null}
       <SectionTitleValue title="Total">
         <Price price={total} />
       </SectionTitleValue>

@@ -63,6 +63,10 @@ export default buildConfig({
     }),
   ],
   graphQL: { disable: true },
+  cors: {
+    origins: [process.env.NEXT_PUBLIC_VERCEL_URL!],
+  },
+  csrf: [process.env.NEXT_PUBLIC_VERCEL_URL!],
   email: nodemailerAdapter({
     defaultFromAddress: 'noreply@nutflick.com',
     defaultFromName: 'Nutflick',
