@@ -29,11 +29,6 @@ export default buildConfig({
     importMap: {
       baseDir: path.resolve(dirname),
     },
-    autoLogin: {
-      email: 'raghavvnarang@gmail.com',
-      password: 'admin',
-      prefillOnly: true,
-    },
   },
   collections: [Users, Media, Products, Categories, Customers, Addresses, Coupons, Orders, Pages],
   globals: [ShippingOptions, HomePageOptions],
