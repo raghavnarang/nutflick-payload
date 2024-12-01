@@ -23,6 +23,11 @@ export const Products: CollectionConfig = {
         revalidateTag('products')
       },
     ],
+    afterDelete: [
+      () => {
+        revalidateTag('products')
+      },
+    ],
   },
   fields: [
     {
