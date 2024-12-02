@@ -22,6 +22,7 @@ const VariantSelectorRow: FC<VariantSelectorRowProps> = ({ variant, product }) =
           <Image
             width={96}
             height={96}
+            quality={50}
             src={image.url}
             alt={image.alt}
             className="w-20 h-20 md:w-24 md:h-24 object-cover rounded-md"

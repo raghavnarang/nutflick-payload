@@ -19,6 +19,7 @@ const CartItem: FC<CartItemProps> = ({ item }) => {
           {item.image ? (
             <Image
               src={item.image}
+              quality={50}
               height={128}
               width={128}
               alt={item.title}

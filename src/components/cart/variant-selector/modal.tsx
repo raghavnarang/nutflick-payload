@@ -33,7 +33,11 @@ const VariantSelectorModal = () => {
   )
 
   return (
-    <Modal title={product.title} close={() => setProduct(undefined)} footer={quickActions}>
+    <Modal
+      title={`${product.variants?.length || 'Mutiple'} options available`}
+      close={() => setProduct(undefined)}
+      footer={quickActions}
+    >
       {product.variants?.map((variant, i) => (
         <VariantSelectorRow variant={variant} product={product} key={i} />
       ))}

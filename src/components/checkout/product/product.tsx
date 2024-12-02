@@ -18,6 +18,7 @@ const CheckoutProduct: FC<CartItem & { name: string }> = ({ name, ...item }) => 
           {item.image ? (
             <Image
               src={item.image}
+              quality={50}
               width={80}
               height={80}
               alt={item.title}

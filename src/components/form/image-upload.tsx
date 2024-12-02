@@ -73,6 +73,7 @@ const ImageUpload: FC<ImageUploadProps> = ({
       {image && (
         <Image
           src={image}
+          quality={50}
           width={imageSize}
           height={imageSize}
           alt="Product Image"

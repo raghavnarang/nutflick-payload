@@ -57,6 +57,7 @@ const Product: FC<ProductProps> = async ({ params }) => {
               src={image.url}
               fill
               priority
+              quality={50}
               alt={image.alt || `${product.title} - ${variant.title}`}
               className="object-contain rounded-lg z-0 p-10"
               sizes="(max-width: 767px) 80vw, 40vw"

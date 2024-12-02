@@ -6,6 +6,7 @@ import BigMessage from '../big-message'
 import Warning from '../Icons/warning'
 import TransactionProgress from './transaction-progress'
 import { useCartStore } from '@/features/cart/cart-store/provider'
+import verifyPayment from '@/features/server/actions/verify-payment'
 
 interface StartPaymentProps {
   rzpOrderId: string
@@ -24,12 +25,13 @@ const StartPayment: FC<StartPaymentProps> = ({ total, name, phone, rzpOrderId })
   }
 
   const openCheckout = () => {
-    const options = {
+    const rzp = new Razorpay({
       key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID!,
       amount: total * 100,
       currency: 'INR',
       order_id: rzpOrderId,
-      callback_url: `${process.env.NEXT_PUBLIC_VERCEL_URL}/payment-complete`,
+      // Callback URL is not working on iOS as safari on iPhone is not sending cookies to below POST route, so using handler
+      // callback_url: `${process.env.NEXT_PUBLIC_VERCEL_URL}/payment-complete`,
       image:
         'https://xghbfedvknsyjypohzpv.supabase.co/storage/v1/object/public/public_bucket/logo_square.png?t=2024-05-25T09%3A53%3A42.975Z',
       name: 'Nutflick',
@@ -37,12 +39,17 @@ const StartPayment: FC<StartPaymentProps> = ({ total, name, phone, rzpOrderId })
         name: name,
         contact: phone,
       },
+      handler: async ({ razorpay_order_id, razorpay_payment_id, razorpay_signature }) => {
+        const data = new FormData()
+        data.append('razorpay_order_id', razorpay_order_id || '')
+        data.append('razorpay_payment_id', razorpay_payment_id || '')
+        data.append('razorpay_signature', razorpay_signature || '')
+        await verifyPayment(data)
+      },
       modal: {
         ondismiss: () => setDismissed(true),
       },
-    }
-
-    const rzp = new Razorpay(options)
+    })
     rzp.open()
   }
 
