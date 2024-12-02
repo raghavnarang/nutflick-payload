@@ -32,8 +32,7 @@ const StartPayment: FC<StartPaymentProps> = ({ total, name, phone, rzpOrderId })
       order_id: rzpOrderId,
       // Callback URL is not working on iOS as safari on iPhone is not sending cookies to below POST route, so using handler
       // callback_url: `${process.env.NEXT_PUBLIC_VERCEL_URL}/payment-complete`,
-      image:
-        'https://xghbfedvknsyjypohzpv.supabase.co/storage/v1/object/public/public_bucket/logo_square.png?t=2024-05-25T09%3A53%3A42.975Z',
+      image: process.env.NEXT_PUBLIC_LOGO_SQUARE_URL!,
       name: 'Nutflick',
       prefill: {
         name: name,
