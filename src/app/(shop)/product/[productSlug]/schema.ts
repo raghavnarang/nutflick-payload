@@ -11,6 +11,16 @@ export default function getSchema(product: Product): WithContext<ProductGroup> {
 
   const finalProductImage = productImage || productBigImage
 
+  let lowPrice = product.variants?.[0].price || 0
+  let highPrice = 0
+  product.variants?.forEach((v) => {
+    if (v.price < lowPrice) {
+      lowPrice = v.price
+    } else if (v.price > highPrice) {
+      highPrice = v.price
+    }
+  })
+
   return {
     '@context': 'https://schema.org',
     '@type': 'ProductGroup',
@@ -23,6 +33,17 @@ export default function getSchema(product: Product): WithContext<ProductGroup> {
     },
     productGroupID: `${product.id}`,
     url: `${baseUrl}/product/${product.slug}`,
+    offers:
+      (product.variants?.length || 0) > 1
+        ? {
+            '@type': 'AggregateOffer',
+            url: `${baseUrl}/product/${product.slug}`,
+            offerCount: product.variants?.length,
+            lowPrice,
+            highPrice,
+            availability: 'https://schema.org/InStock',
+          }
+        : undefined,
     variesBy: 'https://schema.org/size',
     hasVariant: product.variants?.map((v) => {
       const variantImage = typeof v.image !== 'number' && v.image?.url ? v.image.url : undefined
