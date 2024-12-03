@@ -43,7 +43,7 @@ export default function MyAccountHeader({
       </div>
       <div className="flex gap-3 items-center md:flex-row flex-col">
         <p className="text-sm md:text-base">Welcome, {email} </p>
-        <Link href="/logout">
+        <Link href="/logout" prefetch={false}>
           <Button small isSecondary>
             Logout
           </Button>

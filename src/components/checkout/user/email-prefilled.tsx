@@ -36,7 +36,7 @@ export default function CheckoutUserEmailPrefilled({ email, onNewEmail, isLogged
   const loggedInText = (
     <p className="mt-3 text-sm text-gray-500 leading-8">
       Not You?{' '}
-      <Link href="/logout">
+      <Link href="/logout" prefetch={false}>
         <Button small isSecondary className="inline-flex" type="button">
           Logout
         </Button>
