@@ -61,9 +61,8 @@ export async function POST(request: NextRequest) {
     req,
   })
 
-  // Send order summary email to customer and admin
+  // Send order summary email to customer
   sendOrderSummaryEmail(customer.email, updatedOrder)
-  sendOrderSummaryEmail(process.env.NEXT_ADMIN_EMAIL!, updatedOrder)
 
   // DB Operations Completed
   if (req.transactionID) {

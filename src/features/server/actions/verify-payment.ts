@@ -64,7 +64,6 @@ export default async function verifyPayment(data: FormData) {
 
   // Send order summary email to customer and admin
   sendOrderSummaryEmail(customer.email, updatedOrder)
-  sendOrderSummaryEmail(process.env.NEXT_ADMIN_EMAIL!, updatedOrder)
 
   // DB Operations Completed
   if (req.transactionID) {

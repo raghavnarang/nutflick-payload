@@ -64,14 +64,6 @@ export default function getSchema(product: Product): WithContext<ProductGroup> {
           price: v.price.toFixed(2),
           priceCurrency: 'INR',
           availability: 'https://schema.org/InStock',
-          ...(v.comparePrice && {
-            priceSpecification: {
-              '@type': 'UnitPriceSpecification',
-              priceType: 'https://schema.org/ListPrice',
-              price: v.comparePrice.toFixed(2),
-              priceCurrency: 'INR',
-            },
-          }),
           hasMerchantReturnPolicy: {
             '@context': 'https://schema.org',
             '@type': 'MerchantReturnPolicy',
