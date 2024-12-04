@@ -11,7 +11,7 @@ interface CartItemProps {
 }
 
 const CartItem: FC<CartItemProps> = ({ item }) => {
-  const itemLink = `/product/${item.productSlug}/${item.variantSlug}`
+  const itemLink = `/product/${item.productSlug}?size=${item.variantSlug}`
   return (
     <div className="flex flex-col md:flex-row justify-between md:items-end border-b border-solid border-gray-200 pb-5 mb-5">
       <div className="flex">

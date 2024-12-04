@@ -60,7 +60,7 @@ export default function getSchema(product: Product): WithContext<ProductGroup> {
         size: v.title,
         offers: {
           '@type': 'Offer',
-          url: `${baseUrl}/product/${product.slug}/${v.slug}`,
+          url: `${baseUrl}/product/${product.slug}?size=${v.slug}`,
           price: v.price.toFixed(2),
           priceCurrency: 'INR',
           availability: 'https://schema.org/InStock',

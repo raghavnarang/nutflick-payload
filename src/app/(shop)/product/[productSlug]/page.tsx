@@ -4,8 +4,6 @@ import cx from 'clsx'
 import Link from 'next/link'
 import AddToCart from '@/components/cart/add-to-cart'
 import ProductRecommendations from '@/components/product/product-recommendations'
-import BigMessage from '@/components/big-message'
-import Sad from '@/components/Icons/sad'
 import Photo from '@/components/Icons/photo'
 import { getProducts } from '@/features/server/product'
 import Price from '@/components/product/price'
@@ -14,9 +12,10 @@ import getSchema from './schema'
 import type { Metadata } from 'next'
 import { getProductDataFromParams, type ProductProps } from './helper'
 import LexicalView from '@/components/lexical-view'
+import { notFound } from 'next/navigation'
 
-export async function generateMetadata({ params }: ProductProps): Promise<Metadata> {
-  const data = await getProductDataFromParams({ params })
+export async function generateMetadata(props: ProductProps): Promise<Metadata> {
+  const data = await getProductDataFromParams(props)
   if (!data) {
     return {}
   }
@@ -35,14 +34,10 @@ export async function generateMetadata({ params }: ProductProps): Promise<Metada
   }
 }
 
-const Product: FC<ProductProps> = async ({ params }) => {
-  const data = await getProductDataFromParams({ params })
+const Product: FC<ProductProps> = async (props) => {
+  const data = await getProductDataFromParams(props)
   if (!data) {
-    return (
-      <BigMessage icon={Sad} button={{ text: <Link href="/">Go to Home</Link> }}>
-        Error in fetching product or Product is not valid
-      </BigMessage>
-    )
+    notFound()
   }
 
   const { product, variant } = data
@@ -85,8 +80,7 @@ const Product: FC<ProductProps> = async ({ params }) => {
                         'text-red-800 bg-red-100 border-red-500': isSelected,
                       },
                     )}
-                    href={`/product/${product.slug}/${v.slug}`}
-                    prefetch
+                    href={`/product/${product.slug}?size=${v.slug}`}
                     replace
                   >
                     {v.title}
@@ -135,7 +129,5 @@ export default Product
 export async function generateStaticParams() {
   const products = await getProducts()
 
-  return products
-    .filter((p) => p.slug && p.variants && p.variants.every((v) => !!v.slug))
-    .map((p) => ({ productSlug: p.slug! }))
+  return products.map((p) => ({ productSlug: p.slug }))
 }

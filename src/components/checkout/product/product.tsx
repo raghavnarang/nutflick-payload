@@ -7,7 +7,7 @@ import Price from '@/components/product/price'
 import EditCartItem from '@/components/cart/edit-cart-item'
 
 const CheckoutProduct: FC<CartItem & { name: string }> = ({ name, ...item }) => {
-  const itemLink = `/product/${item.productSlug}/${item.variantSlug}`
+  const itemLink = `/product/${item.productSlug}?size=${item.variantSlug}`
   return (
     <div className="flex flex-col md:flex-row md:justify-between md:items-center border-b border-solid border-gray-200 md:px-8 px-2 py-4">
       <div className="flex">

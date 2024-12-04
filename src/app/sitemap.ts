@@ -26,23 +26,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       images: typeof p.image !== 'number' && p.image?.url ? [baseUrl + p.image.url] : undefined,
       priority: 1,
     })
-
-    // Add products variants to sitemap
-    p.variants?.forEach((v) => {
-      if (v.slug) {
-        sitemap.push({
-          url: process.env.NEXT_PUBLIC_VERCEL_URL! + '/product/' + p.slug + '/' + v.slug,
-          lastModified: new Date(p.updatedAt),
-          images:
-            typeof v.image !== 'number' && v.image?.url
-              ? [baseUrl + v.image.url]
-              : typeof p.image !== 'number' && p.image?.url
-                ? [baseUrl + p.image.url]
-                : undefined,
-          priority: 1,
-        })
-      }
-    })
   })
 
   // Add Static Pages
