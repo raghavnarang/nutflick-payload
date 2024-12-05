@@ -13,6 +13,7 @@ import FooterQuickActions from '@/components/quick-actions/footer'
 import GlobalWrapper from '@/components/global-wrapper'
 import type { Metadata } from 'next'
 import favicon from '@/public/favicon.png'
+import Script from 'next/script'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -52,6 +53,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className={clsx(inter.className, 'text-gray-700')}>
+        <Script defer data-domain="nuflick.com" src="https://plausible.io/js/script.js" />
         <CartProvider>
           <GlobalWrapper>
             <div>
