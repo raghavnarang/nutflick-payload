@@ -7,7 +7,7 @@ export interface ProductProps {
 
 export async function getProductDataFromParams({ params, searchParams }: ProductProps) {
   const { productSlug } = await params
-  const { size: variantSlug } = await searchParams
+  const { size: variantSlug } = (await searchParams) || {}
   const product = await getProductBySlug(productSlug)
 
   if (!product || product?.variants?.length === 0) {

@@ -81,7 +81,6 @@ const Product: FC<ProductProps> = async (props) => {
                       },
                     )}
                     href={`/product/${product.slug}?size=${v.slug}`}
-                    replace
                   >
                     {v.title}
                   </Link>

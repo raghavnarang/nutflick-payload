@@ -1,5 +1,4 @@
 import { isAdmin } from '@/access/is-admin'
-import formatSlug from '@/utils/format-slug'
 import { HTMLConverterFeature, lexicalEditor, lexicalHTML } from '@payloadcms/richtext-lexical'
 import { revalidateTag } from 'next/cache'
 import type { CollectionConfig } from 'payload'
