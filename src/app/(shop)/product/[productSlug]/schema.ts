@@ -5,9 +5,13 @@ import type { ProductGroup, WithContext } from 'schema-dts'
 export default function getSchema(product: Product): WithContext<ProductGroup> {
   const baseUrl = process.env.NEXT_PUBLIC_VERCEL_URL!
   const productImage =
-    typeof product.image !== 'number' && product.image.url ? product.image.url : undefined
+    typeof product.image !== 'number'
+      ? product.image.sizes?.optimised?.url || product.image.url || undefined
+      : undefined
   const productBigImage =
-    typeof product.bigImage !== 'number' && product.bigImage?.url ? product.bigImage.url : undefined
+    typeof product.bigImage !== 'number'
+      ? product.bigImage?.sizes?.optimised?.url || product.bigImage?.url || undefined
+      : undefined
 
   const finalProductImage = productImage || productBigImage
 
@@ -46,9 +50,14 @@ export default function getSchema(product: Product): WithContext<ProductGroup> {
         : undefined,
     variesBy: 'https://schema.org/size',
     hasVariant: product.variants?.map((v) => {
-      const variantImage = typeof v.image !== 'number' && v.image?.url ? v.image.url : undefined
+      const variantImage =
+        typeof v.image !== 'number'
+          ? v.image?.sizes?.optimised?.url || v.image?.url || undefined
+          : undefined
       const variantBigImage =
-        typeof v.bigImage !== 'number' && v.bigImage?.url ? v.bigImage.url : undefined
+        typeof v.bigImage !== 'number'
+          ? v.bigImage?.sizes?.optimised?.url || v.bigImage?.url || undefined
+          : undefined
 
       const finalVariantImage = variantImage || variantBigImage || productImage || productBigImage
 

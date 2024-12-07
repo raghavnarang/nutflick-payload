@@ -5,6 +5,11 @@ export const Media: CollectionConfig = {
   access: {
     read: () => true,
   },
+  admin: {
+    components: {
+      beforeListTable: ['/components/admin/regenerate-images'],
+    },
+  },
   fields: [
     {
       name: 'alt',
@@ -12,5 +17,20 @@ export const Media: CollectionConfig = {
       required: true,
     },
   ],
-  upload: true,
+  upload: {
+    formatOptions: {
+      format: 'png',
+      options: {
+        quality: 20,
+      },
+    },
+    imageSizes: [
+      {
+        name: 'optimised',
+        generateImageName: ({ originalName, extension }) =>
+          `${originalName}-optimised.${extension}`,
+        width: 500,
+      },
+    ],
+  },
 }

@@ -29,6 +29,11 @@ export default async function Image(props: ProductProps) {
 
   const { product } = data
 
+  const imageUrl =
+    typeof product.image !== 'number'
+      ? product.image.sizes?.optimised?.url || product.image.url
+      : undefined
+
   return new ImageResponse(
     (
       // ImageResponse JSX element
@@ -43,15 +48,13 @@ export default async function Image(props: ProductProps) {
           gap: '50px',
         }}
       >
-        {typeof product.image !== 'number' &&
-          product.image.url &&
-          !product.image.url.includes('.webp') && (
-            <img
-              style={{ borderRadius: '20px' }}
-              src={process.env.NEXT_PUBLIC_VERCEL_URL! + product.image.url}
-              width={400}
-            />
-          )}
+        {imageUrl && !imageUrl.includes('.webp') && (
+          <img
+            style={{ borderRadius: '20px' }}
+            src={process.env.NEXT_PUBLIC_VERCEL_URL! + imageUrl}
+            width={400}
+          />
+        )}
         <span style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           <img src={logoSrc as unknown as string} width={300} />
           <span
