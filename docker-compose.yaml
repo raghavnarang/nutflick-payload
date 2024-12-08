@@ -5,8 +5,6 @@ services:
     build: .
     ports:
       - '3000:3000'
-    volumes:
-      - ./media:/app/media
     environment:
       - NODE_ENV=production
       - DATABASE_URI=${DATABASE_URI}
