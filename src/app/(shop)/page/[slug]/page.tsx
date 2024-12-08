@@ -41,8 +41,13 @@ export default async function Page({ params }: PageProps) {
 }
 
 export async function generateStaticParams() {
-  const pages = (await getPages()).filter((p) => !!p.content_html)
-  return pages.map((p) => ({
-    slug: p.slug!,
-  }))
+  try {
+    const pages = (await getPages()).filter((p) => !!p.content_html)
+    return pages.map((p) => ({
+      slug: p.slug!,
+    }))
+  } catch (e) {
+    console.log('Unable to connect to DB / generate pages, skipping SSG')
+    return []
+  }
 }

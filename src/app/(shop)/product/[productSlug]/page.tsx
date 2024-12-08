@@ -126,7 +126,12 @@ const Product: FC<ProductProps> = async (props) => {
 export default Product
 
 export async function generateStaticParams() {
-  const products = await getProducts()
+  try {
+    const products = await getProducts()
 
-  return products.map((p) => ({ productSlug: p.slug }))
+    return products.map((p) => ({ productSlug: p.slug }))
+  } catch (e) {
+    console.log('Unable to connect to DB / generate products, skipping SSG')
+    return []
+  }
 }
