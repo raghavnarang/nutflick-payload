@@ -21,7 +21,7 @@ services:
     networks:
       - coolify
 
-volumes:
+networks:
   coolify:
     name: coolify
     external: true
