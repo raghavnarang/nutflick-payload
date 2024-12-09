@@ -41,7 +41,7 @@ export default buildConfig({
   db: postgresAdapter({
     prodMigrations: migrations,
     pool: {
-      connectionString: process.env.DATABASE_URI || '',
+      connectionString: process.env.NODE_ENV === 'production' ? process.env.DATABASE_URI : process.env.EXTERNAL_DATABASE_URI,
     },
   }),
   sharp,
