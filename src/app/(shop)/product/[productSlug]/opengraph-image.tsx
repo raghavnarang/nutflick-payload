@@ -17,7 +17,8 @@ export default async function Image(props: ProductProps) {
   const logoData = await readFile(
     join(
       process.cwd(),
-      process.env.NODE_ENV === 'production' ? './public/logo.png' : './src/public/logo.png',
+      // process.env.NODE_ENV === 'production' ? './public/logo.png' : './src/public/logo.png',
+      './src/public/logo.png'
     ),
   )
   const logoSrc = Uint8Array.from(logoData).buffer
