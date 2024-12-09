@@ -54,6 +54,8 @@ RUN mkdir ./media
 RUN chown nextjs:nodejs ./media
 
 RUN mkdir -p ./.next/cache/images
+RUN chown -R nextjs:nodejs ./.next
+RUN chown -R nextjs:nodejs ./.next/cache
 RUN chown -R nextjs:nodejs ./.next/cache/images
 
 # Automatically leverage output traces to reduce image size
