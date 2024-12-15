@@ -1,3 +1,4 @@
+const colors = require('tailwindcss/colors')
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
@@ -9,8 +10,13 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        primary: colors.orange[800],
+        "primary-hover": colors.orange[900],
+        "primary-fade": colors.orange[100],
+      },
+    },
   },
   plugins: [],
 }
-

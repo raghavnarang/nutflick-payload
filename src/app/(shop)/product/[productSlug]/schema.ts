@@ -1,4 +1,5 @@
 import type { Product } from '@/payload-types'
+import { getProductRange } from '@/utils/misc'
 import { getProductVariantTitle } from '@/utils/product'
 import type { ProductGroup, WithContext } from 'schema-dts'
 
@@ -15,15 +16,7 @@ export default function getSchema(product: Product): WithContext<ProductGroup> {
 
   const finalProductImage = productImage || productBigImage
 
-  let lowPrice = product.variants?.[0].price || 0
-  let highPrice = 0
-  product.variants?.forEach((v) => {
-    if (v.price < lowPrice) {
-      lowPrice = v.price
-    } else if (v.price > highPrice) {
-      highPrice = v.price
-    }
-  })
+  const { lowPrice, highPrice } = getProductRange(product)
 
   return {
     '@context': 'https://schema.org',

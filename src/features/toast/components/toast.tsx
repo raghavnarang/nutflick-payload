@@ -33,7 +33,7 @@ const Toast: FC<ToastType> = ({ id, message, type, duration }) => {
   return (
     <div
       className={cx('rounded border border-solid px-5 transition duration-500', {
-        'border-red-700 text-red-700 bg-red-200': type === 'error',
+        'border-red-500 text-red-500 bg-red-200': type === 'error',
         'border-green-700 text-green-700 bg-green-200': type === 'success',
         'border-blue-700 text-blue-700 bg-blue-200': type === 'info',
       })}

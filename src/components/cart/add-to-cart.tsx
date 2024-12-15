@@ -15,6 +15,7 @@ export interface AddToCartProps {
   bigButton?: boolean
   normalButton?: boolean
   disableRemove?: boolean
+  quantitySelectorClassName?: string
 }
 
 const AddToCart: FC<AddToCartProps> = ({
@@ -23,6 +24,7 @@ const AddToCart: FC<AddToCartProps> = ({
   normalButton,
   showIcon,
   disableRemove,
+  quantitySelectorClassName,
 }) => {
   const { cart, increment } = useCartStore((state) => state)
   const setVariantSelectorProduct = useCartVariantSelectorStore((state) => state.setProduct)
@@ -30,10 +32,6 @@ const AddToCart: FC<AddToCartProps> = ({
   if (!product.variants || product.variants.length === 0) {
     return null
   }
-
-  const optionsLabel = product.variants.length > 1 && (
-    <p className="text-xs text-gray-600 mt-1">{product.variants.length} options</p>
-  )
 
   const areProductVariantsInCart = cart.items.find(
     (ci) => ci.productId === product.id && product.variants?.find((v) => v.id === ci.variantId),
@@ -44,11 +42,10 @@ const AddToCart: FC<AddToCartProps> = ({
         {bigButton && <p className="text-lg mb-3">Quantity (in cart)</p>}
         <EditCartItem
           product={product}
-          className={cx({ '!flex-row': !bigButton })}
+          className={cx({ '!flex-row': !bigButton }, quantitySelectorClassName)}
           bigButton={bigButton}
           disableRemove={disableRemove}
         />
-        {optionsLabel}
       </div>
     )
   }
@@ -72,7 +69,6 @@ const AddToCart: FC<AddToCartProps> = ({
       >
         Add to Cart
       </Button>
-      {optionsLabel}
     </div>
   )
 }
