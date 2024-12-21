@@ -28,6 +28,8 @@ const EditCartItem: FC<EditCartItemProps> = ({ product, disableRemove, ...rest }
   return (
     <EditCartItemUI
       {...rest}
+      hasMultipleVariants={!!product.variants && product.variants.length > 1}
+      showHelperText={true}
       qty={qty}
       onMinusClick={() =>
         cartHasSingleVariant

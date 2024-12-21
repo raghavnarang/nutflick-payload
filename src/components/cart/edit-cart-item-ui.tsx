@@ -4,9 +4,8 @@ import { type FC } from 'react'
 import Plus from '../Icons/plus'
 import Minus from '../Icons/minus'
 import Button from '../button'
-import cx from 'clsx'
+import cx, { clsx } from 'clsx'
 import { useFormStatus } from 'react-dom'
-import Trash from '../Icons/trash'
 
 interface EditCartItemUIProps {
   className?: string
@@ -14,6 +13,8 @@ interface EditCartItemUIProps {
   onMinusClick?: () => void
   onPlusClick?: () => void
   onRemoveClick?: () => void
+  hasMultipleVariants?: boolean
+  showHelperText?: boolean
   qty: number
 }
 
@@ -23,6 +24,8 @@ const EditCartItemUI: FC<EditCartItemUIProps> = ({
   onMinusClick,
   onPlusClick,
   onRemoveClick,
+  hasMultipleVariants,
+  showHelperText,
   qty,
 }) => {
   const { pending } = useFormStatus()
@@ -55,7 +58,10 @@ const EditCartItemUI: FC<EditCartItemUIProps> = ({
         </button>
         <span className="w-8 text-center leading-8">{qty}</span>
         <button
-          className="disabled:opacity-50"
+          className={clsx('disabled:opacity-50', {
+            'flex items-center gap-2 bg-primary text-white pl-1 py-1 pr-3 rounded-full':
+              showHelperText,
+          })}
           onClick={(e) => {
             e.preventDefault()
             onPlusClick?.()
@@ -63,7 +69,14 @@ const EditCartItemUI: FC<EditCartItemUIProps> = ({
           disabled={pending}
           aria-label="Increase Quantity"
         >
-          <Plus className="text-primary !size-8" />
+          <Plus
+            className={clsx('text-primary !size-8', {
+              'bg-white rounded-full': showHelperText,
+            })}
+          />
+          {showHelperText && (
+            <span className="text-sm">{hasMultipleVariants ? 'More Options' : 'Add More'}</span>
+          )}
         </button>
       </div>
       {onRemoveClick && (
