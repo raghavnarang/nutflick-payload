@@ -24,13 +24,5 @@ export const Media: CollectionConfig = {
         quality: 20,
       },
     },
-    imageSizes: [
-      {
-        name: 'optimised',
-        generateImageName: ({ originalName, extension }) =>
-          `${originalName}-optimised.${extension}`,
-        width: 500,
-      },
-    ],
   },
 }

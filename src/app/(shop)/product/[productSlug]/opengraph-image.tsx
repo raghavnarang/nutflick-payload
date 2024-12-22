@@ -29,10 +29,7 @@ export default async function Image(props: ProductProps) {
 
   const { product } = data
 
-  const imageUrl =
-    typeof product.image !== 'number'
-      ? product.image.sizes?.optimised?.url || product.image.url
-      : undefined
+  const imageUrl = typeof product.image !== 'number' ? product.image.url : undefined
 
   return new ImageResponse(
     (
