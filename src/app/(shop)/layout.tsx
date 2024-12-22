@@ -9,7 +9,6 @@ import VariantSelectorModal from '@/components/cart/variant-selector/modal'
 import CartNavItem from '@/components/nav/cart-nav-item'
 import ToastContainer from '@/features/toast/components/toast-container'
 import clsx from 'clsx'
-import FooterQuickActions from '@/components/quick-actions/footer'
 import GlobalWrapper from '@/components/global-wrapper'
 import type { Metadata } from 'next'
 import favicon from '@/public/favicon.png'
@@ -35,12 +34,16 @@ const navItems: NavProps['items'] = [
   {
     text: 'My Account',
     link: '/account',
+    icon: 'User',
   },
-  <CartNavItem key="cart" />,
+  <CartNavItem
+    key="cart"
+    className="md:h-16 h-12 md:pl-5 pl-3 border-gray-300 items-center"
+    hideTextOnMobile
+  />,
 ]
 
 const mobileNavItems = [
-  ...navItems,
   { text: 'Privacy Policy', link: '/page/privacy-policy' },
   { text: 'Terms & Conditions', link: '/page/tnc' },
   {
@@ -63,7 +66,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <Footer />
             <VariantSelectorModal />
             <ToastContainer />
-            <FooterQuickActions />
           </GlobalWrapper>
         </CartProvider>
       </body>

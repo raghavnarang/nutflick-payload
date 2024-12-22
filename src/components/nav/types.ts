@@ -13,4 +13,5 @@ export interface NavProps {
   items: Array<NavItem | ReactElement>;
   className?: string;
   showCart?: boolean;
+  isHeader?: boolean
 }

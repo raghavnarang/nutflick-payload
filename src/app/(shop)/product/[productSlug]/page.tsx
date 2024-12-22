@@ -1,18 +1,14 @@
 import { type FC } from 'react'
 import Image from 'next/image'
-import cx from 'clsx'
-import Link from 'next/link'
-import AddToCart from '@/components/cart/add-to-cart'
 import ProductRecommendations from '@/components/product/product-recommendations'
 import Photo from '@/components/Icons/photo'
 import { getProducts } from '@/features/server/product'
-import Price from '@/components/product/price'
-import GoToCart from '@/components/product/go-to-cart'
 import getSchema from './schema'
 import type { Metadata } from 'next'
 import { getProductDataFromParams, type ProductProps } from './helper'
 import LexicalView from '@/components/lexical-view'
 import { notFound } from 'next/navigation'
+import ProductVariantNavigator from '@/components/product/variant-navigator'
 
 export async function generateMetadata(props: ProductProps): Promise<Metadata> {
   const data = await getProductDataFromParams(props)
@@ -63,46 +59,19 @@ const Product: FC<ProductProps> = async (props) => {
             </div>
           )}
         </div>
+
         <div className="w-full md:w-1/2">
-          <h1 className="md:text-3xl text-xl mb-5 !leading-relaxed">{product.title}</h1>
-          <div className="mb-2">
-            {product.variants?.map((v) => {
-              const isSelected = v.slug?.toLowerCase() === variant.slug?.toLowerCase()
-
-              return (
-                v.slug && (
-                  <Link
-                    key={v.id}
-                    className={cx(
-                      'rounded px-4 py-2 mr-3 last:mr-0 mb-3 transition-colors inline-block text-sm md:text-base',
-                      {
-                        'text-gray-700 bg-gray-100 hover:bg-gray-200': !isSelected,
-                        'text-red-800 bg-red-100 border-red-500': isSelected,
-                      },
-                    )}
-                    href={`/product/${product.slug}?size=${v.slug}`}
-                  >
-                    {v.title}
-                  </Link>
-                )
-              )
-            })}
-          </div>
-
-          <LexicalView
-            className="text-gray-700 mb-5 leading-loose"
-            htmlString={product.description_html || ''}
-          />
-          <div className="flex md:flex-col md:justify-normal justify-between items-center md:items-start z-10 md:gap-5 md:relative fixed md:bottom-auto md:left-auto md:right-auto bottom-14 left-0 right-0 px-5 md:px-0 h-14 md:h-auto border-gray-300 border-t md:border-none bg-white md:bg-transparent">
-            <div className="flex items-center gap-2">
-              <Price price={variant.price} className="font-bold text-xl" />
-              {variant.comparePrice && (
-                <Price price={variant.comparePrice} className="line-through" />
-              )}
+          <h1 className="md:text-3xl text-lg mb-2 !leading-relaxed">{product.title}</h1>
+          <ProductVariantNavigator className="mb-2" product={product} />
+          {product.description_html && (
+            <div>
+              <p className="md:text-lg font-medium mb-3">Product Description</p>
+              <LexicalView
+                className="text-gray-700 mb-5 leading-loose"
+                htmlString={product.description_html}
+              />
             </div>
-            <AddToCart product={{ ...product, variants: [variant] }} normalButton disableRemove />
-            <GoToCart variantId={variant.id || undefined} className="md:block hidden" />
-          </div>
+          )}
         </div>
         <script
           type="application/ld+json"
@@ -126,7 +95,7 @@ const Product: FC<ProductProps> = async (props) => {
 export default Product
 
 export async function generateStaticParams() {
-  const products = await getProducts()
+  const products = await getProducts(true)
 
   return products.map((p) => ({ productSlug: p.slug }))
 }

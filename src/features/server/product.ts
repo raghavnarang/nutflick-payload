@@ -54,14 +54,15 @@ export const getOrderProductsFromCartItems = async (items: CartItem[]) => {
 }
 
 export const getProducts = unstable_cache(
-  async () => {
+  async (slugOnly?: boolean) => {
     const payload = await getPayload({ config })
     const { docs } = await payload.find({
       collection: 'products',
-      select: { bigImage: false, description: false, description_html: false },
+      select: slugOnly
+        ? { slug: true }
+        : { bigImage: false, description: false, description_html: false },
       pagination: false,
       depth: 1,
-      sort: 'createdAt', 
     })
     return docs
   },

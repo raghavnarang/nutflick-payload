@@ -2,9 +2,9 @@ import Link from 'next/link'
 import Image from 'next/image'
 import type { FC } from 'react'
 import Price from '../product/price'
-import EditCartItem from './edit-cart-item'
 import type { CartItem } from '@/shared/types/cart'
 import Photo from '../Icons/photo'
+import CartItemCartControls from './controls/cart-item'
 
 interface CartItemProps {
   item: CartItem
@@ -44,7 +44,7 @@ const CartItem: FC<CartItemProps> = ({ item }) => {
             </Link>
             <Price price={item.price} className="block text-gray-600 text-sm md:text-base" />
           </div>
-          <EditCartItem cartItem={item} className="md:!justify-start mb-2" />
+          <CartItemCartControls cartItem={item} className="mb-2" />
         </div>
       </div>
       <Price price={item.price * item.qty} className="text-lg text-right" />

@@ -17,8 +17,8 @@ export function getFormattedPrice(
 }
 
 export function getProductRange(product: Product) {
-  let lowPrice = product.variants?.[0].price || 0
-  let lowVariantTitle = product.variants?.[0].title || ''
+  let lowPrice = product.variants?.[0]?.price || 0
+  let lowVariantTitle = product.variants?.[0]?.title || ''
   let highPrice = 0
   let highVariantTitle = ''
   product.variants?.forEach((v) => {

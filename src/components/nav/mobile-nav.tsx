@@ -4,11 +4,10 @@ import { FC, useEffect, useState } from 'react'
 import cx from 'clsx'
 import { usePathname, useSearchParams } from 'next/navigation'
 import Bars from '../Icons/bars'
-import Nav from './nav'
-import Cross from '../Icons/cross'
-import { NavProps } from './types'
+import type { NavItem } from './types'
+import Link from 'next/link'
 
-const MobileNav: FC<NavProps> = ({ items }) => {
+const MobileNav: FC<{ items: NavItem[] }> = ({ items }) => {
   const [isOpen, setOpen] = useState(false)
   const pathname = usePathname()
   const searchParams = useSearchParams()
@@ -18,19 +17,28 @@ const MobileNav: FC<NavProps> = ({ items }) => {
   }, [pathname, searchParams])
 
   return (
-    <div className="mr-5 size-8 block md:hidden">
-      <button onClick={() => setOpen(true)} aria-label="Mobile Menu">
+    <div className="mr-3 size-8 block md:hidden">
+      <button onClick={() => setOpen(!isOpen)} aria-label="Mobile Menu">
         <Bars className="!size-8" />
       </button>
       <div
-        className={cx('fixed bg-white inset-0 z-20 p-10 transition-transform duration-500', {
-          '-translate-x-full': !isOpen,
-        })}
+        className={cx(
+          'fixed bg-white inset-0 z-20 mt-12 transition-transform duration-500 border-t border-gray-300 flex flex-col',
+          {
+            '-translate-x-full': !isOpen,
+          },
+        )}
       >
-        <button className="absolute right-8 top-8" onClick={() => setOpen(false)} aria-label="Close Mobile Menu">
-          <Cross className="!size-8 text-red-600" />
-        </button>
-        <Nav items={items} className="flex-col !items-start gap-4" />
+        {items.map((item) => (
+          <Link
+            href={item.link}
+            key={item.link}
+            aria-description={item.text}
+            className='px-5 py-3 border-b border-gray-300'
+          >
+            {item.text}
+          </Link>
+        ))}
       </div>
     </div>
   )

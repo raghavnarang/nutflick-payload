@@ -4,7 +4,7 @@ import Image from 'next/image'
 import type { FC } from 'react'
 import Photo from '@/components/Icons/photo'
 import Price from '@/components/product/price'
-import EditCartItem from '@/components/cart/edit-cart-item'
+import CartItemCartControls from '@/components/cart/controls/cart-item'
 
 const CheckoutProduct: FC<CartItem & { name: string }> = ({ name, ...item }) => {
   const itemLink = `/product/${item.productSlug}?size=${item.variantSlug}`
@@ -43,7 +43,7 @@ const CheckoutProduct: FC<CartItem & { name: string }> = ({ name, ...item }) => 
             </Link>
             <Price price={item.price} className="block text-gray-600 text-sm md:text-base" />
             <div className="mt-2">
-              <EditCartItem cartItem={item} className="md:!justify-start" />
+              <CartItemCartControls cartItem={item} />
             </div>
           </div>
 

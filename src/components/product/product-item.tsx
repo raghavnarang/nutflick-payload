@@ -3,11 +3,9 @@ import { type FC } from 'react'
 import Price from './price'
 import Link from 'next/link'
 import Photo from '../Icons/photo'
-import AddToCart from '../cart/add-to-cart'
 import type { Product } from '@/payload-types'
-import GoToCart from './go-to-cart'
-import ProductItemHelper from './product-item-helper'
 import { getProductRange } from '@/utils/misc'
+import ProductItemCartControls from '../cart/controls/product-item'
 
 interface ProductItemProps {
   product: Product
@@ -64,15 +62,11 @@ const ProductItem: FC<ProductItemProps> = ({ product }) => {
             </p>
             <p className="text-primary font-semibold text-sm">
               {lowVariantTitle}
-              {highVariantTitle && ` - ${highVariantTitle}`}
+              {highVariantTitle && lowVariantTitle !== highVariantTitle && ` - ${highVariantTitle}`}
             </p>
           </div>
         )}
-        <div className="mt-3 flex items-start">
-          <AddToCart product={product} disableRemove quantitySelectorClassName="h-9" />
-          <GoToCart product={product} className="hidden md:block" />
-        </div>
-        <ProductItemHelper product={product} />
+        <ProductItemCartControls product={product} />
       </div>
     </div>
   )

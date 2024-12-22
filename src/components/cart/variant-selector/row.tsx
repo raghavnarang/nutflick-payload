@@ -2,7 +2,7 @@ import Price from '@/components/product/price'
 import type { Product } from '@/payload-types'
 import type { FC } from 'react'
 import Image from 'next/image'
-import AddToCart from '../add-to-cart'
+import VariantSelectorCartControls from '../controls/variant-selector'
 
 interface VariantSelectorRowProps {
   variant: NonNullable<Product['variants']>[number]
@@ -45,9 +45,7 @@ const VariantSelectorRow: FC<VariantSelectorRowProps> = ({ variant, product }) =
               )}
             </div>
           </div>
-          <div className='mt-2'>
-            <AddToCart product={{ ...product, variants: [variant] }} />
-          </div>
+          <VariantSelectorCartControls product={{ ...product, variants: [variant] }} />
         </div>
       </div>
     </div>
