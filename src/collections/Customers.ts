@@ -1,4 +1,5 @@
 import { isAdminOrSelfCustomer } from '@/access/admin-or-self-customer'
+import { isAdmin } from '@/access/is-admin'
 import {
   getResetPasswordEmailHTML,
   getResetPasswordEmailSubject,
@@ -18,10 +19,24 @@ export const Customers: CollectionConfig = {
     useAsTitle: 'email',
   },
   access: {
-    create: ({ req: { user } }) => user?.collection === 'users',
-    read: ({ req: { user } }) => user?.collection === 'customers' || user?.collection === 'users',
-    update: ({ req: { user } }) => user?.collection === 'users',
-    delete: ({ req: { user } }) => user?.collection === 'users',
+    create: isAdmin,
+    read: ({ req: { user } }) => {
+      if (user?.collection === 'users') {
+        return true
+      }
+
+      if (user?.collection === 'customers') {
+        return {
+          id: {
+            equals: user.id,
+          },
+        }
+      }
+
+      return false
+    },
+    update: isAdmin,
+    delete: isAdmin,
   },
   auth: {
     verify: {
