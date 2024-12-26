@@ -1,7 +1,6 @@
 import { Inter } from 'next/font/google'
 import './globals.css'
 import Footer from '@/components/footer'
-import Body from '@/components/body'
 import Header from '@/components/header'
 import type { NavProps } from '@/components/nav/types'
 import { CartProvider } from '@/features/cart/cart-store/provider'
@@ -61,7 +60,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <GlobalWrapper>
             <div>
               <Header navItems={navItems} mobileSideNavItems={mobileNavItems} />
-              <Body>{children}</Body>
+              {children}
             </div>
             <Footer />
             <VariantSelectorModal />

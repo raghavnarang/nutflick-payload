@@ -9,6 +9,7 @@ import { getProductDataFromParams, type ProductProps } from './helper'
 import LexicalView from '@/components/lexical-view'
 import { notFound } from 'next/navigation'
 import ProductVariantNavigator from '@/components/product/variant-navigator'
+import Container from '@/components/container'
 
 export async function generateMetadata(props: ProductProps): Promise<Metadata> {
   const data = await getProductDataFromParams(props)
@@ -40,7 +41,7 @@ const Product: FC<ProductProps> = async (props) => {
   const image = variant.bigImage || product.bigImage || variant.image || product.image
 
   return (
-    <div>
+    <Container>
       <div className="w-full flex md:gap-10 gap-4 flex-col md:flex-row items-start">
         <div className="w-full md:w-1/2 md:h-[80vh] h-[50vh] flex justify-center bg-gray-100 relative">
           {typeof image != 'number' && image && image.url ? (
@@ -88,7 +89,7 @@ const Product: FC<ProductProps> = async (props) => {
           productId={product.id}
         />
       )}
-    </div>
+    </Container>
   )
 }
 

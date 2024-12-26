@@ -9,5 +9,5 @@ export const metadata: Metadata = {
 }
 
 export default function OrderLayout({ children }: { children: ReactNode }) {
-  return <div className="md:mt-0 mt-5">{children}</div>
+  return <div className="md:mt-0 mt-5 px-3 md:px-0">{children}</div>
 }

@@ -16,6 +16,7 @@ export default function SyncCart({ products }: { products: Product[] }) {
             if (product) {
               return generateCartItem(product, item.variantId, item.qty)
             }
+            return item
           })
           .filter((item) => !!item)
         setCartItems(cartItems)

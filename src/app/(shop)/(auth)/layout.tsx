@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 const AuthLayout: FC<AuthLayoutProps> = async ({ children }) => {
   await redirectIfAuthenticated()
   return (
-    <div className="w-full flex justify-center mt-5">
+    <div className="w-full flex justify-center mt-5 px-3 md:px-0">
       <div className="w-full max-w-sm">{children}</div>
     </div>
   )

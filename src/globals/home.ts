@@ -1,3 +1,5 @@
+import HeroBlockConfig from '@/blocks/hero/config'
+import ProductsBlockConfig from '@/blocks/products/config'
 import { GlobalConfig } from 'payload'
 
 const HomePageOptions: GlobalConfig = {
@@ -5,7 +7,13 @@ const HomePageOptions: GlobalConfig = {
     read: ({ req: { user } }) => user?.collection === 'users',
     update: ({ req: { user } }) => user?.collection === 'users',
   },
-  fields: [],
+  fields: [
+    {
+      type: 'blocks',
+      blocks: [HeroBlockConfig, ProductsBlockConfig],
+      name: 'pageBlocks',
+    },
+  ],
   slug: 'home-page-options',
 }
 

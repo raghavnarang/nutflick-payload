@@ -750,6 +750,28 @@ export interface ShippingOption {
  */
 export interface HomePageOption {
   id: number;
+  pageBlocks?:
+    | (
+        | {
+            product: number | Product;
+            titleLeft: string;
+            titleRight: string;
+            tag: string;
+            description: string;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'Hero';
+          }
+        | {
+            products: (number | Product)[];
+            title: string;
+            subtitle: string;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'Products';
+          }
+      )[]
+    | null;
   meta?: {
     title?: string | null;
     description?: string | null;
@@ -786,6 +808,30 @@ export interface ShippingOptionsSelect<T extends boolean = true> {
  * via the `definition` "home-page-options_select".
  */
 export interface HomePageOptionsSelect<T extends boolean = true> {
+  pageBlocks?:
+    | T
+    | {
+        Hero?:
+          | T
+          | {
+              product?: T;
+              titleLeft?: T;
+              titleRight?: T;
+              tag?: T;
+              description?: T;
+              id?: T;
+              blockName?: T;
+            };
+        Products?:
+          | T
+          | {
+              products?: T;
+              title?: T;
+              subtitle?: T;
+              id?: T;
+              blockName?: T;
+            };
+      };
   meta?:
     | T
     | {
