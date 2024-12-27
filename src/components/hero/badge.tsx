@@ -11,7 +11,7 @@ export default function Badge({
   return (
     <div
       className={clsx(
-        'inline-flex items-center rounded-full border px-3 py-1 text-sm font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 bg-orange-600 text-white hover:bg-orange-700',
+        'inline-flex items-center rounded-full border px-3 py-1 text-sm font-semibold transition-colors bg-white text-primary',
         className,
       )}
     >

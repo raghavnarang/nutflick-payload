@@ -45,7 +45,7 @@ const ProductItem: FC<ProductItemProps> = ({ product }) => {
               {product.category.value.title}
             </span>
           )}
-          <span className="block md:text-base text-sm">{product.title}</span>
+          <span className="block font-medium md:text-base text-sm">{product.title}</span>
         </Link>
       </div>
       <div>

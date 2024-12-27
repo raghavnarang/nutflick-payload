@@ -41,7 +41,7 @@ const Product: FC<ProductProps> = async (props) => {
   const image = variant.bigImage || product.bigImage || variant.image || product.image
 
   return (
-    <Container>
+    <Container className='pt-10'>
       <div className="w-full flex md:gap-10 gap-4 flex-col md:flex-row items-start">
         <div className="w-full md:w-1/2 md:h-[80vh] h-[50vh] flex justify-center bg-gray-100 relative">
           {typeof image != 'number' && image && image.url ? (

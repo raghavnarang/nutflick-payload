@@ -20,6 +20,7 @@ const Nav: FC<NavProps> = ({ items, className, isHeader }) => (
         <Link
           href={link}
           key={link}
+          aria-label={text}
           aria-description={text}
           className={clsx('flex items-center', {
             'md:h-16 h-12 md:px-5 px-3 border-r border-gray-300': isHeader,
