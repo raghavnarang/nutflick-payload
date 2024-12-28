@@ -1,5 +1,6 @@
 import HeroBlockConfig from '@/blocks/hero/config'
 import ProductsBlockConfig from '@/blocks/products/config'
+import { revalidatePath } from 'next/cache'
 import { GlobalConfig } from 'payload'
 
 const HomePageOptions: GlobalConfig = {
@@ -15,6 +16,9 @@ const HomePageOptions: GlobalConfig = {
     },
   ],
   slug: 'home-page-options',
+  hooks: {
+    afterChange: [() => revalidatePath('/')],
+  },
 }
 
 export default HomePageOptions
