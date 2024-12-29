@@ -1,6 +1,6 @@
 import { isAdmin } from '@/access/is-admin'
 import { HTMLConverterFeature, lexicalEditor, lexicalHTML } from '@payloadcms/richtext-lexical'
-import { revalidateTag } from 'next/cache'
+import { revalidatePath, revalidateTag } from 'next/cache'
 import type { CollectionConfig } from 'payload'
 
 export const Products: CollectionConfig = {
@@ -20,6 +20,7 @@ export const Products: CollectionConfig = {
     afterChange: [
       () => {
         revalidateTag('products')
+        revalidatePath('/')
       },
     ],
     afterDelete: [
