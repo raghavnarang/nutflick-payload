@@ -9,6 +9,7 @@ import CheckoutCouponSummary from '@/components/checkout/coupon/summary'
 import CheckoutTotal from '@/components/checkout/total'
 import CheckoutPaymentButton from '@/components/checkout/payment-button'
 import { CheckoutProvider } from '@/features/checkout/provider'
+import FBPixelInitateCheckout from '@/components/checkout/fb-pixel'
 
 export const metadata = {
   title: 'Checkout | Nutflick',
@@ -38,6 +39,7 @@ const CheckoutPage = async () => {
               </div>
             </div>
           </CheckoutForm>
+          <FBPixelInitateCheckout />
         </CheckoutProvider>
       </div>
     </div>

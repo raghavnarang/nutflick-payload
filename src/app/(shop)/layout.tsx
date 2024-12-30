@@ -70,6 +70,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
         <Script
           id='fbpixel'
+          strategy='beforeInteractive'
           dangerouslySetInnerHTML={{
             __html: `!function(f,b,e,v,n,t,s)
 {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
