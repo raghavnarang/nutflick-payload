@@ -82,9 +82,10 @@ export const placeOrder = async (checkout: PlaceGuestOrderArgs) => {
   const customer = await getOrCreateCustomer(checkout.email, undefined, req)
   const products = await getOrderProductsFromCartItems(checkout.products)
   const subtotal = products.reduce((total, item) => total + item.qty * item.price, 0)
-  const shipping = (await getShippingOptions()).find((item) => item.id === checkout.shipping)
+  const { option: options, freeShippingSettings } = await getShippingOptions()
+  const shipping = options.find((item) => item.id === checkout.shipping)
   const shippingRate = shipping ? getApplicableShippingRate(products, shipping) : 0
-  const adjustedShippingRate = getAdjustedShippingRate(products, shippingRate)
+  const adjustedShippingRate = getAdjustedShippingRate(products, shippingRate, freeShippingSettings)
   const couponDiscount =
     coupon && isCouponApplicable(coupon, subtotal) ? getDiscountValue(coupon, subtotal) : 0
 

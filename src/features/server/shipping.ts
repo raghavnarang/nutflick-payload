@@ -10,7 +10,7 @@ export const getShippingOptions = unstable_cache(
       slug: 'shipping-options',
     })
 
-    return optionsData.option
+    return optionsData
   },
   ['shipping-options'],
   { tags: ['shipping-options'] },

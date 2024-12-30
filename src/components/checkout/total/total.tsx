@@ -14,8 +14,10 @@ import { ShippingOption } from '@/payload-types'
 
 const CheckoutTotalClient = ({
   defaultShipping,
+  freeShippingSettings,
 }: {
   defaultShipping?: ShippingOption['option'][number]
+  freeShippingSettings: ShippingOption['freeShippingSettings']
 }) => {
   const cart = useCartStore((state) => state.cart)
   const { selectedCoupon: coupon, selectedShipping: storeShipping } = useCheckoutStore(
@@ -25,7 +27,7 @@ const CheckoutTotalClient = ({
 
   const shipping = storeShipping || defaultShipping
   const rate = shipping ? getApplicableShippingRate(cart.items, shipping) : 0
-  const cost = getAdjustedShippingRate(cart.items, rate)
+  const cost = getAdjustedShippingRate(cart.items, rate, freeShippingSettings)
 
   const discount = coupon && getDiscountValue(coupon, subtotal)
   const total = subtotal + cost - (discount || 0)

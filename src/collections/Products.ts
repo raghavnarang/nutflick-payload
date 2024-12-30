@@ -20,12 +20,13 @@ export const Products: CollectionConfig = {
     afterChange: [
       () => {
         revalidateTag('products')
-        revalidatePath('/')
+        revalidateTag('home')
       },
     ],
     afterDelete: [
       () => {
         revalidateTag('products')
+        revalidateTag('home')
       },
     ],
   },

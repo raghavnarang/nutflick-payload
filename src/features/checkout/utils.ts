@@ -11,14 +11,22 @@ export const getDiscountValue = (coupon: Coupon, subtotal: number = 0) => {
 }
 
 export const getAdjustedShippingRate = (
-  items: { includedShippingCost?: number | null; qty: number }[],
+  items: { includedShippingCost?: number | null; qty: number; price: number }[],
   rate: number,
+  freeShippingSettings: ShippingOption['freeShippingSettings'],
 ) => {
   if (rate <= 0) {
     return 0
   }
 
-  const adjustedRate = rate - getShippingCovered(items)
+  // Free Shipping over subtotal
+  const subtotal = getCartSubtotal(items)
+  let adjustedRate = rate
+  if (freeShippingSettings.enable && subtotal >= freeShippingSettings.subtotal) {
+    return 0
+  }
+
+  adjustedRate = adjustedRate - getShippingCovered(items)
   return adjustedRate <= 0 ? 0 : adjustedRate
 }
 
@@ -55,7 +63,11 @@ export const getApplicableShippingRate = (
 
 export const useCartSubtotal = () => {
   const cart = useCartStore((state) => state.cart)
-  return cart.items.reduce((total, item) => total + item.price * item.qty, 0)
+  return getCartSubtotal(cart.items)
+}
+
+export function getCartSubtotal(items: { price: number; qty: number }[]) {
+  return items.reduce((total, item) => total + item.price * item.qty, 0)
 }
 
 export const getShippingCovered = (

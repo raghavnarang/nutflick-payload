@@ -46,10 +46,12 @@ export interface Config {
   globals: {
     'shipping-options': ShippingOption;
     'home-page-options': HomePageOption;
+    'header-settings': HeaderSetting;
   };
   globalsSelect: {
     'shipping-options': ShippingOptionsSelect<false> | ShippingOptionsSelect<true>;
     'home-page-options': HomePageOptionsSelect<false> | HomePageOptionsSelect<true>;
+    'header-settings': HeaderSettingsSelect<false> | HeaderSettingsSelect<true>;
   };
   locale: null;
   user:
@@ -731,6 +733,10 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
  */
 export interface ShippingOption {
   id: number;
+  freeShippingSettings: {
+    enable?: boolean | null;
+    subtotal: number;
+  };
   option: {
     mode: string;
     days?: number | null;
@@ -782,9 +788,25 @@ export interface HomePageOption {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "header-settings".
+ */
+export interface HeaderSetting {
+  id: number;
+  messageStrip?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "shipping-options_select".
  */
 export interface ShippingOptionsSelect<T extends boolean = true> {
+  freeShippingSettings?:
+    | T
+    | {
+        enable?: T;
+        subtotal?: T;
+      };
   option?:
     | T
     | {
@@ -841,6 +863,16 @@ export interface HomePageOptionsSelect<T extends boolean = true> {
         image?: T;
         preview?: T;
       };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "header-settings_select".
+ */
+export interface HeaderSettingsSelect<T extends boolean = true> {
+  messageStrip?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

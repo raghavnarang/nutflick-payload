@@ -16,7 +16,13 @@ const ShippingDiscount = () => (
   </div>
 )
 
-const CheckoutShippingClient = ({ options }: { options: ShippingOption['option'] }) => {
+const CheckoutShippingClient = ({
+  options,
+  freeShippingSettings,
+}: {
+  options: ShippingOption['option']
+  freeShippingSettings: ShippingOption['freeShippingSettings']
+}) => {
   const setStoreShipping = useCheckoutStore((state) => state.setSelectedShipping)
   const cart = useCartStore((state) => state.cart)
 
@@ -28,7 +34,7 @@ const CheckoutShippingClient = ({ options }: { options: ShippingOption['option']
         ?.filter((i) => !!i.id)
         .map((i, index) => {
           const rate = getApplicableShippingRate(cart.items, i)
-          const cost = getAdjustedShippingRate(cart.items, rate)
+          const cost = getAdjustedShippingRate(cart.items, rate, freeShippingSettings)
           return (
             <SectionRadio
               name="shipping"
@@ -44,7 +50,13 @@ const CheckoutShippingClient = ({ options }: { options: ShippingOption['option']
               label={
                 <p className="flex flex-col">
                   <span>
-                    Shipping By <b>{i.mode}</b>
+                    {options.length > 1 ? (
+                      <>
+                        Shipping By <b>{i.mode}</b>
+                      </>
+                    ) : (
+                      'Shipping'
+                    )}
                   </span>
                   {i.days ? (
                     <span className="text-sm text-gray-600">Estimated Delivery ~{i.days} Days</span>

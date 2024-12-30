@@ -1,15 +1,8 @@
-import ProductGrid from '@/components/product/product-grid'
-import SyncCart from '@/features/cart/cart-store/sync-cart'
-import { getProducts } from '@/features/server/product'
-import clsx from 'clsx'
 import type { OnlineStore, WithContext } from 'schema-dts'
 import logo from '@/public/logo.png'
 import type { Metadata } from 'next'
 import { getHomePageOptions } from '@/features/server/home'
-import Container from '@/components/container'
 import HeroBanner from '@/components/hero'
-import config from '@payload-config'
-import { getPayload } from 'payload'
 import ProductsBlockComponent from '@/blocks/products/component'
 import type { Product } from '@/payload-types'
 
@@ -45,33 +38,8 @@ const schema: WithContext<OnlineStore> = {
   },
 }
 
-// const Home = async () => {
-//   const products = await getProducts()
-//   return (
-//     <>
-//       <HeroBanner />
-//       <Container className="pt-12">
-//         <div className='mb-12'>
-//           <h2 className="mb-2 inline-block text-3xl font-extrabold leading-normal md:max-w-full bg-gradient-to-r to-orange-600 from-primary text-transparent bg-clip-text">
-//             New Arrivals
-//           </h2>
-//           <p className="font-medium">Premium Nuts & Dry Fruits Freshly Added</p>
-//         </div>
-
-//         <ProductGrid products={products} />
-//         <SyncCart products={products} />
-//         <script
-//           type="application/ld+json"
-//           dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-//         />
-//       </Container>
-//     </>
-//   )
-// }
-
 export default async function HomePage() {
-  const payload = await getPayload({ config })
-  const data = await payload.findGlobal({ slug: 'home-page-options', depth: 2 })
+  const data = await getHomePageOptions()
   return (
     <>
       {data.pageBlocks?.map((block, index) => {

@@ -16,6 +16,14 @@ const ShippingOptions: GlobalConfig = {
   },
   fields: [
     {
+      type: 'group',
+      name: 'freeShippingSettings',
+      fields: [
+        { type: 'checkbox', name: 'enable', label: 'Enable Free Shipping?', defaultValue: false },
+        { type: 'number', name: 'subtotal', defaultValue: 0, required: true },
+      ],
+    },
+    {
       type: 'array',
       name: 'option',
       minRows: 1,
