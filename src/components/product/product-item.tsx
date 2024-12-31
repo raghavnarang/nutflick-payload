@@ -13,7 +13,12 @@ interface ProductItemProps {
 
 const ProductItem: FC<ProductItemProps> = ({ product }) => {
   const link = `/product/${product.slug}`
-  const { lowPrice, highPrice, lowVariantTitle, highVariantTitle } = getProductRange(product)
+  const {
+    lowPrice,
+    highPrice,
+    lowVariantTitle: { byWeight: lowVariantTitle },
+    highVariantTitle: { byWeight: highVariantTitle },
+  } = getProductRange(product)
 
   return (
     <div className="w-full flex flex-col justify-between">

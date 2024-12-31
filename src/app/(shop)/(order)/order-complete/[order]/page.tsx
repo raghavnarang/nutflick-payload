@@ -6,7 +6,7 @@ import OrderCustomerSummary from '@/components/order/customer-summary'
 import { getCurrentGuestOrCustomer } from '@/features/server/auth/customer'
 import { Suspense } from 'react'
 import OrderFetchingStatus from '@/components/order/status/fetching'
-import FBPixelPurchase from './fb-pixel'
+import PixelPurchase from './pixel'
 
 interface OrderCompleteArgs {
   params: Promise<{ order: number }>
@@ -28,9 +28,6 @@ export default async function OrderComplete({ params: paramsPromise }: OrderComp
     depth: 0,
   })
 
-  const subtotal = order.products.reduce((total, p) => total + p.qty * p.price, 0)
-  const total = subtotal + (order.rate || 0) - (order.discount || 0)
-
   return (
     <div className="max-w-screen-sm mx-auto my-0">
       <Suspense fallback={<OrderFetchingStatus />}>
@@ -38,14 +35,7 @@ export default async function OrderComplete({ params: paramsPromise }: OrderComp
       </Suspense>
       <OrderCustomerSummary order={order} />
       <OrderSummary order={order} />
-      <FBPixelPurchase
-        products={order.products.map((p) => ({
-          variantId: p.variantId,
-          productId: (typeof p.productRef === 'number' ? p.productRef : p.productRef?.id) || 0,
-          qty: p.qty,
-        }))}
-        total={total}
-      />
+      <PixelPurchase order={order} />
     </div>
   )
 }

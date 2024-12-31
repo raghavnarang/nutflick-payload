@@ -11,7 +11,12 @@ export default function getSchema(product: Product): WithContext<ProductGroup> {
 
   const finalProductImage = productImage || productBigImage
 
-  const { lowPrice, highPrice } = getProductRange(product)
+  const {
+    lowPrice,
+    highPrice,
+    lowWeight,
+    highWeight,
+  } = getProductRange(product)
 
   return {
     '@context': 'https://schema.org',
@@ -37,6 +42,12 @@ export default function getSchema(product: Product): WithContext<ProductGroup> {
           }
         : undefined,
     variesBy: 'https://schema.org/size',
+    weight: {
+      '@type': 'QuantitativeValue',
+      minValue: lowWeight,
+      maxValue: highWeight,
+      unitCode: 'KGM',
+    },
     hasVariant: product.variants?.map((v) => {
       const variantImage = (typeof v.image !== 'number' && v.image?.url) || undefined
       const variantBigImage = (typeof v.bigImage !== 'number' && v.bigImage?.url) || undefined
@@ -61,6 +72,14 @@ export default function getSchema(product: Product): WithContext<ProductGroup> {
             applicableCountry: 'IN',
             returnPolicyCategory: 'https://schema.org/MerchantReturnFiniteReturnWindow',
             merchantReturnLink: `${baseUrl}/page/refund-and-cancellation-policy`,
+          },
+          shippingDetails: {
+            '@type': 'OfferShippingDetails',
+            weight: {
+              '@type': 'QuantitativeValue',
+              value: v.weight,
+              unitCode: 'KGM',
+            },
           },
         },
       }

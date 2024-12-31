@@ -10,7 +10,7 @@ import LexicalView from '@/components/lexical-view'
 import { notFound } from 'next/navigation'
 import ProductVariantNavigator from '@/components/product/variant-navigator'
 import Container from '@/components/container'
-import FBPixelViewContent from '../fb-pixel'
+import PixelViewContent from './pixel'
 
 export async function generateMetadata(props: ProductProps): Promise<Metadata> {
   const data = await getProductDataFromParams(props)
@@ -90,7 +90,7 @@ const Product: FC<ProductProps> = async (props) => {
           productId={product.id}
         />
       )}
-      <FBPixelViewContent id={product.id} name={product.title} />
+      <PixelViewContent product={product} />
     </Container>
   )
 }

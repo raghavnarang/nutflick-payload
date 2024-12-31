@@ -18,18 +18,38 @@ export function getFormattedPrice(
 
 export function getProductRange(product: Product) {
   let lowPrice = product.variants?.[0]?.price || 0
-  let lowVariantTitle = product.variants?.[0]?.title || ''
+  let lowVariantTitleByPrice = product.variants?.[0]?.title || ''
   let highPrice = 0
-  let highVariantTitle = ''
+  let highVariantTitleByPrice = ''
+  let lowWeight = product.variants?.[0]?.weight || 0
+  let highWeight = 0
+  let lowVariantTitleByWeight = product.variants?.[0]?.title || ''
+  let highVariantTitleByWeight = ''
+
   product.variants?.forEach((v) => {
     if (v.price < lowPrice) {
       lowPrice = v.price
-      lowVariantTitle = v.title
+      lowVariantTitleByPrice = v.title
     } else if (v.price > highPrice) {
       highPrice = v.price
-      highVariantTitle = v.title
+      highVariantTitleByPrice = v.title
+    }
+
+    if (v.weight < lowWeight) {
+      lowWeight = v.weight
+      lowVariantTitleByWeight = v.title
+    } else if (v.weight > highWeight) {
+      highWeight = v.weight
+      highVariantTitleByWeight = v.title
     }
   })
 
-  return { lowPrice, highPrice, lowVariantTitle, highVariantTitle }
+  return {
+    lowPrice,
+    highPrice,
+    lowVariantTitle: { byPrice: lowVariantTitleByPrice, byWeight: lowVariantTitleByWeight },
+    highVariantTitle: { byPrice: highVariantTitleByPrice, byWeight: highVariantTitleByWeight },
+    lowWeight,
+    highWeight,
+  }
 }

@@ -45,13 +45,13 @@ export default async function HeroBanner({
           {/* Product Image */}
           {typeof product.image !== 'number' && product.image.url && (
             <div className="h-64 overflow-hidden rounded-lg sm:h-72 md:h-96 lg:h-full lg:p-9 mb-9 lg:mb-0">
-              <div className='relative h-full'>
+              <div className="relative h-full">
                 <Image
                   src={product.image.url}
                   alt={product.image.alt || product.title}
-                  layout="fill"
-                  objectFit="contain"
-                  sizes='80vw'
+                  style={{ objectFit: 'contain', width: '100%' }}
+                  fill
+                  sizes="80vw"
                   priority
                 />
               </div>
