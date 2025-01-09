@@ -46,10 +46,10 @@ const Footer = () => (
             <p className="md:mb-2 mb-1 text-primary font-semibold md:text-lg text-base">Contact</p>
             <p>
               <Link
-                href="tel:8437661855"
+                href="tel:7340803995"
                 className="flex gap-1 items-center font-medium text-sm md:text-base"
               >
-                +91-8437661855 <ChevronRight className="!size-5" />
+                +91-7340803995 <ChevronRight className="!size-5" />
               </Link>
               <span className="text-sm">(Call or WhatsApp)</span>
             </p>

@@ -10,7 +10,7 @@ export default function OrderUnknownStatus({ order }: { order: Order }) {
       <div className="text-center md:text-start">
         <p className="text-2xl">Payment status is unknown</p>
         <p className="text-gray-500 text-sm">
-          Please contact us for more information: +91-8437661855
+          Please contact us for more information: +91-7340803995
         </p>
         <p className="text-gray-500 text-sm">
           Order: #{order.id} {paymentIdText}

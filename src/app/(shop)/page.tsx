@@ -34,7 +34,7 @@ const schema: WithContext<OnlineStore> = {
     '@type': 'ContactPoint',
     contactType: 'Customer Service',
     email: 'hi@nutflick.com',
-    telephone: '+918437661855',
+    telephone: '+917340803995',
   },
 }
 
