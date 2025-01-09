@@ -73,12 +73,16 @@ const CheckoutApplyCoupon: FC<CheckoutApplyCouponProps> = ({ coupon, onSuccess, 
   ) : (
     <div className="flex justify-between w-full sm:gap-5 gap-3 md:px-8 px-4 py-5">
       <Textbox
-        name="coupon"
         placeholder="Enter Coupon Name"
         outerWrapperClassname="flex-grow"
-        required
         value={text}
         disabled={pending}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault()
+            applyCustomCoupon()
+          }
+        }}
         onChange={(e) => {
           e.preventDefault()
           setText(e.target.value)

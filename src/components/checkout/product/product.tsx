@@ -6,7 +6,11 @@ import Photo from '@/components/Icons/photo'
 import Price from '@/components/product/price'
 import CartItemCartControls from '@/components/cart/controls/cart-item'
 
-const CheckoutProduct: FC<CartItem & { name: string }> = ({ name, ...item }) => {
+const CheckoutProduct: FC<CartItem & { name: string; removeForm?: boolean }> = ({
+  name,
+  removeForm = false,
+  ...item
+}) => {
   const itemLink = `/product/${item.productSlug}?size=${item.variantSlug}`
   return (
     <div className="flex flex-col md:flex-row md:justify-between md:items-center border-b border-solid border-gray-200 md:px-8 px-2 py-4">
@@ -52,9 +56,13 @@ const CheckoutProduct: FC<CartItem & { name: string }> = ({ name, ...item }) => 
       </div>
 
       <Price price={item.price * item.qty} className="text-right hidden md:block" />
-      <input type="hidden" name={`${name}[productId]`} value={item.productId} />
-      <input type="hidden" name={`${name}[variantId]`} value={item.variantId} />
-      <input type="hidden" name={`${name}[qty]`} value={item.qty} />
+      {removeForm && (
+        <>
+          <input type="hidden" name={`${name}[productId]`} value={item.productId} />
+          <input type="hidden" name={`${name}[variantId]`} value={item.variantId} />
+          <input type="hidden" name={`${name}[qty]`} value={item.qty} />
+        </>
+      )}
     </div>
   )
 }

@@ -25,8 +25,8 @@ const CheckoutPage = async () => {
           <CheckoutForm>
             <div className="flex justify-center items-start lg:flex-row flex-col lg:gap-10">
               <div className="lg:w-1/2 w-full">
-                <Section title="Your Cart" className='md:hidden block' >
-                  <CheckoutProductSection />
+                <Section title="Your Cart" className="md:hidden block">
+                  <CheckoutProductSection removeForm />
                   <CheckoutSubtotal />
                 </Section>
                 <CheckoutUser />
