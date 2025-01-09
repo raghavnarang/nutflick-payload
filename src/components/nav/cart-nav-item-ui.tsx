@@ -18,7 +18,7 @@ const CartNavItemUI: FC<CartNavItemUIProps> = ({
   hideTextOnMobile = false,
   className,
 }) => (
-  <Link href="/cart" className={clsx('mr-8 last:mr-0 relative flex', className)}>
+  <Link href="/checkout" className={clsx('mr-8 last:mr-0 relative flex', className)}>
     {!hideIcon && <Cart className="mr-2" />}
     {!hideText && (
       <span className={clsx('mr-2', { 'md:block hidden': hideTextOnMobile })}>Cart</span>

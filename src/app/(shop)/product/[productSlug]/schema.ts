@@ -70,7 +70,7 @@ export default function getSchema(product: Product): WithContext<ProductGroup> {
             '@context': 'https://schema.org',
             '@type': 'MerchantReturnPolicy',
             applicableCountry: 'IN',
-            returnPolicyCategory: 'https://schema.org/MerchantReturnFiniteReturnWindow',
+            returnPolicyCategory: 'https://schema.org/MerchantReturnNotPermitted',
             merchantReturnLink: `${baseUrl}/page/refund-and-cancellation-policy`,
           },
           shippingDetails: {

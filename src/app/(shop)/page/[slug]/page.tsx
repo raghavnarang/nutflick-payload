@@ -33,7 +33,7 @@ export default async function Page({ params }: PageProps) {
   return (
     <div className="flex justify-center mb:px-0 px-3">
       <div className="max-w-7xl w-full">
-        <h1 className="text-2xl mb-5 mt-5 md:mt-0">{pageData.title}</h1>
+        <h1 className="text-2xl mb-5 mt-5">{pageData.title}</h1>
         <LexicalView htmlString={pageData.content_html || ''} />
       </div>
     </div>
