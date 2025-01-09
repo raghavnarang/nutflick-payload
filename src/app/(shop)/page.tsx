@@ -5,6 +5,7 @@ import { getHomePageOptions } from '@/features/server/home'
 import HeroBanner from '@/components/hero'
 import ProductsBlockComponent from '@/blocks/products/component'
 import type { Product } from '@/payload-types'
+import SyncCart from '@/features/cart/cart-store/sync-cart'
 
 const baseUrl = process.env.NEXT_PUBLIC_VERCEL_URL!
 
@@ -55,6 +56,8 @@ export default async function HomePage() {
                 key={block.id}
               />
             )
+          case 'SyncCart':
+            return <SyncCart key={block.id} />
           default:
             return null
         }

@@ -4,7 +4,6 @@ import { FC } from 'react'
 import ProductItem from './product-item'
 import { Product } from '@/payload-types'
 import clsx from 'clsx'
-import SyncCart from '@/features/cart/cart-store/sync-cart'
 
 interface ProductGrid {
   products: Product[]
@@ -22,7 +21,6 @@ const ProductGrid: FC<ProductGrid> = async ({ products, className }) => {
       {products.map((product) => (
         <ProductItem product={product} key={product.id} />
       ))}
-      <SyncCart products={products} />
     </div>
   )
 }

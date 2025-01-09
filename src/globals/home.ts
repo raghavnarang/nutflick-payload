@@ -1,5 +1,6 @@
 import HeroBlockConfig from '@/blocks/hero/config'
 import ProductsBlockConfig from '@/blocks/products/config'
+import SyncCartBlockConfig from '@/blocks/sync-cart/config'
 import { revalidatePath } from 'next/cache'
 import { GlobalConfig } from 'payload'
 
@@ -11,7 +12,7 @@ const HomePageOptions: GlobalConfig = {
   fields: [
     {
       type: 'blocks',
-      blocks: [HeroBlockConfig, ProductsBlockConfig],
+      blocks: [HeroBlockConfig, ProductsBlockConfig, SyncCartBlockConfig],
       name: 'pageBlocks',
     },
   ],

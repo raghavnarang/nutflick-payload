@@ -10,6 +10,7 @@ import CheckoutTotal from '@/components/checkout/total'
 import CheckoutPaymentButton from '@/components/checkout/payment-button'
 import { CheckoutProvider } from '@/features/checkout/provider'
 import PixelInitateCheckout from '@/components/checkout/pixel'
+import CheckoutSubtotal from '@/components/checkout/subtotal'
 
 export const metadata = {
   title: 'Checkout | Nutflick',
@@ -24,6 +25,10 @@ const CheckoutPage = async () => {
           <CheckoutForm>
             <div className="flex justify-center items-start lg:flex-row flex-col lg:gap-10">
               <div className="lg:w-1/2 w-full">
+                <Section title="Your Cart" className='md:hidden block' >
+                  <CheckoutProductSection />
+                  <CheckoutSubtotal />
+                </Section>
                 <CheckoutUser />
                 <CheckoutAddress />
                 <CheckoutCoupons />

@@ -776,6 +776,11 @@ export interface HomePageOption {
             blockName?: string | null;
             blockType: 'Products';
           }
+        | {
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'SyncCart';
+          }
       )[]
     | null;
   meta?: {
@@ -850,6 +855,12 @@ export interface HomePageOptionsSelect<T extends boolean = true> {
               products?: T;
               title?: T;
               subtitle?: T;
+              id?: T;
+              blockName?: T;
+            };
+        SyncCart?:
+          | T
+          | {
               id?: T;
               blockName?: T;
             };
