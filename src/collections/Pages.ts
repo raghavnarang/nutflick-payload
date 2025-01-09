@@ -19,7 +19,7 @@ export const Pages: CollectionConfig = {
   hooks: {
     afterChange: [
       () => {
-        revalidateTag('products')
+        revalidateTag('pages')
       },
     ],
   },
