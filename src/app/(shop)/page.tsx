@@ -6,6 +6,7 @@ import HeroBanner from '@/components/hero'
 import ProductsBlockComponent from '@/blocks/products/component'
 import type { Product } from '@/payload-types'
 import SyncCart from '@/features/cart/cart-store/sync-cart'
+import Features from '@/components/features'
 
 const baseUrl = process.env.NEXT_PUBLIC_VERCEL_URL!
 
@@ -58,6 +59,8 @@ export default async function HomePage() {
             )
           case 'SyncCart':
             return <SyncCart key={block.id} />
+          case 'BrandFeatures':
+            return <Features key={block.id} {...block} />
           default:
             return null
         }

@@ -47,7 +47,7 @@ export default async function UserSingleOrderPage({
           </Suspense>
           <OrderCustomerSummary order={order} />
           <AfterOrderSummary order={order} />
-          <OrderSummary order={order} />
+          <OrderSummary order={order} gstInvoice />
         </div>
       </div>
     </div>

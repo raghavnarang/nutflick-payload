@@ -34,7 +34,10 @@ const CheckoutTotalClient = ({
 
   return (
     <SectionTitleValue title="Total">
-      <Price price={total} />
+      <div className='flex flex-col items-end'>
+        <Price price={total} className='font-bold' />
+        <span className='text-xs '>(Inclusive of GST)</span>
+      </div>
     </SectionTitleValue>
   )
 }

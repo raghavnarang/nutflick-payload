@@ -47,11 +47,13 @@ export interface Config {
     'shipping-options': ShippingOption;
     'home-page-options': HomePageOption;
     'header-settings': HeaderSetting;
+    gst: Gst;
   };
   globalsSelect: {
     'shipping-options': ShippingOptionsSelect<false> | ShippingOptionsSelect<true>;
     'home-page-options': HomePageOptionsSelect<false> | HomePageOptionsSelect<true>;
     'header-settings': HeaderSettingsSelect<false> | HeaderSettingsSelect<true>;
+    gst: GstSelect<false> | GstSelect<true>;
   };
   locale: null;
   user:
@@ -332,6 +334,7 @@ export interface Order {
     price: number;
     weight: number;
     includedShippingCost?: number | null;
+    gstRate?: number | null;
     id?: string | null;
   }[];
   afterOrder?: {
@@ -349,6 +352,47 @@ export interface Order {
     signature?: string | null;
     total?: number | null;
   };
+  gstState?:
+    | (
+        | 'AN'
+        | 'AP'
+        | 'AR'
+        | 'AS'
+        | 'BR'
+        | 'CG'
+        | 'CH'
+        | 'DN'
+        | 'DD'
+        | 'DL'
+        | 'GA'
+        | 'GJ'
+        | 'HR'
+        | 'HP'
+        | 'JK'
+        | 'JH'
+        | 'KA'
+        | 'KL'
+        | 'LA'
+        | 'LD'
+        | 'MP'
+        | 'MH'
+        | 'MN'
+        | 'ML'
+        | 'MZ'
+        | 'NL'
+        | 'OR'
+        | 'PY'
+        | 'PB'
+        | 'RJ'
+        | 'SK'
+        | 'TN'
+        | 'TS'
+        | 'TR'
+        | 'UP'
+        | 'UK'
+        | 'WB'
+      )
+    | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -650,6 +694,7 @@ export interface OrdersSelect<T extends boolean = true> {
         price?: T;
         weight?: T;
         includedShippingCost?: T;
+        gstRate?: T;
         id?: T;
       };
   afterOrder?:
@@ -671,6 +716,7 @@ export interface OrdersSelect<T extends boolean = true> {
         signature?: T;
         total?: T;
       };
+  gstState?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -781,6 +827,7 @@ export interface HomePageOption {
             blockName?: string | null;
             blockType: 'SyncCart';
           }
+        | BrandFeatures
       )[]
     | null;
   meta?: {
@@ -793,11 +840,86 @@ export interface HomePageOption {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "BrandFeatures".
+ */
+export interface BrandFeatures {
+  title?: string | null;
+  subtitle?: string | null;
+  features?:
+    | {
+        text?: string | null;
+        image?: (number | null) | Media;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'BrandFeatures';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "header-settings".
  */
 export interface HeaderSetting {
   id: number;
   messageStrip?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "gst".
+ */
+export interface Gst {
+  id: number;
+  state:
+    | 'AN'
+    | 'AP'
+    | 'AR'
+    | 'AS'
+    | 'BR'
+    | 'CG'
+    | 'CH'
+    | 'DN'
+    | 'DD'
+    | 'DL'
+    | 'GA'
+    | 'GJ'
+    | 'HR'
+    | 'HP'
+    | 'JK'
+    | 'JH'
+    | 'KA'
+    | 'KL'
+    | 'LA'
+    | 'LD'
+    | 'MP'
+    | 'MH'
+    | 'MN'
+    | 'ML'
+    | 'MZ'
+    | 'NL'
+    | 'OR'
+    | 'PY'
+    | 'PB'
+    | 'RJ'
+    | 'SK'
+    | 'TN'
+    | 'TS'
+    | 'TR'
+    | 'UP'
+    | 'UK'
+    | 'WB';
+  categoryGSTSets?:
+    | {
+        rate: number;
+        category: (number | Category)[];
+        id?: string | null;
+      }[]
+    | null;
+  restGSTSet: {
+    rate: number;
+  };
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -864,6 +986,21 @@ export interface HomePageOptionsSelect<T extends boolean = true> {
               id?: T;
               blockName?: T;
             };
+        BrandFeatures?:
+          | T
+          | {
+              title?: T;
+              subtitle?: T;
+              features?:
+                | T
+                | {
+                    text?: T;
+                    image?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
       };
   meta?:
     | T
@@ -884,6 +1021,28 @@ export interface HomePageOptionsSelect<T extends boolean = true> {
  */
 export interface HeaderSettingsSelect<T extends boolean = true> {
   messageStrip?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "gst_select".
+ */
+export interface GstSelect<T extends boolean = true> {
+  state?: T;
+  categoryGSTSets?:
+    | T
+    | {
+        rate?: T;
+        category?: T;
+        id?: T;
+      };
+  restGSTSet?:
+    | T
+    | {
+        rate?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

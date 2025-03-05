@@ -6,3 +6,11 @@ export function getProductVariantTitle(
 ) {
   return `${product.title} - ${variant.title}`
 }
+
+export function generateProportionalDiscount(
+  productTotal: number,
+  orderSubtotal: number,
+  orderDiscount: number,
+) {
+  return (productTotal / orderSubtotal) * orderDiscount
+}

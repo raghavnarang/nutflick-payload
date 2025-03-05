@@ -1,3 +1,4 @@
+import BrandFeaturesBlockConfig from '@/blocks/brand-features/config'
 import HeroBlockConfig from '@/blocks/hero/config'
 import ProductsBlockConfig from '@/blocks/products/config'
 import SyncCartBlockConfig from '@/blocks/sync-cart/config'
@@ -12,7 +13,7 @@ const HomePageOptions: GlobalConfig = {
   fields: [
     {
       type: 'blocks',
-      blocks: [HeroBlockConfig, ProductsBlockConfig, SyncCartBlockConfig],
+      blocks: [HeroBlockConfig, ProductsBlockConfig, SyncCartBlockConfig, BrandFeaturesBlockConfig],
       name: 'pageBlocks',
     },
   ],

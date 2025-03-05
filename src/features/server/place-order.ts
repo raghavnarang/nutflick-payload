@@ -19,6 +19,7 @@ import {
 import { redirect } from 'next/navigation'
 import { createOrder as createRzpOrder } from '@/features/razorpay/api'
 import { getApplicableCoupon } from './actions/coupon'
+import { getGSTState } from './gst'
 
 const statesArray = Object.keys(states)
 
@@ -113,6 +114,7 @@ export const placeOrder = async (checkout: PlaceGuestOrderArgs) => {
       phone: address.phone,
       name: address.name,
       pincode: address.pincode,
+      gstState: await getGSTState(),
     },
     req,
   })

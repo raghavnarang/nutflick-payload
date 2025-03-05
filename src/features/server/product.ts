@@ -3,6 +3,8 @@ import { z } from 'zod'
 import { getPayload } from 'payload'
 import config from '@payload-config'
 import { unstable_cache } from 'next/cache'
+import { getCategoryGSTRate } from './gst'
+import { Order } from '@/payload-types'
 
 interface CartItem {
   productId: number
@@ -24,33 +26,43 @@ export const getOrderProductsFromCartItems = async (items: CartItem[]) => {
     return []
   }
 
-  return parsedItems
-    .map((item) => {
-      if (!item.qty) {
-        return undefined
-      }
+  return (
+    await Promise.all(
+      parsedItems.map(async (item) => {
+        if (!item.qty) {
+          return undefined
+        }
 
-      const product = products.find((p) => p.id === item.productId)
-      if (!product) {
-        return undefined
-      }
+        const product = products.find((p) => p.id === item.productId)
+        if (!product) {
+          return undefined
+        }
 
-      const variant = product.variants?.find((v) => v.id === item.variantId)
-      if (!variant) {
-        return undefined
-      }
+        const variant = product.variants?.find((v) => v.id === item.variantId)
+        if (!variant) {
+          return undefined
+        }
 
-      return {
-        variantId: item.variantId,
-        productRef: item.productId,
-        qty: item.qty,
-        title: `${product.title} - ${variant.title}`,
-        price: variant.price,
-        weight: variant.weight,
-        includedShippingCost: variant.includedShippingCost,
-      }
-    })
-    .filter((item) => !!item)
+        const categoryId =
+          typeof product.category?.value !== 'number'
+            ? product.category?.value.id
+            : product.category.value
+
+        const gstRate = await getCategoryGSTRate(categoryId)
+
+        return {
+          variantId: item.variantId,
+          productRef: item.productId,
+          qty: item.qty,
+          title: `${product.title} - ${variant.title}`,
+          price: variant.price,
+          weight: variant.weight,
+          includedShippingCost: variant.includedShippingCost,
+          gstRate,
+        } as Order['products'][number]
+      }),
+    )
+  ).filter((item) => !!item)
 }
 
 export const getProducts = unstable_cache(
@@ -63,7 +75,7 @@ export const getProducts = unstable_cache(
         : { bigImage: false, description: false, description_html: false },
       pagination: false,
       depth: 1,
-      sort: 'createdAt', 
+      sort: 'createdAt',
     })
     return docs
   },

@@ -7,6 +7,7 @@ import Nav from './nav/nav'
 import MobileNav from './nav/mobile-nav'
 import MessageStrip from './message-strip'
 import { getHeaderSettings } from '@/features/server/header'
+import Container from './container'
 
 interface HeaderProps {
   mobileSideNavItems?: NavItem[]
@@ -19,9 +20,9 @@ const Header: FC<HeaderProps> = async ({ mobileSideNavItems, navItems }) => {
 
   return (
     <div>
-      <div className="md:h-16 h-12">
-        <header className="flex justify-center fixed left-0 w-full z-20 bg-white px-3 xl:px-0 border-b border-solid border-gray-300">
-          <div className="container flex justify-between">
+      <div className="md:h-24 h-20">
+        <header className="fixed left-0 w-full z-20 bg-white shadow-md">
+          <Container innerClassName="flex justify-between">
             <div className="flex items-center">
               <Suspense>{mobileSideNavItems && <MobileNav items={mobileSideNavItems} />}</Suspense>
               <Link href="/">
@@ -29,10 +30,10 @@ const Header: FC<HeaderProps> = async ({ mobileSideNavItems, navItems }) => {
               </Link>
             </div>
             {navItems && <Nav items={navItems} isHeader />}
-          </div>
+          </Container>
+          {headerSettings.messageStrip && <MessageStrip message={headerSettings.messageStrip} />}
         </header>
       </div>
-      {headerSettings.messageStrip && <MessageStrip message={headerSettings.messageStrip} />}
     </div>
   )
 }

@@ -38,7 +38,6 @@ const navItems: NavProps['items'] = [
   <CartNavItem
     key="cart"
     className="md:h-16 h-12 md:pl-5 pl-3 border-gray-300 items-center"
-    hideTextOnMobile
   />,
 ]
 

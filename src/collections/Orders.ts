@@ -138,6 +138,11 @@ export const Orders: CollectionConfig = {
               type: 'number',
               name: 'includedShippingCost',
             },
+            {
+              type: 'number',
+              name: 'gstRate',
+              label: 'GST %',
+            },
           ],
         },
       ],
@@ -238,6 +243,14 @@ export const Orders: CollectionConfig = {
           name: 'total',
         },
       ],
+    },
+    {
+      type: 'select',
+      name: 'gstState',
+      options: Object.entries(states).map(([value, label]) => ({ label, value })),
+      admin: {
+        readOnly: true,
+      },
     },
   ],
 }

@@ -20,6 +20,7 @@ import { Pages } from './collections/Pages'
 import { seoPlugin } from '@payloadcms/plugin-seo'
 import HomePageOptions from './globals/home'
 import HeaderSettings from './globals/header'
+import { GST } from './globals/gst'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -32,7 +33,7 @@ export default buildConfig({
     },
   },
   collections: [Users, Media, Products, Categories, Customers, Addresses, Coupons, Orders, Pages],
-  globals: [ShippingOptions, HomePageOptions, HeaderSettings],
+  globals: [ShippingOptions, HomePageOptions, HeaderSettings, GST],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
