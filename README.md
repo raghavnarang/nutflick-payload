@@ -1,8 +1,3 @@
-# blank
+# Nutflick
 
-blank
-
-## Attributes
-
-- **Database**: mongodb
-- **Storage Adapter**: localDisk
+Tech Stack: Next.JS (App Router), React, Payload CMS, Tailwind CSS, PostgreSQL
